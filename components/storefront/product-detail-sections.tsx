@@ -253,13 +253,13 @@ export function ProductDetailGallery({
   if (images.length <= 1) {
     const image = images[0]
     return (
-      <div className="aspect-4/3 w-full border-b border-[var(--sidebar-border)] bg-muted/20 sm:aspect-[16/10]">
+      <div className="flex aspect-4/3 w-full items-center justify-center border-b border-[var(--sidebar-border)] bg-muted/20 p-4 sm:aspect-[16/10] sm:p-6">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={image.url}
             alt={image.alt ?? product.name}
-            className="size-full object-cover"
+            className="max-h-full max-w-full object-contain"
           />
         ) : (
           <div className="flex size-full items-center justify-center text-3xl font-semibold text-muted-foreground/40">
@@ -272,23 +272,27 @@ export function ProductDetailGallery({
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_88px] gap-px border-b border-[var(--sidebar-border)] bg-[var(--sidebar-border)] sm:grid-cols-[minmax(0,1fr)_96px]">
-      <div className="aspect-4/3 bg-muted/20 sm:aspect-[16/10]">
+      <div className="flex aspect-4/3 items-center justify-center bg-muted/20 p-4 sm:aspect-[16/10] sm:p-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={images[0].url}
           alt={images[0].alt ?? product.name}
-          className="size-full object-cover"
+          className="max-h-full max-w-full object-contain"
         />
       </div>
       <div className="grid max-h-full auto-rows-fr gap-px bg-[var(--sidebar-border)]">
         {images.slice(1, 4).map((image) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <div
             key={image.url}
-            src={image.url}
-            alt={image.alt ?? product.name}
-            className="size-full min-h-0 object-cover bg-muted/20"
-          />
+            className="flex min-h-0 items-center justify-center bg-muted/20 p-1.5"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={image.url}
+              alt={image.alt ?? product.name}
+              className="max-h-full max-w-full object-contain"
+            />
+          </div>
         ))}
       </div>
     </div>
