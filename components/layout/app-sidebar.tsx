@@ -129,7 +129,7 @@ export function AppSidebar({
           <span className="text-sm font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
             Restoloop
           </span>
-          <span className="ml-auto rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-medium text-orange-600 group-data-[collapsible=icon]:hidden dark:text-orange-400">
+          <span className="ml-auto rounded-full bg-[var(--brand-orange)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--brand-orange)] group-data-[collapsible=icon]:hidden">
             {panelLabel}
           </span>
         </Link>
@@ -193,7 +193,7 @@ export function AppSidebar({
               <SidebarMenuButton
                 render={<a href={cta.href} target="_blank" rel="noreferrer" />}
                 tooltip={cta.label}
-                className="mt-1 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground data-active:bg-primary data-active:text-primary-foreground"
+                className="mt-1 rounded-xl btn-brand text-white hover:opacity-90 data-active:opacity-90"
               >
                 <ExternalLink />
                 <span>{cta.label}</span>
@@ -233,20 +233,20 @@ export function AppSidebar({
                           className={cn(
                             "relative h-9 rounded-lg px-2.5 transition-colors",
                             active &&
-                              "bg-orange-500/10 font-semibold text-orange-600 hover:bg-orange-500/15 hover:text-orange-600 data-active:text-orange-600 data-active:hover:text-orange-600 before:absolute before:inset-y-1.5 before:left-0 before:w-[3px] before:rounded-full before:bg-[#F58220] dark:text-orange-400 dark:data-active:text-orange-400 dark:hover:text-orange-400"
+                              "bg-[var(--brand-orange)]/10 font-semibold text-[var(--brand-orange)] hover:bg-[var(--brand-orange)]/15 hover:text-[var(--brand-orange)] data-active:text-[var(--brand-orange)] data-active:hover:text-[var(--brand-orange)] before:absolute before:inset-y-1.5 before:left-0 before:w-[3px] before:rounded-full before:bg-[var(--brand-orange)]"
                           )}
                         >
                           <item.icon
                             className={cn(
                               "size-4 shrink-0",
                               active
-                                ? "!text-orange-600 dark:!text-orange-400"
+                                ? "!text-[var(--brand-orange)]"
                                 : "text-sidebar-foreground/70"
                             )}
                           />
                           <span
                             className={cn(
-                              active && "!text-orange-600 dark:!text-orange-400"
+                              active && "!text-[var(--brand-orange)]"
                             )}
                           >
                             {translateNavTitle(t, item.href, item.title)}
@@ -276,7 +276,7 @@ export function AppSidebar({
               >
                 <Avatar className="size-8 rounded-lg ring-1 ring-border/60">
                   <AvatarImage src="" alt={user.name} />
-                  <AvatarFallback className="rounded-lg bg-orange-500/10 text-xs font-semibold text-orange-700 dark:text-orange-300">
+                  <AvatarFallback className="rounded-lg bg-[var(--brand-orange)]/10 text-xs font-semibold text-[var(--brand-orange)]">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
@@ -298,7 +298,7 @@ export function AppSidebar({
                   <DropdownMenuLabel className="p-0 font-normal">
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                       <Avatar className="size-8 rounded-lg">
-                        <AvatarFallback className="rounded-lg bg-orange-500/10 text-orange-700">
+                        <AvatarFallback className="rounded-lg bg-[var(--brand-orange)]/10 text-[var(--brand-orange)]">
                           {initials}
                         </AvatarFallback>
                       </Avatar>
