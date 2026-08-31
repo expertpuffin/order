@@ -50,6 +50,7 @@
 
 :root {
   --brand: #f58220;
+  --brand-orange: #f58220;
   --brand-navy: #002d62;
   --background: oklch(1 0 0);
   --foreground: #002d62;
@@ -134,6 +135,16 @@
 @layer utilities {
   .table-polish [data-slot="table-row"] {
     transition: background-color 0.2s ease;
+  }
+
+  /** Primary commerce CTA — brand orange */
+  .btn-brand {
+    background-color: var(--brand-orange);
+    color: white;
+    font-weight: 600;
+  }
+  .btn-brand:hover {
+    background-color: color-mix(in srgb, var(--brand-orange) 90%, black);
   }
 }
 /* Order / page print: hide chrome + suppress browser date/title headers */
