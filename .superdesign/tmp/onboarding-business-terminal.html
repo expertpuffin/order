@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding — Add Business</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="mx-auto flex min-h-[900px] w-[480px] max-w-lg flex-col justify-center bg-[#f7f7f8] px-4 py-10" style="font-family: ui-sans-serif, system-ui, sans-serif;">
+    <div class="mb-6 flex items-center gap-2.5">
+      <img src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e/brand-assets/public-icon.png/icon.png" alt="Restoloop" class="size-7 object-contain" />
+      <div>
+        <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Step 3 · Business</p>
+        <p class="text-sm font-semibold tracking-tight text-[#002d62]">RestoLoop</p>
+      </div>
+    </div>
+    <h1 class="text-xl font-semibold tracking-tight text-[#002d62]">Add your business</h1>
+    <p class="mt-1.5 mb-6 text-sm text-gray-500">Same flow as the app — basics, address, contact, then hours.</p>
+    <div class="space-y-5 rounded-[2px] border border-[#e5e7eb] bg-white p-5 text-[#002d62]">
+      <div class="flex gap-1">
+        <div class="h-1 flex-1 rounded-[1px] bg-[#002d62]"></div>
+        <div class="h-1 flex-1 rounded-[1px] bg-[#002d62]"></div>
+        <div class="h-1 flex-1 rounded-[1px] bg-gray-200"></div>
+        <div class="h-1 flex-1 rounded-[1px] bg-gray-200"></div>
+      </div>
+      <h2 class="text-[15px] font-semibold tracking-tight">Address</h2>
+      <div class="flex gap-2">
+        <div class="min-w-0 flex-1">
+          <label for="pc" class="mb-1.5 block text-[11px] font-medium uppercase tracking-wide text-gray-500">Postcode</label>
+          <input id="pc" value="E1 6AN" class="h-10 w-full rounded-[2px] border border-[#e5e7eb] px-2.5 text-sm" />
+        </div>
+        <button type="button" class="mt-[22px] h-10 shrink-0 rounded-[2px] border border-[#e5e7eb] px-3 text-sm">Find address</button>
+      </div>
+      <div>
+        <label for="l1" class="mb-1.5 block text-[11px] font-medium uppercase tracking-wide text-gray-500">Address line 1</label>
+        <input id="l1" value="12 Brick Lane" class="h-10 w-full rounded-[2px] border border-[#e5e7eb] px-2.5 text-sm" />
+      </div>
+      <div class="flex gap-2">
+        <button type="button" class="h-10 flex-1 rounded-[2px] border border-[#e5e7eb] text-sm">Back</button>
+        <button type="button" class="h-10 flex-1 rounded-[2px] bg-[#002d62] text-sm font-semibold text-white">Continue</button>
+      </div>
+    </div>
+    <p class="mt-4 text-center text-sm"><a id="keep-browsing" href="#home" class="font-medium text-[#002d62] underline-offset-4 hover:underline">Keep browsing</a></p>
+  </div>
+</body>
+</html>

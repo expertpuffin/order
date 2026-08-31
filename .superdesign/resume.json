@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "targets": {
+    "storefront-header": {
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "baselineDraftId": "c0353e49-ed72-4f10-91d5-4e58fce5a0a5",
+      "activeDraftId": "76b0a702-3187-4b8d-9d11-5adee99616f6",
+      "brandAssets": {
+        "logo": {
+          "assetKey": "public-icon.png",
+          "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e/brand-assets/public-icon.png/icon.png",
+          "key": "public/icon.png"
+        }
+      },
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        ".superdesign/init/theme.md",
+        "components/storefront/storefront-top-bar.tsx",
+        "components/storefront/delivery-business-picker.tsx",
+        "components/ui/button.tsx",
+        "components/ui/input.tsx"
+      ],
+      "updatedAt": "2026-08-28T21:46:00.000Z"
+    },
+    "storefront-sidebars": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "baselineDraftId": "4260efcd-7257-404c-9a89-37753a510f07",
+      "activeDraftId": "0eb94e9c-2a2d-4a03-876b-4dcca196ceaa",
+      "branches": [
+        {
+          "draftId": "5757f1ee-5127-48b2-8a47-589d80e58344",
+          "title": "Restoloop Ledger Sidebars Redesign",
+          "description": "Ledger match — sharp nav + navy cart CTA"
+        },
+        {
+          "draftId": "0eb94e9c-2a2d-4a03-876b-4dcca196ceaa",
+          "title": "Restoloop Sidebars - Terminal Variant",
+          "description": "Denser POS — navy fill active rows"
+        }
+      ],
+      "updatedAt": "2026-08-28T22:01:00.000Z",
+      "implemented": "terminal-b"
+    },
+    "storefront-middle": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "82dca839-818e-43ad-b19b-8a7bd4b6798a",
+      "previewUrl": "https://p.superdesign.dev/draft/82dca839-818e-43ad-b19b-8a7bd4b6798a",
+      "implemented": "terminal",
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        ".superdesign/init/theme.md",
+        "components/storefront/market-shell.tsx",
+        "components/storefront/banner-carousel.tsx",
+        "components/storefront/category-icon-rail.tsx",
+        "components/storefront/product-rail.tsx",
+        "components/storefront/product-card.tsx"
+      ],
+      "updatedAt": "2026-08-28T22:15:00.000Z",
+      "note": "AI generate blocked by insufficient_credits; Terminal middle applied in code + import-design-draft"
+    },
+    "auth-gate-modal": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "40121eee-de38-4b94-a053-628149c38c6a",
+      "branches": [
+        {
+          "draftId": "40121eee-de38-4b94-a053-628149c38c6a",
+          "title": "Auth Gate — Sign in (Terminal)",
+          "previewUrl": "https://p.superdesign.dev/draft/40121eee-de38-4b94-a053-628149c38c6a"
+        },
+        {
+          "draftId": "458667ba-2fc9-42e0-96d0-49e131d041a3",
+          "title": "Auth Gate — Sign up (Terminal)",
+          "previewUrl": "https://p.superdesign.dev/draft/458667ba-2fc9-42e0-96d0-49e131d041a3"
+        }
+      ],
+      "implemented": "terminal",
+      "contextFiles": [
+        "components/storefront/auth-gate.tsx",
+        "components/ui/dialog.tsx",
+        "components/ui/input.tsx",
+        "components/ui/button.tsx"
+      ],
+      "updatedAt": "2026-08-28T22:20:00.000Z"
+    },
+    "onboarding-business": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "07b4a2cf-1f58-4982-af33-4b7b63102de0",
+      "previewUrl": "https://p.superdesign.dev/draft/07b4a2cf-1f58-4982-af33-4b7b63102de0",
+      "implemented": "terminal",
+      "contextFiles": [
+        "components/onboarding/onboarding-shell.tsx",
+        "components/onboarding/business-apply-form.tsx",
+        "components/onboarding/verify-form.tsx",
+        "components/onboarding/acquisition-form.tsx",
+        "app/(storefront)/onboarding/page.tsx"
+      ],
+      "updatedAt": "2026-08-28T22:30:00.000Z",
+      "note": "Standalone /login /register removed; post-register flow mirrors mobile verify → acquisition → add business"
+    },
+    "favourites": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "1fdaf948-0f1a-401d-844f-7b11bf7ba3d0",
+      "previewUrl": "https://p.superdesign.dev/draft/1fdaf948-0f1a-401d-844f-7b11bf7ba3d0",
+      "implemented": "terminal",
+      "contextFiles": [
+        "app/(dashboard)/favourites/page.tsx",
+        "components/storefront/account-page-header.tsx",
+        "components/order/add-to-cart.tsx",
+        "components/order/favorite-toggle.tsx"
+      ],
+      "updatedAt": "2026-08-28T22:40:00.000Z"
+    },
+    "cart": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "95a4ef44-00a8-422f-8f5a-4045896d6a9f",
+      "previewUrl": "https://p.superdesign.dev/draft/95a4ef44-00a8-422f-8f5a-4045896d6a9f",
+      "implemented": "terminal",
+      "contextFiles": [
+        "app/(dashboard)/cart/page.tsx",
+        "components/order/cart-editor.tsx",
+        "components/order/checkout-form.tsx",
+        "components/storefront/account-page-header.tsx"
+      ],
+      "updatedAt": "2026-08-28T22:45:00.000Z"
+    },
+    "account": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "7a7e5a47-6cfb-4b46-a2ae-33ada5653ba4",
+      "previewUrl": "https://p.superdesign.dev/draft/7a7e5a47-6cfb-4b46-a2ae-33ada5653ba4",
+      "implemented": "terminal",
+      "contextFiles": [
+        "app/(dashboard)/account/page.tsx",
+        "components/storefront/account-page-header.tsx",
+        "components/storefront/business-switcher.tsx"
+      ],
+      "updatedAt": "2026-08-28T23:50:00.000Z"
+    },
+    "orders": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "c9e68d62-e4be-422a-bbc6-2129b8d8de40",
+      "previewUrl": "https://p.superdesign.dev/draft/c9e68d62-e4be-422a-bbc6-2129b8d8de40",
+      "implemented": "terminal",
+      "contextFiles": [
+        "app/(dashboard)/orders/page.tsx",
+        "components/storefront/order-status-tabs.tsx",
+        "components/storefront/account-page-header.tsx",
+        "components/shared/list-filter-bar.tsx"
+      ],
+      "updatedAt": "2026-08-28T23:50:00.000Z"
+    },
+    "help": {
+      "targetKind": "existing-ui",
+      "projectId": "63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "projectUrl": "https://superdesign.dev/teams/48bcc0b8-0ce5-477b-b763-3df2b5cbb84a/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e",
+      "activeDraftId": "f45b2dd3-8132-4dec-bd31-5529b987e55d",
+      "previewUrl": "https://p.superdesign.dev/draft/f45b2dd3-8132-4dec-bd31-5529b987e55d",
+      "implemented": "terminal",
+      "contextFiles": [
+        "app/(dashboard)/help/page.tsx",
+        "components/storefront/account-page-header.tsx"
+      ],
+      "updatedAt": "2026-08-28T23:50:00.000Z"
+    }
+  }
+}

@@ -76,11 +76,14 @@ export function CartEditor({ businessId, lines }: CartEditorProps) {
 
   return (
     <>
-      <ul className="divide-y">
+      <ul className="divide-y divide-[var(--sidebar-border)]">
         {lines.map((line) => (
-          <li key={line.id} className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-start">
+          <li
+            key={line.id}
+            className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-start"
+          >
             <div className="flex min-w-0 flex-1 gap-3">
-              <div className="size-14 shrink-0 overflow-hidden rounded-xl border bg-muted/40">
+              <div className="size-14 shrink-0 overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#f3f4f6]">
                 {line.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -96,9 +99,12 @@ export function CartEditor({ businessId, lines }: CartEditorProps) {
               </div>
               <div className="min-w-0 flex-1 space-y-2">
                 <div>
-                  <p className="font-medium text-[var(--brand-navy)]">{line.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {[line.brand, line.packSize].filter(Boolean).join(" · ") || "—"}
+                  <p className="text-sm font-medium text-[var(--brand-navy)]">
+                    {line.name}
+                  </p>
+                  <p className="font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+                    {[line.brand, line.packSize].filter(Boolean).join(" · ") ||
+                      "—"}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -115,10 +121,13 @@ export function CartEditor({ businessId, lines }: CartEditorProps) {
                       })
                     }
                   >
-                    <SelectTrigger size="sm" className="h-9 w-[92px] rounded-lg">
+                    <SelectTrigger
+                      size="sm"
+                      className="h-9 w-[92px] rounded-[2px] border-[var(--sidebar-border)]"
+                    >
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-[2px]">
                       {(line.packagingOptions.length
                         ? line.packagingOptions
                         : [line.unit]
@@ -129,26 +138,26 @@ export function CartEditor({ businessId, lines }: CartEditorProps) {
                       ))}
                     </SelectContent>
                   </Select>
-                  <div className="flex items-center gap-1 rounded-lg border bg-muted/30 p-0.5">
+                  <div className="inline-flex overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
                     <Button
                       type="button"
                       size="icon-sm"
                       variant="ghost"
-                      className="size-8 rounded-md"
+                      className="size-8 rounded-none"
                       disabled={pending}
                       onClick={() => bumpQty(line, -1)}
                       aria-label={t("cart.decreaseQty")}
                     >
                       <Minus className="size-4" />
                     </Button>
-                    <span className="min-w-8 text-center text-sm font-semibold tabular-nums">
+                    <span className="flex min-w-8 items-center justify-center border-x border-[var(--sidebar-border)] text-sm font-semibold tabular-nums text-[var(--brand-navy)]">
                       {line.quantity}
                     </span>
                     <Button
                       type="button"
                       size="icon-sm"
                       variant="ghost"
-                      className="size-8 rounded-md"
+                      className="size-8 rounded-none"
                       disabled={pending}
                       onClick={() => bumpQty(line, 1)}
                       aria-label={t("cart.increaseQty")}
@@ -163,7 +172,7 @@ export function CartEditor({ businessId, lines }: CartEditorProps) {
                     setComments((c) => ({ ...c, [line.id]: e.target.value }))
                   }
                   placeholder={t("cart.lineNotePlaceholder")}
-                  className="h-9 rounded-lg text-sm"
+                  className="h-9 rounded-[2px] border-[var(--sidebar-border)] text-sm focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
                   disabled={pending}
                   onBlur={() =>
                     startTransition(async () => {
@@ -182,16 +191,19 @@ export function CartEditor({ businessId, lines }: CartEditorProps) {
         ))}
       </ul>
 
-      <div className="mt-4 border-t pt-4">
+      <div className="mt-4 border-t border-[var(--sidebar-border)] pt-4">
         <Button
           variant="outline"
           size="sm"
           disabled={pending}
-          className="rounded-lg"
+          className="rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
           onClick={() => {
             if (!window.confirm(t("cart.clearConfirm"))) return
             startTransition(async () => {
-              notifyActionResult(await clearCartAction(businessId), t("cart.cleared"))
+              notifyActionResult(
+                await clearCartAction(businessId),
+                t("cart.cleared")
+              )
             })
           }}
         >
@@ -205,24 +217,36 @@ export function CartEditor({ businessId, lines }: CartEditorProps) {
           if (!open) setPendingRemove(null)
         }}
       >
-        <DialogContent showCloseButton={false} className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>{t("cart.removeTitle")}</DialogTitle>
-            <DialogDescription>
+        <DialogContent
+          showCloseButton={false}
+          className="gap-0 overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] p-0 ring-0 sm:max-w-md"
+        >
+          <DialogHeader className="space-y-1 border-b border-[var(--sidebar-border)] px-5 py-4 text-left">
+            <DialogTitle className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
+              {t("cart.removeTitle")}
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
               {t("cart.removeBody", {
                 name: pendingRemove?.line.name ?? "",
               })}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="sm:justify-end">
+          <DialogFooter className="gap-2 px-5 py-4 sm:justify-end">
             <Button
               type="button"
               variant="outline"
+              className="rounded-[2px] border-[var(--sidebar-border)]"
               onClick={() => setPendingRemove(null)}
             >
               {t("common.cancel")}
             </Button>
-            <Button type="button" variant="destructive" disabled={pending} onClick={confirmRemove}>
+            <Button
+              type="button"
+              variant="destructive"
+              className="rounded-[2px]"
+              disabled={pending}
+              onClick={confirmRemove}
+            >
               {t("cart.removeConfirm")}
             </Button>
           </DialogFooter>

@@ -26,33 +26,29 @@ export function CategoryIconRail({
 
   return (
     <div className="relative">
+      <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+        {t("storefront.categories")}
+      </p>
       <div
         ref={ref}
-        className="flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-2.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <Link
           href="/?view=offers"
-          className="flex w-[92px] shrink-0 flex-col items-center gap-2"
+          className="flex w-[84px] shrink-0 flex-col items-center gap-1.5"
         >
           <div
             className={cn(
-              "flex size-[76px] items-center justify-center overflow-hidden rounded-2xl border shadow-sm",
-              activeView === "offers"
-                ? "ring-2 ring-primary ring-offset-2"
-                : null
+              "flex size-[72px] items-center justify-center overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#FFF4E8]",
+              activeView === "offers" &&
+                "border-[var(--brand-navy)] bg-[var(--brand-navy)] ring-1 ring-[var(--brand-navy)]"
             )}
-            style={{ backgroundColor: "#FFF4E8" }}
           >
-            <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow">
-              <Percent className="size-6 stroke-[2.5]" />
+            <div className="flex size-10 items-center justify-center rounded-[2px] bg-primary text-primary-foreground">
+              <Percent className="size-5 stroke-[2.5]" />
             </div>
           </div>
-          <span
-            className={cn(
-              "line-clamp-2 text-center text-xs font-semibold",
-              activeView === "offers" ? "text-primary" : "text-[var(--brand-navy)]"
-            )}
-          >
+          <span className="line-clamp-2 text-center text-[11px] font-medium text-[var(--brand-navy)]">
             {t("storefront.offers")}
           </span>
         </Link>
@@ -64,12 +60,13 @@ export function CategoryIconRail({
             <Link
               key={cat.id}
               href={`/?category=${encodeURIComponent(cat.slug!)}`}
-              className="flex w-[92px] shrink-0 flex-col items-center gap-2"
+              className="flex w-[84px] shrink-0 flex-col items-center gap-1.5"
             >
               <div
                 className={cn(
-                  "relative size-[76px] overflow-hidden rounded-2xl border bg-white shadow-sm",
-                  active && "ring-2 ring-primary ring-offset-2"
+                  "relative size-[72px] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-white",
+                  active &&
+                    "border-[var(--brand-navy)] ring-1 ring-[var(--brand-navy)]"
                 )}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -79,12 +76,7 @@ export function CategoryIconRail({
                   className="size-full object-cover"
                 />
               </div>
-              <span
-                className={cn(
-                  "line-clamp-2 text-center text-xs font-semibold",
-                  active ? "text-primary" : "text-[var(--brand-navy)]"
-                )}
-              >
+              <span className="line-clamp-2 text-center text-[11px] font-medium text-[var(--brand-navy)]">
                 {cat.name}
               </span>
             </Link>
@@ -98,7 +90,7 @@ export function CategoryIconRail({
           onClick={() =>
             ref.current?.scrollBy({ left: 280, behavior: "smooth" })
           }
-          className="absolute top-[38px] right-0 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border bg-white shadow"
+          className="absolute top-[46px] right-0 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)]"
           aria-label="Scroll categories"
         >
           <ChevronRight className="size-4" />

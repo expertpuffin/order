@@ -1,14 +1,8 @@
 import Link from "next/link"
 
-import { PageHeader } from "@/components/shared/page-header"
+import { EmptyState } from "@/components/brand/empty-state"
+import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 
 export function AccessDenied({
   description = "Your staff role does not include this section.",
@@ -16,24 +10,20 @@ export function AccessDenied({
   description?: string
 }) {
   return (
-    <>
-      <PageHeader title="Access denied" description={description} />
-      <Card>
-        <CardHeader>
-          <CardTitle>Insufficient permissions</CardTitle>
-          <CardDescription>
-            Ask a master or People Admin to update your staff role.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button
-            nativeButton={false}
-            render={<Link href="/" />}
-          >
-            Back to home
-          </Button>
-        </CardContent>
-      </Card>
-    </>
+    <EmptyState
+      icon={PUFFIN_ICONS.accessDenied}
+      eyebrow="Access"
+      title="Access denied"
+      body={description}
+      actions={
+        <Button
+          className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+          nativeButton={false}
+          render={<Link href="/" />}
+        >
+          Back to home
+        </Button>
+      }
+    />
   )
 }

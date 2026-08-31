@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restoloop Storefront Middle — Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <style>
+    :root {
+      --brand-navy: #002d62;
+      --brand-orange: #f58220;
+      --sidebar-border: #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-[1100px] w-[880px] bg-[#f7f7f8] px-6 py-4 text-[var(--brand-navy)]" style="font-family: ui-sans-serif, system-ui, sans-serif;">
+    <!-- Banner -->
+    <div class="relative mb-6 overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+      <div class="relative h-[200px] w-full">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=1200&h=480&fit=crop" alt="Promo banner" class="absolute inset-0 size-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-r from-[var(--brand-navy)]/80 via-[var(--brand-navy)]/35 to-transparent"></div>
+        <div class="relative z-[2] flex h-full flex-col justify-end p-5">
+          <p class="text-xl font-semibold tracking-tight text-white">Weekly kitchen essentials</p>
+          <p class="mt-1 text-sm text-white/85">Stock up before the weekend rush.</p>
+          <span class="mt-3 inline-flex w-fit rounded-[2px] bg-[var(--brand-orange)] px-2.5 py-1 text-[11px] font-semibold text-white">Shop offers</span>
+        </div>
+      </div>
+      <button type="button" class="absolute top-1/2 right-2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white/95" aria-label="Next slide">
+        <iconify-icon icon="lucide:chevron-right" width="16"></iconify-icon>
+      </button>
+    </div>
+    <div class="mb-6 flex justify-center gap-1">
+      <span class="h-1 w-4 rounded-[1px] bg-[var(--brand-navy)]"></span>
+      <span class="h-1 w-4 rounded-[1px] bg-gray-300"></span>
+      <span class="h-1 w-4 rounded-[1px] bg-gray-300"></span>
+    </div>
+
+    <!-- Category rail -->
+    <p class="mb-2 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Categories</p>
+    <div class="mb-6 flex gap-2.5 overflow-hidden">
+      <a id="cat-offers" href="#offers" class="flex w-[84px] shrink-0 flex-col items-center gap-1.5">
+        <div class="flex size-[72px] items-center justify-center rounded-[2px] border border-[var(--brand-navy)] bg-[var(--brand-navy)] ring-1 ring-[var(--brand-navy)]">
+          <div class="flex size-10 items-center justify-center rounded-[2px] bg-[var(--brand-orange)] text-white">
+            <iconify-icon icon="lucide:percent" width="20"></iconify-icon>
+          </div>
+        </div>
+        <span class="text-center text-[11px] font-medium">Offers</span>
+      </a>
+      <a id="cat-produce" href="#produce" class="flex w-[84px] shrink-0 flex-col items-center gap-1.5">
+        <div class="size-[72px] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+          <img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=200&h=200&fit=crop" alt="Produce" class="size-full object-cover" />
+        </div>
+        <span class="text-center text-[11px] font-medium">Produce</span>
+      </a>
+      <a id="cat-dairy" href="#dairy" class="flex w-[84px] shrink-0 flex-col items-center gap-1.5">
+        <div class="size-[72px] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+          <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=200&h=200&fit=crop" alt="Dairy" class="size-full object-cover" />
+        </div>
+        <span class="text-center text-[11px] font-medium">Dairy</span>
+      </a>
+      <a id="cat-meat" href="#meat" class="flex w-[84px] shrink-0 flex-col items-center gap-1.5">
+        <div class="size-[72px] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+          <img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200&h=200&fit=crop" alt="Meat" class="size-full object-cover" />
+        </div>
+        <span class="text-center text-[11px] font-medium">Meat</span>
+      </a>
+      <a id="cat-dry" href="#dry" class="flex w-[84px] shrink-0 flex-col items-center gap-1.5">
+        <div class="size-[72px] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+          <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&h=200&fit=crop" alt="Dry goods" class="size-full object-cover" />
+        </div>
+        <span class="text-center text-[11px] font-medium">Dry goods</span>
+      </a>
+    </div>
+
+    <!-- Product rails panel -->
+    <div class="space-y-8 rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4">
+      <section>
+        <div class="mb-3 flex items-end justify-between gap-3 border-b border-[var(--sidebar-border)] pb-2">
+          <h2 class="text-[15px] font-semibold tracking-tight">Popular this week</h2>
+          <a id="see-all-popular" href="#all-popular" class="text-xs font-semibold uppercase tracking-wide text-[var(--brand-orange)] underline-offset-4 hover:underline">See all</a>
+        </div>
+        <div class="flex gap-3">
+          <article class="w-[176px] shrink-0">
+            <div class="relative aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-gray-100">
+              <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=400&h=400&fit=crop" alt="Apples" class="size-full object-cover" />
+              <button type="button" class="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white" aria-label="Add apples">
+                <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
+              </button>
+            </div>
+            <div class="pt-2">
+              <p class="text-base font-semibold tabular-nums">£2.40</p>
+              <p class="font-mono text-[10px] uppercase tracking-wide text-gray-500">Case · 12</p>
+              <h3 class="mt-0.5 text-sm font-medium leading-snug">Royal Gala Apples</h3>
+              <p class="text-xs text-gray-500">Fresh · 1kg</p>
+            </div>
+          </article>
+          <article class="w-[176px] shrink-0">
+            <div class="relative aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-gray-100">
+              <img src="https://images.unsplash.com/photo-1582721478779-0bf8841e69c3?w=400&h=400&fit=crop" alt="Eggs" class="size-full object-cover" />
+              <button type="button" class="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white" aria-label="Add eggs">
+                <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
+              </button>
+            </div>
+            <div class="pt-2">
+              <p class="text-base font-semibold tabular-nums">£3.10</p>
+              <span class="mt-0.5 inline-block rounded-[2px] bg-orange-100 px-1.5 py-0.5 text-[10px] font-bold text-[var(--brand-orange)]">%12 OFF</span>
+              <h3 class="mt-0.5 text-sm font-medium leading-snug">Free Range Eggs</h3>
+              <p class="text-xs text-gray-500">Farm · 30pk</p>
+            </div>
+          </article>
+          <article class="w-[176px] shrink-0">
+            <div class="relative aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-gray-100">
+              <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&h=400&fit=crop" alt="Milk" class="size-full object-cover" />
+              <button type="button" class="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white" aria-label="Add milk">
+                <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
+              </button>
+            </div>
+            <div class="pt-2">
+              <p class="text-base font-semibold tabular-nums">£1.85</p>
+              <p class="font-mono text-[10px] uppercase tracking-wide text-gray-500">Each</p>
+              <h3 class="mt-0.5 text-sm font-medium leading-snug">Whole Milk 2L</h3>
+              <p class="text-xs text-gray-500">Dairy · 2L</p>
+            </div>
+          </article>
+          <article class="w-[176px] shrink-0">
+            <div class="relative aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-gray-100">
+              <img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&h=400&fit=crop" alt="Chicken" class="size-full object-cover" />
+              <button type="button" class="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white" aria-label="Add chicken">
+                <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
+              </button>
+            </div>
+            <div class="pt-2">
+              <p class="text-base font-semibold tabular-nums">£8.90</p>
+              <h3 class="mt-0.5 text-sm font-medium leading-snug">Chicken Breast</h3>
+              <p class="text-xs text-gray-500">Protein · 2kg</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="mb-3 flex items-end justify-between gap-3 border-b border-[var(--sidebar-border)] pb-2">
+          <h2 class="text-[15px] font-semibold tracking-tight">New arrivals</h2>
+          <a id="see-all-new" href="#all-new" class="text-xs font-semibold uppercase tracking-wide text-[var(--brand-orange)] underline-offset-4 hover:underline">See all</a>
+        </div>
+        <div class="flex gap-3">
+          <article class="w-[176px] shrink-0">
+            <div class="relative aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-gray-100">
+              <img src="https://images.unsplash.com/photo-1596040033229-a0b34b0b0b0b?w=400&h=400&fit=crop" alt="Rice" class="size-full object-cover" />
+              <button type="button" class="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white" aria-label="Add rice">
+                <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
+              </button>
+            </div>
+            <div class="pt-2">
+              <p class="text-base font-semibold tabular-nums">£12.50</p>
+              <h3 class="mt-0.5 text-sm font-medium leading-snug">Basmati Rice 10kg</h3>
+              <p class="text-xs text-gray-500">Dry · 10kg</p>
+            </div>
+          </article>
+          <article class="w-[176px] shrink-0">
+            <div class="relative aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-gray-100">
+              <img src="https://images.unsplash.com/photo-1474979266404-7ea40350644c?w=400&h=400&fit=crop" alt="Oil" class="size-full object-cover" />
+              <button type="button" class="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white" aria-label="Add oil">
+                <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
+              </button>
+            </div>
+            <div class="pt-2">
+              <p class="text-base font-semibold tabular-nums">£6.20</p>
+              <h3 class="mt-0.5 text-sm font-medium leading-snug">Sunflower Oil 5L</h3>
+              <p class="text-xs text-gray-500">Oils · 5L</p>
+            </div>
+          </article>
+          <article class="w-[176px] shrink-0">
+            <div class="relative aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-gray-100">
+              <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop" alt="Chocolate" class="size-full object-cover" />
+              <button type="button" class="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white" aria-label="Add chocolate">
+                <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
+              </button>
+            </div>
+            <div class="pt-2">
+              <p class="text-base font-semibold tabular-nums">£4.75</p>
+              <h3 class="mt-0.5 text-sm font-medium leading-snug">Dark Chocolate Case</h3>
+              <p class="text-xs text-gray-500">Dessert · Case</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

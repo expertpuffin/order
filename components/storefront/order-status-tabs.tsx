@@ -47,7 +47,7 @@ export function OrderStatusTabs({ active, preserve }: OrderStatusTabsProps) {
   }
 
   return (
-    <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+    <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
       {STATUS_VALUES.map((value) => {
         const isActive = active === value
         return (
@@ -55,10 +55,10 @@ export function OrderStatusTabs({ active, preserve }: OrderStatusTabsProps) {
             key={value || "all"}
             href={href(value)}
             className={cn(
-              "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+              "shrink-0 rounded-[2px] border px-3 py-1.5 text-xs font-medium transition-colors",
               isActive
-                ? "bg-primary text-primary-foreground"
-                : "bg-white text-[var(--brand-navy)] ring-1 ring-border hover:bg-muted/50"
+                ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
+                : "border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-muted/50"
             )}
           >
             {label(value)}

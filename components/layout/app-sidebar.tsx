@@ -324,7 +324,7 @@ export function AppSidebar({
                         } catch {
                           /* ignore */
                         }
-                        window.location.href = "/login"
+                        window.location.href = "/"
                       })()
                     }}
                   >

@@ -15,8 +15,10 @@ function DetailRow({
   value: string | null | undefined
 }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-border/60 py-3 text-sm last:border-0">
-      <span className="text-muted-foreground">{label}</span>
+    <div className="flex justify-between gap-4 border-b border-[var(--sidebar-border)] py-3 text-sm last:border-0">
+      <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+        {label}
+      </span>
       <span className="max-w-[65%] text-right font-medium text-[var(--brand-navy)]">
         {value?.trim() ? value : "—"}
       </span>
@@ -48,15 +50,21 @@ export default async function AccountPage() {
   return (
     <div className="space-y-5">
       <AccountPageHeader
+        eyebrow={t("account.sectionLabel")}
         title={t("account.title")}
         description={t("account.description")}
       />
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <section className="rounded-2xl border bg-white p-4 sm:p-6">
-          <h2 className="mb-4 text-base font-semibold text-[var(--brand-navy)]">
-            {t("account.profileTitle")}
-          </h2>
+        <section className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5">
+          <div className="mb-3 border-b border-[var(--sidebar-border)] pb-2">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              {t("account.sectionLabel")}
+            </p>
+            <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
+              {t("account.profileTitle")}
+            </h2>
+          </div>
           <DetailRow label={t("account.name")} value={user.name} />
           <DetailRow label={t("account.email")} value={user.email} />
           <DetailRow
@@ -65,10 +73,13 @@ export default async function AccountPage() {
           />
         </section>
 
-        <section className="rounded-2xl border bg-white p-4 sm:p-6">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <section className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5">
+          <div className="mb-3 flex flex-col gap-3 border-b border-[var(--sidebar-border)] pb-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h2 className="text-base font-semibold text-[var(--brand-navy)]">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                {t("account.businessSectionLabel")}
+              </p>
+              <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
                 {t("account.businessTitle")}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -96,11 +107,23 @@ export default async function AccountPage() {
               label={t("account.legalName")}
               value={business.businessName}
             />
-            <DetailRow label={t("account.businessType")} value={business.businessType} />
-            <DetailRow label={t("account.businessNumber")} value={business.businessNumber} />
+            <DetailRow
+              label={t("account.businessType")}
+              value={business.businessType}
+            />
+            <DetailRow
+              label={t("account.businessNumber")}
+              value={business.businessNumber}
+            />
             <DetailRow label={t("account.address")} value={address} />
-            <DetailRow label={t("account.contact")} value={business.contactName} />
-            <DetailRow label={t("account.contactPhone")} value={business.contactPhone} />
+            <DetailRow
+              label={t("account.contact")}
+              value={business.contactName}
+            />
+            <DetailRow
+              label={t("account.contactPhone")}
+              value={business.contactPhone}
+            />
             <DetailRow
               label={t("account.hours")}
               value={

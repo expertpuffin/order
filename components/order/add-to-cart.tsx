@@ -50,10 +50,13 @@ export function AddToCart({
     <div className="flex items-center gap-1.5">
       {!compact ? (
         <Select value={unit} onValueChange={(value) => setUnit(value ?? "EACH")}>
-          <SelectTrigger size="sm" className="w-[86px]">
+          <SelectTrigger
+            size="sm"
+            className="h-8 w-[86px] rounded-[2px] border-[var(--sidebar-border)]"
+          >
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-[2px]">
             {(packagingOptions.length ? packagingOptions : ["EACH"]).map(
               (option) => (
                 <SelectItem key={option} value={option}>
@@ -69,10 +72,15 @@ export function AddToCart({
         min={1}
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
-        className="h-8 w-[58px]"
+        className="h-8 w-[58px] rounded-[2px] border-[var(--sidebar-border)]"
         aria-label="Quantity"
       />
-      <Button size="sm" disabled={pending} onClick={add}>
+      <Button
+        size="sm"
+        disabled={pending}
+        onClick={add}
+        className="h-8 rounded-[2px] bg-[var(--brand-navy)] text-white hover:bg-[var(--brand-navy)]/90"
+      >
         <Plus />
         <span className="sr-only sm:not-sr-only sm:inline">Add</span>
       </Button>

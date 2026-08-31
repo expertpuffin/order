@@ -14,6 +14,7 @@ import { getApiBaseUrl } from "@/lib/api/config"
 import { apiFetch } from "@/lib/api/client"
 import { ApiError } from "@/lib/api/errors"
 import { mapUser } from "@/lib/mappers"
+import { FALLBACK_TEAM_ROLE_NAMES } from "@/lib/team-roles"
 import type { User } from "@/lib/types"
 
 async function persistAuthResponse(res: Response, json: {
@@ -131,6 +132,39 @@ export async function lookupPostcode(postcode: string) {
   })
 }
 
+/** GET /api/roles (fallback /api/businesses/team-roles) — names for applicant role chips. */
+export async function listTeamRoleNames(): Promise<string[]> {
+  try {
+    const data = await apiFetch<{
+      names?: string[]
+      roles?: Array<{ name?: string }>
+    }>("/api/roles")
+    if (data.names?.length) return data.names
+    const fromRoles = (data.roles ?? [])
+      .map((r) => r.name?.trim())
+      .filter((n): n is string => Boolean(n))
+    if (fromRoles.length) return fromRoles
+  } catch {
+    /* try business fallback */
+  }
+
+  try {
+    const data = await apiFetch<{
+      names?: string[]
+      roles?: Array<{ name?: string }>
+    }>("/api/businesses/team-roles")
+    if (data.names?.length) return data.names
+    const fromRoles = (data.roles ?? [])
+      .map((r) => r.name?.trim())
+      .filter((n): n is string => Boolean(n))
+    if (fromRoles.length) return fromRoles
+  } catch {
+    /* use static fallback */
+  }
+
+  return [...FALLBACK_TEAM_ROLE_NAMES]
+}
+
 export type CreateBusinessInput = {
   businessName: string
   tradingName: string
@@ -150,6 +184,13 @@ export type CreateBusinessInput = {
   mainBusinessEmail?: string
   mainBusinessPhone?: string
   isOwner?: boolean
+  ownerDetails?: {
+    firstName: string
+    lastName?: string
+    email: string
+    phone?: string | null
+  }
+  applicantRole?: string
   openTime: string
   closeTime: string
   deliveryTime?: string | null

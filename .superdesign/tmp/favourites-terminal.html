@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Favourites — Terminal (mobile parity)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+</head>
+<body>
+  <div class="min-h-[800px] w-[960px] bg-[#f7f7f8] px-6 py-5 text-[#002d62]" style="font-family: ui-sans-serif, system-ui, sans-serif;">
+    <div class="mb-5 flex items-end justify-between border-b border-[#e5e7eb] pb-4">
+      <div>
+        <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Saved</p>
+        <h1 class="text-[22px] font-semibold tracking-tight">Favourites</h1>
+        <p class="text-sm text-gray-500">3 favourite items · synced with the mobile app</p>
+      </div>
+      <a id="find-more" href="#catalog" class="inline-flex h-9 items-center rounded-[2px] border border-[#e5e7eb] bg-white px-3 text-sm font-medium">Find more products</a>
+    </div>
+
+    <div class="mb-4 flex gap-2">
+      <button type="button" class="h-9 flex-1 rounded-[2px] border border-[#e5e7eb] bg-white font-mono text-xs font-semibold uppercase tracking-wide">Expand all</button>
+      <button type="button" class="h-9 flex-1 rounded-[2px] border border-[#e5e7eb] bg-white font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">Collapse all</button>
+    </div>
+
+    <div class="space-y-2.5">
+      <button type="button" class="flex w-full items-center justify-between rounded-[2px] border border-[#e5e7eb] bg-white px-4 py-3.5 text-left">
+        <div>
+          <p class="text-[15px] font-semibold">Fresh produce</p>
+          <p class="mt-0.5 text-xs text-gray-500">2 products</p>
+        </div>
+        <iconify-icon icon="lucide:chevron-up" width="16"></iconify-icon>
+      </button>
+
+      <div class="rounded-[2px] border border-[#e5e7eb] bg-white p-3">
+        <div class="flex gap-3">
+          <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=144&h=144&fit=crop" alt="Apples" class="size-[72px] rounded-[2px] border border-[#e5e7eb] object-cover" />
+          <div class="min-w-0 flex-1">
+            <p class="font-mono text-[10px] uppercase tracking-wide text-gray-500">RL-10421</p>
+            <p class="text-sm font-semibold">Fresh Direct</p>
+            <p class="text-sm text-gray-500">Royal Gala Apples</p>
+            <p class="mt-1 text-xs text-gray-500">1kg</p>
+          </div>
+          <button type="button" class="self-start p-2 text-red-700" aria-label="Remove apples">
+            <iconify-icon icon="lucide:trash-2" width="16"></iconify-icon>
+          </button>
+        </div>
+        <p class="mb-2 mt-3 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Packaging</p>
+        <div class="flex gap-1.5">
+          <span class="rounded-[2px] border border-[#002d62] bg-[#002d62] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase text-white">Each</span>
+          <span class="rounded-[2px] border border-[#e5e7eb] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase">Pack</span>
+          <span class="rounded-[2px] border border-[#e5e7eb] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase">Box</span>
+        </div>
+        <div class="mt-3 flex items-center justify-between">
+          <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Quantity</p>
+          <div class="flex items-center gap-2">
+            <button type="button" class="flex size-8 items-center justify-center rounded-[2px] border border-[#e5e7eb]" aria-label="Decrease apples"><iconify-icon icon="lucide:minus" width="14"></iconify-icon></button>
+            <span class="min-w-[28px] text-center text-base font-semibold">2</span>
+            <button type="button" class="flex size-8 items-center justify-center rounded-[2px] border border-[#e5e7eb]" aria-label="Increase apples"><iconify-icon icon="lucide:plus" width="14"></iconify-icon></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-[2px] border border-[#e5e7eb] bg-white p-3">
+        <div class="flex gap-3">
+          <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=144&h=144&fit=crop" alt="Milk" class="size-[72px] rounded-[2px] border border-[#e5e7eb] object-cover" />
+          <div class="min-w-0 flex-1">
+            <p class="font-mono text-[10px] uppercase tracking-wide text-gray-500">RL-22011</p>
+            <p class="text-sm font-semibold">Dairy Co</p>
+            <p class="text-sm text-gray-500">Whole Milk 2L</p>
+          </div>
+          <button type="button" class="self-start p-2 text-red-700" aria-label="Remove milk">
+            <iconify-icon icon="lucide:trash-2" width="16"></iconify-icon>
+          </button>
+        </div>
+        <p class="mb-2 mt-3 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Packaging</p>
+        <div class="flex gap-1.5">
+          <span class="rounded-[2px] border border-[#002d62] bg-[#002d62] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase text-white">Each</span>
+          <span class="rounded-[2px] border border-[#e5e7eb] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase">Box</span>
+        </div>
+        <div class="mt-3 flex items-center justify-between">
+          <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Quantity</p>
+          <div class="flex items-center gap-2">
+            <button type="button" class="flex size-8 items-center justify-center rounded-[2px] border border-[#e5e7eb]" aria-label="Decrease milk"><iconify-icon icon="lucide:minus" width="14"></iconify-icon></button>
+            <span class="min-w-[28px] text-center text-base font-semibold">1</span>
+            <button type="button" class="flex size-8 items-center justify-center rounded-[2px] border border-[#e5e7eb]" aria-label="Increase milk"><iconify-icon icon="lucide:plus" width="14"></iconify-icon></button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="flex w-full items-center justify-between rounded-[2px] border border-[#e5e7eb] bg-white px-4 py-3.5 text-left">
+        <div>
+          <p class="text-[15px] font-semibold">Dry goods</p>
+          <p class="mt-0.5 text-xs text-gray-500">1 product</p>
+        </div>
+        <iconify-icon icon="lucide:chevron-down" width="16"></iconify-icon>
+      </button>
+    </div>
+
+    <div class="mt-4 flex gap-2 rounded-[2px] border border-[#e5e7eb] bg-white p-3">
+      <button type="button" class="flex h-11 flex-1 items-center justify-center gap-2 rounded-[2px] border border-[#f58220]/50 font-semibold">
+        <iconify-icon icon="lucide:shopping-cart" width="16"></iconify-icon> Add all
+      </button>
+      <button type="button" class="flex h-11 flex-1 items-center justify-center gap-2 rounded-[2px] bg-[#f58220] font-semibold text-white">
+        <iconify-icon icon="lucide:check" width="16"></iconify-icon> Place order
+      </button>
+    </div>
+  </div>
+</body>
+</html>

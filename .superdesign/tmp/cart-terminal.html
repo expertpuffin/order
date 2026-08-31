@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart — Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+</head>
+<body>
+  <div class="min-h-[900px] w-[1100px] bg-[#f7f7f8] px-6 py-5 text-[#002d62]" style="font-family: ui-sans-serif, system-ui, sans-serif;">
+    <div class="mb-5 flex items-end justify-between border-b border-[#e5e7eb] pb-4">
+      <div>
+        <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Basket</p>
+        <h1 class="text-[22px] font-semibold tracking-tight">Cart</h1>
+        <p class="text-sm text-gray-500">Your cart stays synced across all your devices.</p>
+      </div>
+      <a id="continue-shopping" href="#catalog" class="inline-flex h-9 items-center rounded-[2px] border border-[#e5e7eb] bg-white px-3 text-sm font-medium">Continue shopping</a>
+    </div>
+    <div class="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div class="rounded-[2px] border border-[#e5e7eb] bg-white p-5">
+        <div class="mb-3 flex items-baseline justify-between border-b border-[#e5e7eb] pb-2">
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">Basket</p>
+            <h2 class="text-[15px] font-semibold">Items</h2>
+          </div>
+          <span class="font-mono text-[10px] uppercase text-gray-500">2 lines</span>
+        </div>
+        <div class="flex gap-3 border-b border-[#e5e7eb] py-4">
+          <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=112&h=112&fit=crop" alt="Apples" class="size-14 rounded-[2px] border border-[#e5e7eb] object-cover" />
+          <div class="flex-1">
+            <p class="text-sm font-medium">Royal Gala Apples</p>
+            <p class="font-mono text-[10px] uppercase tracking-wide text-gray-500">Fresh · 1kg</p>
+            <div class="mt-2 inline-flex overflow-hidden rounded-[2px] border border-[#e5e7eb]">
+              <button type="button" class="flex size-8 items-center justify-center" aria-label="Decrease"><iconify-icon icon="lucide:minus" width="14"></iconify-icon></button>
+              <span class="flex min-w-8 items-center justify-center border-x border-[#e5e7eb] text-sm font-semibold">2</span>
+              <button type="button" class="flex size-8 items-center justify-center" aria-label="Increase"><iconify-icon icon="lucide:plus" width="14"></iconify-icon></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-[2px] border border-[#e5e7eb] bg-white p-5">
+        <div class="mb-4 border-b border-[#e5e7eb] pb-2">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">Order</p>
+          <h2 class="text-[15px] font-semibold">Checkout</h2>
+        </div>
+        <div class="mb-4 grid grid-cols-2 gap-2">
+          <button type="button" class="rounded-[2px] border border-[#002d62] bg-[#002d62] py-3 text-sm font-medium text-white">Delivery</button>
+          <button type="button" class="rounded-[2px] border border-[#e5e7eb] py-3 text-sm font-medium">Collection</button>
+        </div>
+        <button type="button" class="h-11 w-full rounded-[2px] bg-[#002d62] text-sm font-semibold text-white">Place order</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

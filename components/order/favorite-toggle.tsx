@@ -26,10 +26,11 @@ export function FavoriteToggle({
 
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="icon-sm"
       disabled={isPending}
       aria-label={favorited ? "Remove from favourites" : "Add to favourites"}
+      className="size-8 rounded-[2px] border-[var(--sidebar-border)]"
       onClick={() =>
         startTransition(async () => {
           setOptimistic(!favorited)
@@ -46,7 +47,10 @@ export function FavoriteToggle({
     >
       <Star
         className={cn(
-          optimistic ? "fill-orange-500 text-orange-500" : "text-muted-foreground"
+          "size-4",
+          optimistic
+            ? "fill-[var(--brand-navy)] text-[var(--brand-navy)]"
+            : "text-muted-foreground"
         )}
       />
     </Button>

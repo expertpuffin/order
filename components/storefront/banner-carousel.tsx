@@ -13,7 +13,7 @@ type BannerCarouselProps = {
   fallbackSubtitle: string
 }
 
-const GAP_PX = 12
+const GAP_PX = 0
 const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1544025162-d76694265947?w=1200&h=480&fit=crop",
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=480&fit=crop",
@@ -43,7 +43,7 @@ function SlideCard({
 
   const card = (
     <div
-      className="relative h-[168px] shrink-0 overflow-hidden rounded-2xl sm:h-[200px]"
+      className="relative h-[168px] shrink-0 overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] sm:h-[200px]"
       style={{ width: width > 0 ? width : "100%" }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -56,21 +56,21 @@ function SlideCard({
           if (src !== fallback) setSrc(fallback)
         }}
       />
-      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/50 via-black/20 to-black/5" />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[var(--brand-navy)]/80 via-[var(--brand-navy)]/35 to-transparent" />
       {(slide.title || slide.body || slide.ctaLabel) && (
         <div className="relative z-[2] flex h-full flex-col justify-end p-4 sm:p-5">
           {slide.title ? (
-            <p className="text-lg font-bold leading-tight text-white drop-shadow sm:text-xl">
+            <p className="text-lg font-semibold leading-tight tracking-tight text-white sm:text-xl">
               {slide.title}
             </p>
           ) : null}
           {slide.body ? (
-            <p className="mt-1 line-clamp-2 text-sm text-white/90 drop-shadow">
+            <p className="mt-1 line-clamp-2 text-sm text-white/85">
               {slide.body}
             </p>
           ) : null}
           {slide.ctaLabel ? (
-            <span className="mt-3 inline-flex w-fit rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+            <span className="mt-3 inline-flex w-fit rounded-[2px] bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
               {slide.ctaLabel}
             </span>
           ) : null}
@@ -115,11 +115,8 @@ export function BannerCarousel({
   const [viewportWidth, setViewportWidth] = useState(0)
   const [index, setIndex] = useState(0)
 
-  const slidesPerView = viewportWidth >= 640 ? 2 : 1
-  const slideWidth =
-    viewportWidth > 0
-      ? (viewportWidth - GAP_PX * (slidesPerView - 1)) / slidesPerView
-      : 0
+  const slidesPerView = 1
+  const slideWidth = viewportWidth > 0 ? viewportWidth : 0
   const maxIndex = Math.max(0, slides.length - slidesPerView)
 
   const clampIndex = useCallback(
@@ -162,7 +159,7 @@ export function BannerCarousel({
 
   return (
     <div className="relative">
-      <div ref={viewportRef} className="overflow-hidden rounded-2xl">
+      <div ref={viewportRef} className="overflow-hidden rounded-[2px]">
         <div
           className="flex transition-transform duration-300 ease-out"
           style={{
@@ -187,7 +184,7 @@ export function BannerCarousel({
             type="button"
             onClick={() => go(-1)}
             disabled={index <= 0}
-            className="absolute top-1/2 left-2 z-10 hidden size-9 -translate-y-1/2 items-center justify-center rounded-full border bg-white/95 shadow disabled:opacity-40 sm:flex"
+            className="absolute top-1/2 left-2 z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40 sm:flex"
             aria-label="Previous"
           >
             <ChevronLeft className="size-4" />
@@ -196,12 +193,12 @@ export function BannerCarousel({
             type="button"
             onClick={() => go(1)}
             disabled={index >= maxIndex}
-            className="absolute top-1/2 right-2 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border bg-white/95 shadow disabled:opacity-40"
+            className="absolute top-1/2 right-2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40"
             aria-label="Next"
           >
             <ChevronRight className="size-4" />
           </button>
-          <div className="mt-3 flex justify-center gap-1.5">
+          <div className="mt-3 flex justify-center gap-1">
             {slides.map((slide, i) => (
               <button
                 key={slide.id}
@@ -209,8 +206,8 @@ export function BannerCarousel({
                 aria-label={`Slide ${i + 1}`}
                 onClick={() => setIndex(clampIndex(i))}
                 className={cn(
-                  "size-2 rounded-full transition-colors",
-                  i >= index && i < index + slidesPerView
+                  "h-1 w-4 rounded-[1px] transition-colors",
+                  i === index
                     ? "bg-[var(--brand-navy)]"
                     : "bg-muted-foreground/30"
                 )}

@@ -116,13 +116,14 @@ export async function apiFetch<T>(
   const json = (await res.json().catch(() => null)) as {
     success?: boolean
     message?: string
+    error?: string
     errors?: string[]
     data?: T
   } | null
 
   if (!res.ok || json?.success === false) {
     throw new ApiError(
-      json?.message || `Request failed (${res.status})`,
+      json?.message || json?.error || `Request failed (${res.status})`,
       res.status,
       json?.errors
     )

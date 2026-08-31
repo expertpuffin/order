@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 
 import { AuthGateProvider } from "@/components/storefront/auth-gate"
 import { StorefrontTopBar } from "@/components/storefront/storefront-top-bar"
+import { authGateHref } from "@/lib/auth-gate-url"
 import { getStorefrontSession } from "@/lib/storefront-session"
 
 export default async function AccountLayout({
@@ -10,7 +11,7 @@ export default async function AccountLayout({
   children: React.ReactNode
 }) {
   const session = await getStorefrontSession()
-  if (!session.user) redirect("/login")
+  if (!session.user) redirect(authGateHref({ tab: "login", next: "/account" }))
   if (!session.businessId) redirect("/onboarding")
 
   return (

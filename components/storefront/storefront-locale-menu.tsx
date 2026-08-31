@@ -17,24 +17,45 @@ const OPTIONS: { value: Locale; label: string }[] = [
   { value: "en", label: "EN" },
 ]
 
-export function StorefrontLocaleMenu({ className }: { className?: string }) {
+type StorefrontLocaleMenuProps = {
+  className?: string
+  variant?: "default" | "rail"
+}
+
+export function StorefrontLocaleMenu({
+  className,
+  variant = "default",
+}: StorefrontLocaleMenuProps) {
   const { locale, setLocale, t } = useI18n()
   const active = OPTIONS.find((o) => o.value === locale) ?? OPTIONS[0]
+  const rail = variant === "rail"
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "inline-flex h-10 items-center gap-1.5 rounded-lg px-2 text-sm font-medium text-[var(--brand-navy)] outline-none hover:bg-muted/60 data-open:bg-muted/60",
+          "outline-none",
+          rail
+            ? "inline-flex h-9 w-10 items-center justify-center text-sm font-medium text-[var(--brand-navy)] transition-colors hover:bg-muted/60 data-open:bg-muted/60"
+            : "inline-flex h-10 items-center gap-1.5 rounded-lg px-2 text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/60 data-open:bg-muted/60",
           className
         )}
         aria-label={t("common.language")}
       >
-        <Globe className="size-[18px] stroke-[1.75]" />
-        <span>{active.label}</span>
-        <ChevronDown className="size-4 text-primary" />
+        {rail ? (
+          <span>{active.label}</span>
+        ) : (
+          <>
+            <Globe className="size-[18px] stroke-[1.75]" />
+            <span>{active.label}</span>
+            <ChevronDown className="size-4 text-primary" />
+          </>
+        )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-28 rounded-xl p-1">
+      <DropdownMenuContent
+        align="end"
+        className={cn("min-w-28 p-1", rail ? "rounded-[2px]" : "rounded-xl")}
+      >
         {OPTIONS.map((opt) => (
           <DropdownMenuItem
             key={opt.value}

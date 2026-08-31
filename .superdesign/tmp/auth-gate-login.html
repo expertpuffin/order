@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auth Gate — Sign in</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+</head>
+<body>
+  <div class="flex min-h-[640px] w-[480px] items-center justify-center bg-black/20 p-8" style="font-family: ui-sans-serif, system-ui, sans-serif;">
+    <div class="w-full max-w-md overflow-hidden rounded-[2px] border border-[#e5e7eb] bg-white text-[#002d62] shadow-lg">
+      <div class="relative space-y-1 border-b border-[#e5e7eb] px-5 py-4">
+        <button type="button" class="absolute top-3 right-3 flex size-8 items-center justify-center text-gray-500" aria-label="Close dialog">
+          <iconify-icon icon="lucide:x" width="16"></iconify-icon>
+        </button>
+        <div class="mb-2 flex items-center gap-2">
+          <img src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/63e54a69-ecd4-416d-87a7-7936aa58bf5e/brand-assets/public-icon.png/icon.png" alt="Restoloop" class="size-6 object-contain" />
+          <span class="text-sm font-semibold tracking-tight">Restoloop</span>
+        </div>
+        <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Account</p>
+        <h2 class="text-[15px] font-semibold tracking-tight">Sign in</h2>
+        <p class="text-xs text-gray-500">Sign in or create an account to add products and place orders.</p>
+      </div>
+      <div class="grid grid-cols-2 border-b border-[#e5e7eb] bg-gray-50">
+        <button type="button" class="bg-[#002d62] py-2.5 text-sm font-medium text-white">Sign in</button>
+        <button type="button" class="py-2.5 text-sm font-medium text-[#002d62]">Sign up</button>
+      </div>
+      <form class="space-y-3.5 p-5" action="#signin" method="get">
+        <div class="space-y-1.5">
+          <label for="login-email" class="block text-[11px] font-medium uppercase tracking-wide text-gray-500">Email</label>
+          <input id="login-email" type="email" class="h-10 w-full rounded-[2px] border border-[#e5e7eb] px-2.5 text-sm outline-none focus:border-[#002d62]" />
+        </div>
+        <div class="space-y-1.5">
+          <label for="login-password" class="block text-[11px] font-medium uppercase tracking-wide text-gray-500">Password</label>
+          <input id="login-password" type="password" class="h-10 w-full rounded-[2px] border border-[#e5e7eb] px-2.5 text-sm outline-none focus:border-[#002d62]" />
+        </div>
+        <button type="submit" class="h-11 w-full rounded-[2px] bg-[#002d62] text-sm font-semibold text-white">Sign in</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -37,7 +37,10 @@ export function BusinessSwitcher({
             size="sm"
             variant={active ? "default" : "outline"}
             disabled={pending || active}
-            className={cn("rounded-full", active && "pointer-events-none")}
+            className={cn(
+              "rounded-[2px]",
+              active && "pointer-events-none bg-[var(--brand-navy)] text-white hover:bg-[var(--brand-navy)]"
+            )}
             onClick={() => {
               startTransition(async () => {
                 await switchBusinessAction(business.id)

@@ -10,19 +10,20 @@ import {
   isAccessTokenExpired,
 } from "@/lib/auth/refresh"
 import { edgeWaf, withSecurityHeaders } from "@/lib/edge-waf"
+import { authGateHref } from "@/lib/auth-gate-url"
 
 const PUBLIC_PATHS = [
   "/",
   "/catalog",
-  "/login",
-  "/register",
   "/verify-email",
   "/onboarding",
 ]
 
 function isPublic(pathname: string) {
+  if (pathname.startsWith("/products/")) return true
   return PUBLIC_PATHS.some(
-    (p) => p === "/" ? pathname === "/" : pathname === p || pathname.startsWith(`${p}/`)
+    (p) =>
+      p === "/" ? pathname === "/" : pathname === p || pathname.startsWith(`${p}/`)
   )
 }
 
@@ -40,28 +41,32 @@ export async function proxy(request: NextRequest) {
     return withSecurityHeaders(NextResponse.next())
   }
 
+  // Legacy standalone auth pages → home modal
+  if (pathname === "/login" || pathname === "/register") {
+    const tab = pathname === "/register" ? "register" : "login"
+    const next = request.nextUrl.searchParams.get("next") || undefined
+    return withSecurityHeaders(
+      NextResponse.redirect(new URL(authGateHref({ tab, next }), request.url))
+    )
+  }
+
   let access = request.cookies.get(ACCESS_COOKIE)?.value ?? null
   const refresh = request.cookies.get(REFRESH_COOKIE)?.value ?? null
 
-  // Why: cookie may still exist while JWT is expired; also refresh before skew window
   const needsRefresh = Boolean(refresh) && isAccessTokenExpired(access)
 
   if (needsRefresh && refresh) {
     const session = await callRefreshApi(refresh)
     if (session) {
       access = session.accessToken
-      const response =
-        pathname === "/login" || pathname === "/register"
-          ? NextResponse.redirect(new URL("/", request.url))
-          : NextResponse.next()
+      const response = NextResponse.next()
       applySessionToResponseCookies(response, session)
       return withSecurityHeaders(response)
     }
-    // Refresh failed — clear stale cookies and fall through to login redirect
     if (!isPublic(pathname) && pathname !== "/") {
-      const loginUrl = new URL("/login", request.url)
-      loginUrl.searchParams.set("next", pathname)
-      const response = NextResponse.redirect(loginUrl)
+      const response = NextResponse.redirect(
+        new URL(authGateHref({ tab: "login", next: pathname }), request.url)
+      )
       response.cookies.set(ACCESS_COOKIE, "", { path: "/", maxAge: 0 })
       response.cookies.set(REFRESH_COOKIE, "", { path: "/", maxAge: 0 })
       return withSecurityHeaders(response)
@@ -69,22 +74,13 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!access && !isPublic(pathname) && pathname !== "/") {
-    const loginUrl = new URL("/login", request.url)
-    loginUrl.searchParams.set("next", pathname)
-    return withSecurityHeaders(NextResponse.redirect(loginUrl))
-  }
-
-  if (
-    access &&
-    !isAccessTokenExpired(access) &&
-    (pathname === "/login" || pathname === "/register")
-  ) {
     return withSecurityHeaders(
-      NextResponse.redirect(new URL("/", request.url))
+      NextResponse.redirect(
+        new URL(authGateHref({ tab: "login", next: pathname }), request.url)
+      )
     )
   }
 
-  // Expose pathname to RSC (dashboard layout refresh redirect)
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set("x-pathname", pathname)
   return withSecurityHeaders(

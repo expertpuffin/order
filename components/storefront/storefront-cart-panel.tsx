@@ -2,13 +2,15 @@
 
 import Link from "next/link"
 import { useTransition } from "react"
-import { Minus, Plus, ShoppingBasket } from "lucide-react"
+import { Minus, Plus } from "lucide-react"
 
 import {
   removeCartItemAction,
   updateCartItemAction,
 } from "@/lib/actions"
 import { notifyActionResult } from "@/lib/action-toast"
+import { EmptyState } from "@/components/brand/empty-state"
+import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { useT } from "@/components/i18n/i18n-provider"
 import { useAuthGate } from "@/components/storefront/auth-gate"
 import type { CartLine } from "@/lib/api/cart"
@@ -39,8 +41,10 @@ export function StorefrontCartPanel({
   const money = (n: number) =>
     currency === "GBP" ? `£${n.toFixed(2)}` : `${n.toFixed(2)} ${currency}`
 
+  const itemCount = lines.reduce((sum, line) => sum + line.quantity, 0)
+
   const bump = (line: CartLine, delta: number) => {
-    if (!businessId) return
+    if (!businessId || pending) return
     const next = line.quantity + delta
     startTransition(async () => {
       if (next < 1) {
@@ -58,30 +62,40 @@ export function StorefrontCartPanel({
   }
 
   return (
-    <aside className={cn("flex h-full flex-col border-l bg-white", className)}>
-      <div className="border-b px-4 py-4">
-        <h2 className="text-base font-semibold text-[var(--brand-navy)]">
-          {t("storefront.yourCart")}
-        </h2>
-      </div>
+    <aside
+      className={cn(
+        "flex h-full min-h-0 flex-col bg-background text-[var(--brand-navy)]",
+        className
+      )}
+    >
+      <header className="shrink-0 border-b border-[var(--sidebar-border)] px-4 py-3.5">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
+            {t("storefront.yourCart")}
+          </h2>
+          {lines.length > 0 ? (
+            <span className="text-xs font-medium tabular-nums text-muted-foreground">
+              {t("storefront.cartItems", { count: String(itemCount) })}
+            </span>
+          ) : null}
+        </div>
+      </header>
 
-      <div className="flex-1 overflow-y-auto px-3 py-3">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
         {lines.length === 0 ? (
-          <div className="flex h-full min-h-40 flex-col items-center justify-center gap-3 px-4 text-center">
-            <ShoppingBasket className="size-10 text-muted-foreground/50" />
-            <p className="text-sm text-muted-foreground">
-              {t("storefront.cartEmpty")}
-            </p>
-          </div>
+          <EmptyState
+            compact
+            icon={PUFFIN_ICONS.emptyCart}
+            eyebrow={t("storefront.yourCart")}
+            title={t("storefront.cartEmpty")}
+            className="h-full min-h-[12rem] justify-center"
+          />
         ) : (
-          <ul className="space-y-3">
+          <ul className="divide-y divide-[var(--sidebar-border)]">
             {lines.map((line) => (
-              <li
-                key={line.id}
-                className="rounded-xl border p-3"
-              >
-                <div className="flex gap-2">
-                  <div className="size-12 shrink-0 overflow-hidden rounded-lg border bg-muted/40">
+              <li key={line.id} className="px-4 py-3.5">
+                <div className="flex gap-3">
+                  <div className="size-11 shrink-0 overflow-hidden border border-[var(--sidebar-border)] bg-muted/30">
                     {line.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -89,47 +103,71 @@ export function StorefrontCartPanel({
                         alt=""
                         className="size-full object-cover"
                       />
-                    ) : null}
+                    ) : (
+                      <div
+                        className="flex size-full items-center justify-center text-[10px] font-semibold uppercase text-muted-foreground"
+                        aria-hidden
+                      >
+                        {line.name.slice(0, 2)}
+                      </div>
+                    )}
                   </div>
+
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{line.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {line.unit}
-                      {line.unitPrice != null
-                        ? ` · ${money(line.unitPrice)}`
-                        : null}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    <Button
-                      type="button"
-                      size="icon-sm"
-                      variant="outline"
-                      disabled={pending}
-                      onClick={() => bump(line, -1)}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium leading-snug text-[var(--brand-navy)]">
+                          {line.name}
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {line.unit}
+                          {line.unitPrice != null
+                            ? ` · ${money(line.unitPrice)}`
+                            : null}
+                        </p>
+                      </div>
+                      {line.unitPrice != null ? (
+                        <span className="shrink-0 text-sm font-semibold tabular-nums text-[var(--brand-navy)]">
+                          {money(line.unitPrice * line.quantity)}
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div
+                      className="mt-2.5 inline-flex overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]"
+                      role="group"
+                      aria-label={line.name}
                     >
-                      <Minus className="size-3.5" />
-                    </Button>
-                    <span className="w-8 text-center text-sm font-semibold tabular-nums">
-                      {line.quantity}
-                    </span>
-                    <Button
-                      type="button"
-                      size="icon-sm"
-                      variant="outline"
-                      disabled={pending}
-                      onClick={() => bump(line, 1)}
-                    >
-                      <Plus className="size-3.5" />
-                    </Button>
+                      <Button
+                        type="button"
+                        size="icon-sm"
+                        variant="ghost"
+                        className="size-8 rounded-none border-r border-[var(--sidebar-border)] hover:bg-muted/60"
+                        disabled={pending}
+                        aria-label={`− ${line.name}`}
+                        onClick={() => bump(line, -1)}
+                      >
+                        <Minus className="size-3.5" />
+                      </Button>
+                      <span
+                        className="flex min-w-9 items-center justify-center bg-background text-sm font-semibold tabular-nums"
+                        aria-live="polite"
+                      >
+                        {line.quantity}
+                      </span>
+                      <Button
+                        type="button"
+                        size="icon-sm"
+                        variant="ghost"
+                        className="size-8 rounded-none border-l border-[var(--sidebar-border)] hover:bg-muted/60"
+                        disabled={pending}
+                        aria-label={`+ ${line.name}`}
+                        onClick={() => bump(line, 1)}
+                      >
+                        <Plus className="size-3.5" />
+                      </Button>
+                    </div>
                   </div>
-                  {line.unitPrice != null ? (
-                    <span className="text-sm font-semibold tabular-nums">
-                      {money(line.unitPrice * line.quantity)}
-                    </span>
-                  ) : null}
                 </div>
               </li>
             ))}
@@ -137,18 +175,24 @@ export function StorefrontCartPanel({
         )}
       </div>
 
-      <div className="space-y-3 border-t p-4">
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">{t("storefront.subtotal")}</span>
-          <span className="font-medium tabular-nums">{money(subtotal)}</span>
-        </div>
-        <div className="flex justify-between text-base font-semibold">
-          <span>{t("storefront.total")}</span>
-          <span className="tabular-nums">{money(subtotal)}</span>
-        </div>
+      <footer className="shrink-0 border-t border-[var(--sidebar-border)] bg-background px-4 py-4">
+        <dl className="space-y-1.5 text-sm">
+          <div className="flex justify-between gap-4 text-muted-foreground">
+            <dt>{t("storefront.subtotal")}</dt>
+            <dd className="font-medium tabular-nums text-[var(--brand-navy)]">
+              {money(subtotal)}
+            </dd>
+          </div>
+          <div className="flex justify-between gap-4 border-t border-[var(--sidebar-border)] pt-2 text-base font-semibold text-[var(--brand-navy)]">
+            <dt>{t("storefront.total")}</dt>
+            <dd className="tabular-nums">{money(subtotal)}</dd>
+          </div>
+        </dl>
+
         <Button
-          className="h-12 w-full rounded-xl text-base font-semibold"
-          disabled={lines.length === 0 && canOrder}
+          className="mt-4 h-11 w-full rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+          disabled={(lines.length === 0 && canOrder) || pending}
+          data-state={pending ? "loading" : undefined}
           onClick={() => {
             if (!isAuthenticated) {
               openAuthGate({ intent: "checkout", tab: "login" })
@@ -157,17 +201,18 @@ export function StorefrontCartPanel({
             requestCheckout()
           }}
         >
-          {t("storefront.confirmCart")}
+          {pending ? t("common.saving") : t("storefront.confirmCart")}
         </Button>
+
         {canOrder && lines.length > 0 ? (
           <Link
             href="/cart"
-            className="block w-full rounded-lg py-2 text-center text-sm font-medium text-primary hover:underline"
+            className="mt-2 block py-2 text-center text-sm font-medium text-[var(--brand-navy)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
           >
             {t("storefront.fullCheckout")}
           </Link>
         ) : null}
-      </div>
+      </footer>
     </aside>
   )
 }

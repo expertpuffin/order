@@ -30,6 +30,65 @@ export type CatalogProduct = {
   offerIdsByUnit: Record<string, string>
 }
 
+export type CatalogProductImage = {
+  url: string
+  alt: string | null
+}
+
+export type CatalogProductPackaging = {
+  type: string
+  barcode: string | null
+}
+
+export type CatalogAllergenChip = {
+  label: string
+}
+
+export type CatalogNutrition = {
+  basis: "per100g" | "perServing"
+  basisUnit: "g" | "ml"
+  notOnPack: boolean
+  energyKcal: number | null
+  fat: number | null
+  protein: number | null
+  carbohydrate: number | null
+  sugars: number | null
+  fibre: number | null
+  salt: number | null
+  saturates: number | null
+  units: {
+    fat: string
+    protein: string
+    carbohydrate: string
+    sugars: string
+    fibre: string
+    salt: string
+    saturates: string
+  }
+  extras: Array<{ label: string; value: number | null; unit: string }>
+}
+
+/** Tam ürün detayı — GET /api/products/by-code/:itemCode */
+export type CatalogProductDetail = CatalogProduct & {
+  longDescription: string | null
+  ingredients: string | null
+  ingredientsNotApplicable: boolean
+  allergens: string | null
+  allergenChips: CatalogAllergenChip[]
+  allergensNone: boolean
+  allergensNotApplicable: boolean
+  nutrition: CatalogNutrition | null
+  nutritionNote: string | null
+  storage: string | null
+  barcode: string | null
+  packagingCodes: Record<string, string | null>
+  packagings: CatalogProductPackaging[]
+  images: CatalogProductImage[]
+  categoryName: string | null
+  unitOfMeasure: string | null
+  usageTags: string[]
+}
+
 export type CatalogCategory = {
   id: string
   name: string
@@ -148,6 +207,123 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
   }
 }
 
+function numOrNull(value: unknown): number | null {
+  const n = Number(value)
+  return Number.isFinite(n) ? n : null
+}
+
+function mapNutrition(raw: unknown): CatalogNutrition | null {
+  if (!raw || typeof raw !== "object") return null
+  const n = raw as Record<string, unknown>
+  const unitsRaw = (n.units ?? {}) as Record<string, unknown>
+  const extrasRaw = Array.isArray(n.extras) ? n.extras : []
+  return {
+    basis: n.basis === "perServing" ? "perServing" : "per100g",
+    basisUnit: n.basisUnit === "ml" ? "ml" : "g",
+    notOnPack: Boolean(n.notOnPack),
+    energyKcal: numOrNull(n.energyKcal),
+    fat: numOrNull(n.fat),
+    protein: numOrNull(n.protein),
+    carbohydrate: numOrNull(n.carbohydrate),
+    sugars: numOrNull(n.sugars),
+    fibre: numOrNull(n.fibre),
+    salt: numOrNull(n.salt),
+    saturates: numOrNull(n.saturates),
+    units: {
+      fat: String(unitsRaw.fat ?? "g"),
+      protein: String(unitsRaw.protein ?? "g"),
+      carbohydrate: String(unitsRaw.carbohydrate ?? "g"),
+      sugars: String(unitsRaw.sugars ?? "g"),
+      fibre: String(unitsRaw.fibre ?? "g"),
+      salt: String(unitsRaw.salt ?? "g"),
+      saturates: String(unitsRaw.saturates ?? "g"),
+    },
+    extras: extrasRaw
+      .filter((row) => row && typeof row === "object")
+      .map((row) => {
+        const r = row as Record<string, unknown>
+        return {
+          label: String(r.label ?? ""),
+          value: numOrNull(r.value),
+          unit: String(r.unit ?? "g"),
+        }
+      })
+      .filter((row) => row.label),
+  }
+}
+
+function mapCatalogProductDetail(
+  raw: Record<string, unknown>
+): CatalogProductDetail {
+  const base = mapCatalogProduct(raw)
+  const packagings = Array.isArray(raw.packagings)
+    ? (raw.packagings as Record<string, unknown>[]).map((pack) => ({
+        type: String(pack.type ?? "EACH").toUpperCase(),
+        barcode: (pack.barcode as string | null) ?? null,
+      }))
+    : []
+  const packagingCodesRaw = (raw.packagingCodes ?? {}) as Record<
+    string,
+    unknown
+  >
+  const packagingCodes: Record<string, string | null> = {}
+  for (const [key, value] of Object.entries(packagingCodesRaw)) {
+    packagingCodes[key.toUpperCase()] =
+      value != null && value !== "" ? String(value) : null
+  }
+  const images = (Array.isArray(raw.images) ? raw.images : [])
+    .map((img) => {
+      const row = img as Record<string, unknown>
+      const url = resolveMediaUrl((row.url as string | null) ?? null)
+      if (!url) return null
+      return {
+        url,
+        alt: (row.alt as string | null) ?? null,
+      }
+    })
+    .filter(Boolean) as CatalogProductImage[]
+  const mainCategory = raw.mainCategory as Record<string, unknown> | null
+  const categoryPath = Array.isArray(raw.categoryPath)
+    ? (raw.categoryPath as Record<string, unknown>[])
+    : []
+  const categoryName =
+    (mainCategory?.name as string | undefined) ||
+    (categoryPath[0]?.name as string | undefined) ||
+    null
+
+  return {
+    ...base,
+    imageUrl: resolveMediaUrl(base.imageUrl),
+    longDescription: (raw.longDescription as string | null) ?? null,
+    ingredients: (raw.ingredients as string | null) ?? null,
+    ingredientsNotApplicable: Boolean(raw.ingredientsNotApplicable),
+    allergens: (raw.allergens as string | null) ?? null,
+    allergenChips: Array.isArray(raw.allergenChips)
+      ? raw.allergenChips
+          .map((chip) => {
+            const c = chip as Record<string, unknown>
+            const label = String(c.label ?? "").trim()
+            return label ? { label } : null
+          })
+          .filter(Boolean) as CatalogAllergenChip[]
+      : [],
+    allergensNone: Boolean(raw.allergensNone),
+    allergensNotApplicable: Boolean(raw.allergensNotApplicable),
+    nutrition: mapNutrition(raw.nutrition),
+    nutritionNote: (raw.nutritionNote as string | null) ?? null,
+    storage: (raw.storage as string | null) ?? null,
+    barcode: (raw.barcode as string | null) ?? null,
+    packagingCodes,
+    packagings,
+    images,
+    categoryName,
+    unitOfMeasure: (raw.unitOfMeasure as string | null) ?? null,
+    usageTags: Array.isArray(raw.usageTags)
+      ? raw.usageTags.map((tag) => String(tag)).filter(Boolean)
+      : [],
+  }
+}
+
 export async function listProducts(params?: {
   q?: string
   categorySlug?: string
@@ -167,6 +343,37 @@ export async function listProducts(params?: {
   return {
     products: (data.products ?? []).map(mapCatalogProduct),
     pagination: data.pagination,
+  }
+}
+
+export async function getProductByItemCode(
+  itemCode: string
+): Promise<CatalogProductDetail | null> {
+  try {
+    const code = decodeURIComponent(itemCode).trim().toUpperCase()
+    if (!code) return null
+    const data = await apiFetch<{ product: Record<string, unknown> }>(
+      `/api/products/by-code/${encodeURIComponent(code)}`,
+      { auth: false }
+    )
+    if (!data.product) return null
+    return mapCatalogProductDetail(data.product)
+  } catch {
+    return null
+  }
+}
+
+/** @deprecated Prefer getProductByItemCode for storefront URLs */
+export async function getProduct(id: string): Promise<CatalogProductDetail | null> {
+  try {
+    const data = await apiFetch<{ product: Record<string, unknown> }>(
+      `/api/products/${encodeURIComponent(id)}`,
+      { auth: false }
+    )
+    if (!data.product) return null
+    return mapCatalogProductDetail(data.product)
+  } catch {
+    return null
   }
 }
 

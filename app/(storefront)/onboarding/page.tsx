@@ -1,17 +1,26 @@
 import { redirect } from "next/navigation"
 
 import { getSessionUser } from "@/lib/api/auth"
+import { authGateHref } from "@/lib/auth-gate-url"
 import { fetchMeExtended, getMyBusinessesSafe } from "@/lib/onboarding-routing"
+import { OnboardingShell } from "@/components/onboarding/onboarding-shell"
 import { OnboardingVerifyForm } from "@/components/onboarding/verify-form"
 import { OnboardingAcquisitionForm } from "@/components/onboarding/acquisition-form"
+import { getTranslator } from "@/lib/i18n"
 
 export default async function OnboardingPage() {
   const user = await getSessionUser()
-  if (!user) redirect("/login?next=/onboarding")
+  if (!user) redirect(authGateHref({ tab: "login", next: "/onboarding" }))
+
+  const { t } = await getTranslator()
 
   if (!user.isEmailVerified) {
     return (
-      <OnboardingShell title="Verify email">
+      <OnboardingShell
+        title={t("onboarding.verifyTitle")}
+        subtitle={t("onboarding.verifySubtitle")}
+        stepLabel={t("onboarding.stepVerify")}
+      >
         <OnboardingVerifyForm email={user.email} />
       </OnboardingShell>
     )
@@ -27,7 +36,11 @@ export default async function OnboardingPage() {
 
   if (!acquisitionAnsweredAt) {
     return (
-      <OnboardingShell title="How did you hear about us?">
+      <OnboardingShell
+        title={t("onboarding.acquisitionTitle")}
+        subtitle={t("onboarding.acquisitionSubtitle")}
+        stepLabel={t("onboarding.stepAcquisition")}
+      >
         <OnboardingAcquisitionForm />
       </OnboardingShell>
     )
@@ -42,22 +55,4 @@ export default async function OnboardingPage() {
   if (pending) redirect("/onboarding/pending")
 
   redirect("/")
-}
-
-function OnboardingShell({
-  title,
-  children,
-}: {
-  title: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="mx-auto flex min-h-svh max-w-md flex-col justify-center px-4 py-10">
-      <h1 className="mb-1 text-2xl font-bold text-[var(--brand-navy)]">{title}</h1>
-      <p className="mb-6 text-sm text-muted-foreground">
-        Complete setup to start ordering from Restoloop Market.
-      </p>
-      {children}
-    </div>
-  )
 }

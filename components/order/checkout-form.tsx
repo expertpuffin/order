@@ -208,12 +208,12 @@ export function CheckoutForm({
       <input type="hidden" name="requestedDeliveryDate" value={deliveryDate} />
       <input type="hidden" name="deliveryTime" value={deliveryTime} />
 
-      <div className="rounded-xl bg-[#f7f7f8] px-4 py-3 text-sm text-muted-foreground">
+      <div className="rounded-[2px] border border-[var(--sidebar-border)] bg-[#f7f7f8] px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
         {t("cart.checkoutSummaryItems", { count: String(lineCount) })}
       </div>
 
       <div className="space-y-2.5">
-        <Label className="text-[var(--brand-navy)]">
+        <Label className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
           {t("cart.checkoutFulfillment")}
         </Label>
         <div className="grid grid-cols-2 gap-2">
@@ -238,10 +238,10 @@ export function CheckoutForm({
                 type="button"
                 onClick={() => setFulfillment(value)}
                 className={cn(
-                  "flex flex-col items-center gap-1.5 rounded-xl border px-3 py-3 text-sm font-medium transition-colors",
+                  "flex flex-col items-center gap-1.5 rounded-[2px] border px-3 py-3 text-sm font-medium transition-colors",
                   active
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-white text-[var(--brand-navy)] hover:bg-muted/40"
+                    ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
+                    : "border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
                 )}
               >
                 <Icon className="size-5 stroke-[1.75]" />
@@ -261,7 +261,9 @@ export function CheckoutForm({
       </div>
 
       <div className="space-y-2.5">
-        <Label className="text-[var(--brand-navy)]">{t("cart.checkoutDate")}</Label>
+        <Label className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+          {t("cart.checkoutDate")}
+        </Label>
         {daysLoading ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="size-4 animate-spin" />
@@ -282,16 +284,16 @@ export function CheckoutForm({
                   type="button"
                   onClick={() => setDeliveryDate(iso)}
                   className={cn(
-                    "flex min-w-[88px] shrink-0 flex-col items-center rounded-xl border px-3 py-2.5 text-center transition-colors",
+                    "flex min-w-[88px] shrink-0 flex-col items-center rounded-[2px] border px-3 py-2.5 text-center transition-colors",
                     active
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-white text-[var(--brand-navy)] hover:bg-muted/40"
+                      ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
+                      : "border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
                   )}
                 >
-                  <span className="text-[11px] font-medium uppercase opacity-80">
+                  <span className="font-mono text-[10px] font-medium uppercase tracking-wide opacity-80">
                     {card.weekdayShort}
                   </span>
-                  <span className="text-sm font-bold">{card.dayMonth}</span>
+                  <span className="text-sm font-semibold">{card.dayMonth}</span>
                 </button>
               )
             })}
@@ -303,7 +305,7 @@ export function CheckoutForm({
       </div>
 
       <div className="space-y-3">
-        <Label className="text-[var(--brand-navy)]">
+        <Label className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
           {fulfillment === "collection"
             ? t("cart.checkoutCollectionTime")
             : t("cart.checkoutTime")}
@@ -314,12 +316,14 @@ export function CheckoutForm({
             {t("cart.checkoutLoadingSchedule")}
           </div>
         ) : slotStarts.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("cart.checkoutNoSlots")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("cart.checkoutNoSlots")}
+          </p>
         ) : (
           <>
             {morningSlots.length > 0 ? (
               <div className="space-y-2">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
                   {t("cart.checkoutMorning")}
                 </p>
                 <div
@@ -338,10 +342,10 @@ export function CheckoutForm({
                         type="button"
                         onClick={() => setDeliveryTime(value)}
                         className={cn(
-                          "rounded-lg border py-2 text-sm font-medium tabular-nums transition-colors",
+                          "rounded-[2px] border py-2 text-sm font-medium tabular-nums transition-colors",
                           deliveryTime === value
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-border bg-white text-[var(--brand-navy)] hover:bg-muted/40"
+                            ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
+                            : "border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
                         )}
                       >
                         {slotDisplayLabel(slotStart, fulfillment)}
@@ -353,7 +357,7 @@ export function CheckoutForm({
             ) : null}
             {afternoonSlots.length > 0 ? (
               <div className="space-y-2">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
                   {t("cart.checkoutAfternoon")}
                 </p>
                 <div
@@ -372,10 +376,10 @@ export function CheckoutForm({
                         type="button"
                         onClick={() => setDeliveryTime(value)}
                         className={cn(
-                          "rounded-lg border py-2 text-sm font-medium tabular-nums transition-colors",
+                          "rounded-[2px] border py-2 text-sm font-medium tabular-nums transition-colors",
                           deliveryTime === value
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-border bg-white text-[var(--brand-navy)] hover:bg-muted/40"
+                            ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
+                            : "border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
                         )}
                       >
                         {slotDisplayLabel(slotStart, fulfillment)}
@@ -392,7 +396,7 @@ export function CheckoutForm({
       <div className="space-y-2">
         <button
           type="button"
-          className="w-full rounded-xl border px-3 py-2.5 text-left text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/30"
+          className="w-full rounded-[2px] border border-[var(--sidebar-border)] px-3 py-2.5 text-left text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/30"
           onClick={() => setShowNote((open) => !open)}
         >
           {t("cart.checkoutNoteToggle")}
@@ -403,20 +407,20 @@ export function CheckoutForm({
             name="specialNote"
             rows={3}
             placeholder={t("cart.checkoutNotePlaceholder")}
-            className="rounded-xl"
+            className="rounded-[2px] border-[var(--sidebar-border)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
           />
         ) : null}
       </div>
 
       {state && "error" in state && state.error ? (
-        <p className="rounded-xl border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+        <p className="rounded-[2px] border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
           {state.error}
         </p>
       ) : null}
 
       <Button
         type="submit"
-        className="h-12 w-full rounded-xl text-base font-semibold"
+        className="h-11 w-full rounded-[2px] bg-[var(--brand-navy)] text-base font-semibold text-white hover:bg-[var(--brand-navy)]/90"
         disabled={
           pending ||
           lineCount === 0 ||

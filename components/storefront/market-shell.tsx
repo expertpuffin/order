@@ -101,7 +101,7 @@ export function MarketShell({
         />
 
         <div className="mx-auto flex w-full max-w-[1440px] flex-1">
-          <div className="hidden w-[260px] shrink-0 border-r bg-white lg:block">
+          <div className="hidden w-[260px] shrink-0 border-r border-[var(--sidebar-border)] bg-background lg:block">
             <div className="sticky top-16 h-[calc(100svh-4rem)]">
               <StorefrontCategoryNav
                 categories={categories}
@@ -126,7 +126,7 @@ export function MarketShell({
                   activeView={activeView}
                 />
 
-                <div className="space-y-8 rounded-2xl bg-white p-3 sm:p-4">
+                <div className="space-y-8 rounded-[2px] border border-[var(--sidebar-border)] bg-white p-3 sm:p-4">
                   {rails.map((rail) => (
                     <ProductRail
                       key={rail.id}
@@ -157,7 +157,7 @@ export function MarketShell({
                 ) : null}
 
                 {products.length === 0 ? (
-                  <div className="rounded-2xl border bg-white py-16 text-center text-sm text-muted-foreground">
+                  <div className="rounded-[2px] border border-[var(--sidebar-border)] bg-white py-16 text-center text-sm text-muted-foreground">
                     {t("storefront.noProducts")}
                   </div>
                 ) : (
@@ -179,7 +179,7 @@ export function MarketShell({
             )}
           </main>
 
-          <div className="hidden w-[320px] shrink-0 xl:block">
+          <div className="hidden w-[300px] shrink-0 border-l border-[var(--sidebar-border)] xl:block">
             <div className="sticky top-16 h-[calc(100svh-4rem)]">
               <StorefrontCartPanel lines={cartLines} businessId={businessId} />
             </div>
@@ -197,7 +197,10 @@ export function MarketShell({
         </Sheet>
 
         <Sheet open={cartOpen} onOpenChange={setCartOpen}>
-          <SheetContent side="bottom" className="h-[85svh] p-0">
+          <SheetContent
+            side="right"
+            className="w-full max-w-[min(100vw,360px)] border-l border-[var(--sidebar-border)] p-0 sm:max-w-[360px]"
+          >
             <SheetHeader className="sr-only">
               <SheetTitle>{t("storefront.yourCart")}</SheetTitle>
             </SheetHeader>

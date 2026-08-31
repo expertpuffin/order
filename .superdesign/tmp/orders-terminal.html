@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders — Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+</head>
+<body>
+  <div class="min-h-[720px] w-[960px] bg-[#f7f7f8] px-6 py-5 text-[#002d62]" style="font-family: ui-sans-serif, system-ui, sans-serif;">
+    <div class="mb-5 border-b border-[#e5e7eb] pb-4">
+      <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">History</p>
+      <h1 class="text-[22px] font-semibold tracking-tight">Orders</h1>
+      <p class="text-sm text-gray-500">24 orders total</p>
+    </div>
+    <div class="mb-4 flex gap-1.5 overflow-x-auto pb-1">
+      <a id="tab-all" href="#all" class="shrink-0 rounded-[2px] border border-[#002d62] bg-[#002d62] px-3 py-1.5 text-xs font-medium text-white">All</a>
+      <a id="tab-submitted" href="#submitted" class="shrink-0 rounded-[2px] border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium">Submitted</a>
+      <a id="tab-confirmed" href="#confirmed" class="shrink-0 rounded-[2px] border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium">Confirmed</a>
+      <a id="tab-delivered" href="#delivered" class="shrink-0 rounded-[2px] border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium">Delivered</a>
+    </div>
+    <div class="mb-4 rounded-[2px] border border-[#e5e7eb] bg-white p-4">
+      <div class="flex flex-wrap gap-3">
+        <div class="min-w-[220px] flex-[2]">
+          <label class="mb-1 block font-mono text-[10px] uppercase tracking-widest text-gray-500">Search</label>
+          <input type="text" placeholder="Order no., supplier…" class="h-9 w-full rounded-[2px] border border-[#e5e7eb] px-3 text-sm" />
+        </div>
+        <div>
+          <label class="mb-1 block font-mono text-[10px] uppercase tracking-widest text-gray-500">Method</label>
+          <select class="h-9 rounded-[2px] border border-[#e5e7eb] px-2 text-sm">
+            <option>All</option>
+            <option>Delivery</option>
+            <option>Collection</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button type="button" class="h-9 rounded-[2px] bg-[#002d62] px-4 text-sm font-semibold text-white">Search</button>
+        </div>
+      </div>
+    </div>
+    <div class="overflow-hidden rounded-[2px] border border-[#e5e7eb] bg-white">
+      <div class="flex items-baseline justify-between border-b border-[#e5e7eb] px-5 py-4">
+        <div>
+          <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">History</p>
+          <h2 class="text-[15px] font-semibold tracking-tight">Order history</h2>
+          <p class="mt-0.5 text-sm text-gray-500">Showing 3 of 24</p>
+        </div>
+        <button type="button" class="rounded-[2px] border border-[#e5e7eb] px-3 py-1.5 text-xs font-medium">Export</button>
+      </div>
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b border-[#e5e7eb]">
+            <th class="h-10 px-4 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Order</th>
+            <th class="h-10 px-4 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Supplier</th>
+            <th class="h-10 px-4 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Method</th>
+            <th class="h-10 px-4 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Delivery</th>
+            <th class="h-10 px-4 font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Status</th>
+            <th class="h-10 px-4 text-right font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Amount</th>
+            <th class="h-10 w-12"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-[#e5e7eb]">
+            <td class="px-4 py-3">
+              <a id="order-rl-1042" href="#order-1042" class="font-mono text-xs font-semibold underline-offset-4 hover:underline">RL-1042</a>
+              <div class="font-mono text-[10px] uppercase tracking-wide text-gray-500">4 items</div>
+            </td>
+            <td class="px-4 py-3">Fresh Direct</td>
+            <td class="px-4 py-3"><span class="rounded-[2px] border border-[#e5e7eb] px-1.5 py-0.5 font-mono text-[10px] uppercase">Delivery</span></td>
+            <td class="px-4 py-3 whitespace-nowrap">28 Aug 2026 · AM</td>
+            <td class="px-4 py-3"><span class="rounded-[2px] bg-[#002d62] px-1.5 py-0.5 font-mono text-[10px] uppercase text-white">Confirmed</span></td>
+            <td class="px-4 py-3 text-right font-medium tabular-nums">£186.40</td>
+            <td class="px-4 py-3 text-right">
+              <a id="view-rl-1042" href="#order-1042" class="inline-flex size-8 items-center justify-center rounded-[2px] border border-[#e5e7eb]" aria-label="View RL-1042">
+                <iconify-icon icon="lucide:eye" width="16"></iconify-icon>
+              </a>
+            </td>
+          </tr>
+          <tr class="border-b border-[#e5e7eb]">
+            <td class="px-4 py-3">
+              <a id="order-rl-1038" href="#order-1038" class="font-mono text-xs font-semibold underline-offset-4 hover:underline">RL-1038</a>
+              <div class="font-mono text-[10px] uppercase tracking-wide text-gray-500">2 items</div>
+            </td>
+            <td class="px-4 py-3">Dairy Co</td>
+            <td class="px-4 py-3"><span class="rounded-[2px] border border-[#e5e7eb] px-1.5 py-0.5 font-mono text-[10px] uppercase">Collection</span></td>
+            <td class="px-4 py-3 whitespace-nowrap">26 Aug 2026</td>
+            <td class="px-4 py-3"><span class="rounded-[2px] border border-[#e5e7eb] px-1.5 py-0.5 font-mono text-[10px] uppercase">Delivered</span></td>
+            <td class="px-4 py-3 text-right font-medium tabular-nums">£42.10</td>
+            <td class="px-4 py-3 text-right">
+              <a id="view-rl-1038" href="#order-1038" class="inline-flex size-8 items-center justify-center rounded-[2px] border border-[#e5e7eb]" aria-label="View RL-1038">
+                <iconify-icon icon="lucide:eye" width="16"></iconify-icon>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

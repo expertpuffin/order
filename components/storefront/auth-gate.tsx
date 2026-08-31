@@ -2,19 +2,23 @@
 
 import {
   createContext,
+  Suspense,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react"
-import { useRouter } from "next/navigation"
+import Image from "next/image"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useActionState } from "react"
 
 import {
   loginAction,
   registerAction,
 } from "@/lib/actions"
+import { PuffinIcon, PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import {
@@ -91,6 +95,7 @@ export function AuthGateProvider({
   })
   const [productSheetOpen, setProductSheetOpen] = useState(false)
   const [activeProduct, setActiveProduct] = useState<CatalogProduct | null>(null)
+  const [loginNext, setLoginNext] = useState("/onboarding")
 
   const openAuthGate = useCallback(
     (opts?: {
@@ -103,6 +108,29 @@ export function AuthGateProvider({
         tab: opts?.tab ?? "login",
         intent: opts?.intent ?? "browse",
         product: opts?.product ?? null,
+      })
+    },
+    []
+  )
+
+  const clearAuthQuery = useCallback(() => {
+    if (typeof window === "undefined") return
+    const url = new URL(window.location.href)
+    if (!url.searchParams.has("auth") && !url.searchParams.has("next")) return
+    url.searchParams.delete("auth")
+    url.searchParams.delete("next")
+    const qs = url.searchParams.toString()
+    router.replace(qs ? `${url.pathname}?${qs}` : url.pathname, { scroll: false })
+  }, [router])
+
+  const handleAuthQueryOpen = useCallback(
+    (tab: "login" | "register", next: string) => {
+      setLoginNext(next)
+      setGate({
+        open: true,
+        tab,
+        intent: "browse",
+        product: null,
       })
     },
     []
@@ -179,22 +207,53 @@ export function AuthGateProvider({
 
   return (
     <AuthGateContext.Provider value={value}>
+      <Suspense fallback={null}>
+        <AuthQuerySync
+          isAuthenticated={isAuthenticated}
+          onOpen={handleAuthQueryOpen}
+          onClearAuthenticatedLogin={clearAuthQuery}
+        />
+      </Suspense>
       {children}
 
       <Dialog
         open={gate.open}
-        onOpenChange={(open) => setGate((g) => ({ ...g, open }))}
+        onOpenChange={(open) => {
+          setGate((g) => ({ ...g, open }))
+          if (!open) clearAuthQuery()
+        }}
       >
-        <DialogContent className="max-w-md gap-0 p-0 sm:max-w-md">
-          <DialogHeader className="border-b px-5 py-4">
-            <DialogTitle>
+        <DialogContent className="max-w-md gap-0 overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] p-0 ring-0 sm:max-w-md">
+          <DialogHeader className="space-y-1 border-b border-[var(--sidebar-border)] px-5 py-4 text-left">
+            <div className="mb-2 flex items-start justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/icon.png"
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="size-6 object-contain"
+                />
+                <span className="text-sm font-semibold tracking-tight text-[var(--brand-navy)]">
+                  {t("common.restoloop")}
+                </span>
+              </div>
+              <PuffinIcon
+                name={PUFFIN_ICONS.welcome}
+                className="size-12 shrink-0 text-[var(--brand-navy)]"
+              />
+            </div>
+            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              {t("auth.accountLabel")}
+            </p>
+            <DialogTitle className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
               {pendingBlocked
                 ? t("storefront.pendingTitle")
                 : gate.tab === "login"
                   ? t("auth.signIn")
                   : t("auth.signUp")}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs text-muted-foreground">
               {pendingBlocked
                 ? t("storefront.pendingBody")
                 : t("storefront.authGateHint")}
@@ -202,13 +261,16 @@ export function AuthGateProvider({
           </DialogHeader>
 
           {pendingBlocked ? (
-            <div className="space-y-3 p-5">
-              <Button className="w-full" onClick={() => router.push("/onboarding/pending")}>
+            <div className="space-y-2 p-5">
+              <Button
+                className="h-11 w-full rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+                onClick={() => router.push("/onboarding/pending")}
+              >
                 {t("storefront.viewApplication")}
               </Button>
               <Button
                 variant="outline"
-                className="w-full"
+                className="h-10 w-full rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
                 onClick={() => setGate((g) => ({ ...g, open: false }))}
               >
                 {t("storefront.keepBrowsing")}
@@ -216,25 +278,25 @@ export function AuthGateProvider({
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 border-b">
+              <div className="grid grid-cols-2 border-b border-[var(--sidebar-border)] bg-muted/20">
                 <button
                   type="button"
-                  className={`py-2.5 text-sm font-medium ${
+                  className={
                     gate.tab === "login"
-                      ? "border-b-2 border-primary text-primary"
-                      : "text-muted-foreground"
-                  }`}
+                      ? "bg-[var(--brand-navy)] py-2.5 text-sm font-medium text-white"
+                      : "py-2.5 text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/60"
+                  }
                   onClick={() => setGate((g) => ({ ...g, tab: "login" }))}
                 >
                   {t("auth.signIn")}
                 </button>
                 <button
                   type="button"
-                  className={`py-2.5 text-sm font-medium ${
+                  className={
                     gate.tab === "register"
-                      ? "border-b-2 border-primary text-primary"
-                      : "text-muted-foreground"
-                  }`}
+                      ? "bg-[var(--brand-navy)] py-2.5 text-sm font-medium text-white"
+                      : "py-2.5 text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/60"
+                  }
                   onClick={() => setGate((g) => ({ ...g, tab: "register" }))}
                 >
                   {t("auth.signUp")}
@@ -242,7 +304,7 @@ export function AuthGateProvider({
               </div>
               <div className="p-5">
                 {gate.tab === "login" ? (
-                  <LoginGateForm next="/" />
+                  <LoginGateForm next={loginNext} />
                 ) : (
                   <RegisterGateForm />
                 )}
@@ -264,33 +326,81 @@ export function AuthGateProvider({
   )
 }
 
+function AuthQuerySync({
+  isAuthenticated,
+  onOpen,
+  onClearAuthenticatedLogin,
+}: {
+  isAuthenticated: boolean
+  onOpen: (tab: "login" | "register", next: string) => void
+  onClearAuthenticatedLogin: () => void
+}) {
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const auth = searchParams.get("auth")
+    if (auth !== "login" && auth !== "register") return
+    const rawNext = searchParams.get("next")
+    const next =
+      rawNext?.startsWith("/") && !rawNext.startsWith("//")
+        ? rawNext
+        : "/onboarding"
+    if (isAuthenticated && auth === "login") {
+      onClearAuthenticatedLogin()
+      return
+    }
+    onOpen(auth, next)
+  }, [searchParams, isAuthenticated, onOpen, onClearAuthenticatedLogin])
+
+  return null
+}
+
+const gateField =
+  "h-10 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+const gateLabel =
+  "text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+const gateSubmit =
+  "h-11 w-full rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+
 function LoginGateForm({ next }: { next: string }) {
   const t = useT()
   const [state, formAction, pending] = useActionState(loginAction, null)
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form action={formAction} className="space-y-3.5">
       <input type="hidden" name="next" value={next} />
       {state && "error" in state && state.error ? (
-        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive">
+        <p className="rounded-[2px] border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
           {state.error}
         </p>
       ) : null}
       <div className="space-y-1.5">
-        <Label htmlFor="gate-email">{t("common.email")}</Label>
-        <Input id="gate-email" name="email" type="email" required autoComplete="email" />
+        <Label htmlFor="gate-email" className={gateLabel}>
+          {t("common.email")}
+        </Label>
+        <Input
+          id="gate-email"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          className={gateField}
+        />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="gate-password">{t("common.password")}</Label>
+        <Label htmlFor="gate-password" className={gateLabel}>
+          {t("common.password")}
+        </Label>
         <Input
           id="gate-password"
           name="password"
           type="password"
           required
           autoComplete="current-password"
+          className={gateField}
         />
       </div>
-      <Button type="submit" className="w-full" disabled={pending}>
+      <Button type="submit" className={gateSubmit} disabled={pending}>
         {pending ? t("auth.signingIn") : t("auth.signIn")}
       </Button>
     </form>
@@ -302,28 +412,54 @@ function RegisterGateForm() {
   const [state, formAction, pending] = useActionState(registerAction, null)
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form action={formAction} className="space-y-3.5">
       {state && "error" in state && state.error ? (
-        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive">
+        <p className="rounded-[2px] border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
           {state.error}
         </p>
       ) : null}
       <div className="grid grid-cols-2 gap-2">
         <div className="space-y-1.5">
-          <Label htmlFor="firstName">{t("auth.firstName")}</Label>
-          <Input id="firstName" name="firstName" required autoComplete="given-name" />
+          <Label htmlFor="firstName" className={gateLabel}>
+            {t("auth.firstName")}
+          </Label>
+          <Input
+            id="firstName"
+            name="firstName"
+            required
+            autoComplete="given-name"
+            className={gateField}
+          />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="lastName">{t("auth.lastName")}</Label>
-          <Input id="lastName" name="lastName" autoComplete="family-name" />
+          <Label htmlFor="lastName" className={gateLabel}>
+            {t("auth.lastName")}
+          </Label>
+          <Input
+            id="lastName"
+            name="lastName"
+            autoComplete="family-name"
+            className={gateField}
+          />
         </div>
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="reg-email">{t("common.email")}</Label>
-        <Input id="reg-email" name="email" type="email" required autoComplete="email" />
+        <Label htmlFor="reg-email" className={gateLabel}>
+          {t("common.email")}
+        </Label>
+        <Input
+          id="reg-email"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          className={gateField}
+        />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="phone">{t("auth.phone")}</Label>
+        <Label htmlFor="phone" className={gateLabel}>
+          {t("auth.phone")}
+        </Label>
         <Input
           id="phone"
           name="phone"
@@ -331,10 +467,13 @@ function RegisterGateForm() {
           required
           placeholder="+44…"
           autoComplete="tel"
+          className={gateField}
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="reg-password">{t("common.password")}</Label>
+        <Label htmlFor="reg-password" className={gateLabel}>
+          {t("common.password")}
+        </Label>
         <Input
           id="reg-password"
           name="password"
@@ -342,6 +481,7 @@ function RegisterGateForm() {
           required
           minLength={8}
           autoComplete="new-password"
+          className={gateField}
         />
       </div>
       <label className="flex items-start gap-2 text-xs text-muted-foreground">
@@ -349,11 +489,11 @@ function RegisterGateForm() {
           type="checkbox"
           name="receiveAnnouncements"
           value="off"
-          className="mt-0.5"
+          className="mt-0.5 size-3.5 rounded-[2px] border-[var(--sidebar-border)] accent-[var(--brand-navy)]"
         />
         {t("auth.optOutAnnouncements")}
       </label>
-      <Button type="submit" className="w-full" disabled={pending}>
+      <Button type="submit" className={gateSubmit} disabled={pending}>
         {pending ? t("auth.signingUp") : t("auth.signUp")}
       </Button>
     </form>

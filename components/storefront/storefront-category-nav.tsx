@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { ChevronDown, Store } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
 import type { CatalogCategory } from "@/lib/api/catalog"
@@ -56,7 +56,9 @@ export function StorefrontCategoryNav({
     return ids
   }, [activeSlug, categories])
 
-  const [openIds, setOpenIds] = useState<Set<string>>(() => new Set(activeAncestors))
+  const [openIds, setOpenIds] = useState<Set<string>>(
+    () => new Set(activeAncestors)
+  )
 
   useEffect(() => {
     if (activeAncestors.size === 0) return
@@ -93,6 +95,9 @@ export function StorefrontCategoryNav({
     })
   }
 
+  const rowActive = (isActive: boolean, childActive: boolean) =>
+    isActive || childActive
+
   const renderBranch = (nodes: CatalogCategory[], depth: number) =>
     nodes.map((category) => {
       const children = byParent.get(category.id) ?? []
@@ -102,15 +107,16 @@ export function StorefrontCategoryNav({
       const childActive =
         Boolean(activeSlug) &&
         (descendantSlugSet.get(category.id)?.has(activeSlug!) ?? false)
+      const selected = rowActive(isActive, childActive)
 
       return (
         <div key={category.id} className="min-w-0">
           <div
             className={cn(
-              "flex items-center gap-0.5 rounded-xl transition-colors",
-              isActive || (hasChildren && childActive && !isOpen)
-                ? "bg-primary/10 font-semibold text-primary"
-                : "hover:bg-muted"
+              "flex items-center gap-0.5 transition-colors",
+              selected
+                ? "bg-[var(--brand-navy)] font-medium text-white"
+                : "text-[var(--brand-navy)] hover:bg-muted"
             )}
             style={{ paddingLeft: Math.min(depth, 3) * 10 }}
           >
@@ -118,19 +124,19 @@ export function StorefrontCategoryNav({
               <button
                 type="button"
                 onClick={() => toggle(category.id)}
-                className="min-w-0 flex-1 truncate px-3 py-2.5 text-left text-sm"
+                className="min-w-0 flex-1 truncate px-3 py-2 text-left text-sm"
               >
                 {category.name}
               </button>
             ) : category.slug ? (
               <Link
                 href={categoryHref(category.slug)}
-                className="min-w-0 flex-1 truncate px-3 py-2.5 text-sm"
+                className="min-w-0 flex-1 truncate px-3 py-2 text-sm"
               >
                 {category.name}
               </Link>
             ) : (
-              <span className="min-w-0 flex-1 truncate px-3 py-2.5 text-sm">
+              <span className="min-w-0 flex-1 truncate px-3 py-2 text-sm">
                 {category.name}
               </span>
             )}
@@ -141,7 +147,12 @@ export function StorefrontCategoryNav({
                 aria-expanded={isOpen}
                 aria-label={isOpen ? "Collapse" : "Expand"}
                 onClick={() => toggle(category.id)}
-                className="mr-1 flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-black/5 hover:text-foreground"
+                className={cn(
+                  "mr-1 flex size-7 shrink-0 items-center justify-center",
+                  selected
+                    ? "text-white/70 hover:text-white"
+                    : "text-muted-foreground hover:bg-black/5 hover:text-foreground"
+                )}
               >
                 <ChevronDown
                   className={cn(
@@ -151,19 +162,19 @@ export function StorefrontCategoryNav({
                 />
               </button>
             ) : (
-              <span className="mr-1 size-8 shrink-0" aria-hidden />
+              <span className="mr-1 size-7 shrink-0" aria-hidden />
             )}
           </div>
 
           {hasChildren && isOpen ? (
-            <div className="mt-0.5 space-y-0.5 border-l border-border/70 ml-3.5 pl-1">
+            <div className="mt-0.5 space-y-0.5 border-l border-[var(--sidebar-border)] ml-3.5 pl-1">
               {category.slug ? (
                 <Link
                   href={categoryHref(category.slug)}
                   className={cn(
-                    "block rounded-xl px-3 py-2 text-sm transition-colors",
+                    "block px-3 py-2 text-sm transition-colors",
                     isActive
-                      ? "bg-primary/10 font-semibold text-primary"
+                      ? "bg-[var(--brand-navy)] font-medium text-white"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                   style={{ paddingLeft: Math.min(depth + 1, 3) * 10 + 12 }}
@@ -179,24 +190,22 @@ export function StorefrontCategoryNav({
     })
 
   return (
-    <aside className={cn("flex h-full flex-col", className)}>
-      <div className="border-b p-4">
-        <div className="flex items-start gap-3">
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Store className="size-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-[var(--brand-navy)]">
-              {businessName || t("common.restoloop")}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t("storefront.storeSubtitle")}
-            </p>
-          </div>
-        </div>
+    <aside
+      className={cn(
+        "flex h-full flex-col bg-background text-[var(--brand-navy)]",
+        className
+      )}
+    >
+      <div className="border-b border-[var(--sidebar-border)] px-4 py-3.5">
+        <p className="mb-1 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          {t("storefront.storeLabel")}
+        </p>
+        <p className="truncate text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
+          {businessName || t("common.restoloop")}
+        </p>
       </div>
 
-      <div className="px-3 pt-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+      <div className="px-3 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         {t("storefront.categories")}
       </div>
 
@@ -204,9 +213,9 @@ export function StorefrontCategoryNav({
         <Link
           href="/"
           className={cn(
-            "mb-1 flex items-center rounded-xl px-3 py-2.5 text-sm transition-colors",
+            "mb-1 flex items-center px-3 py-2 text-sm transition-colors",
             !activeSlug
-              ? "bg-primary/10 font-semibold text-primary"
+              ? "bg-[var(--brand-navy)] font-medium text-white"
               : "hover:bg-muted"
           )}
         >
