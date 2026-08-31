@@ -420,7 +420,7 @@ export function CheckoutForm({
 
       <Button
         type="submit"
-        className="h-11 w-full rounded-[2px] bg-[var(--brand-navy)] text-base font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+        className="h-11 w-full rounded-[2px] btn-brand text-base font-semibold text-white"
         disabled={
           pending ||
           lineCount === 0 ||

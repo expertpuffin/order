@@ -182,7 +182,7 @@ export function ProductAddSheet({
             </div>
           ) : null}
           <Button
-            className="h-11 w-full font-semibold"
+            className="h-11 w-full rounded-[2px] btn-brand font-semibold text-white"
             disabled={pending || quantity < 1}
             data-state={pending ? "loading" : undefined}
             onClick={add}

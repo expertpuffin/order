@@ -61,8 +61,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
         </Link>
         <Button
           size="icon"
-          variant="outline"
-          className="absolute right-2 bottom-2 z-1 size-8 rounded-[2px] border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-[var(--brand-navy)] hover:text-white"
+          className="absolute right-2 bottom-2 z-1 size-8 rounded-[2px] border-0 btn-brand text-white hover:opacity-90"
           onClick={(event) => {
             event.preventDefault()
             event.stopPropagation()

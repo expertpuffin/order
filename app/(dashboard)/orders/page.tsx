@@ -114,7 +114,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
           params.placed ? (
             <Badge
               variant="default"
-              className="rounded-[2px] bg-[var(--brand-navy)] text-white"
+              className="rounded-[2px] bg-[var(--brand-orange)] text-white"
             >
               {params.placed === "1"
                 ? t("orders.placedOne")

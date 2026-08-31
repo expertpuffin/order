@@ -263,7 +263,7 @@ export function AuthGateProvider({
           {pendingBlocked ? (
             <div className="space-y-2 p-5">
               <Button
-                className="h-11 w-full rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+                className="h-11 w-full rounded-[2px] btn-brand font-semibold text-white"
                 onClick={() => router.push("/onboarding/pending")}
               >
                 {t("storefront.viewApplication")}
@@ -360,7 +360,7 @@ const gateField =
 const gateLabel =
   "text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
 const gateSubmit =
-  "h-11 w-full rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+  "h-11 w-full rounded-[2px] btn-brand font-semibold text-white"
 
 function LoginGateForm({ next }: { next: string }) {
   const t = useT()

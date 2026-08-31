@@ -190,7 +190,7 @@ export function StorefrontCartPanel({
         </dl>
 
         <Button
-          className="mt-4 h-11 w-full rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+          className="mt-4 h-11 w-full rounded-[2px] btn-brand font-semibold text-white"
           disabled={(lines.length === 0 && canOrder) || pending}
           data-state={pending ? "loading" : undefined}
           onClick={() => {

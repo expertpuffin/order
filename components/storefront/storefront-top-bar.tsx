@@ -45,7 +45,7 @@ export function StorefrontTopBar({
 
   const cartBadge =
     cartCount > 0 ? (
-      <span className="flex items-center justify-center rounded-[2px] bg-[var(--brand-navy)] px-1.5 py-0.5 text-[10px] font-bold text-white">
+      <span className="flex items-center justify-center rounded-[2px] bg-[var(--brand-orange)] px-1.5 py-0.5 text-[10px] font-bold text-white">
         {cartCount > 9 ? "9+" : cartCount}
       </span>
     ) : null
@@ -149,7 +149,7 @@ export function StorefrontTopBar({
               </button>
               <Button
                 size="sm"
-                className="h-9 rounded-[2px] bg-[var(--brand-navy)] px-4 text-white hover:bg-[var(--brand-navy)]/90"
+                className="h-9 rounded-[2px] btn-brand px-4 text-white"
                 onClick={() => openAuthGate({ tab: "register" })}
               >
                 {t("auth.signUp")}

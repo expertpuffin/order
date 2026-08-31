@@ -79,7 +79,7 @@ export function AddToCart({
         size="sm"
         disabled={pending}
         onClick={add}
-        className="h-8 rounded-[2px] bg-[var(--brand-navy)] text-white hover:bg-[var(--brand-navy)]/90"
+        className="h-8 rounded-[2px] btn-brand text-white"
       >
         <Plus />
         <span className="sr-only sm:not-sr-only sm:inline">Add</span>
