@@ -36,7 +36,14 @@ export default async function HelpPage() {
           </div>
         </div>
         <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
-          {t("storefront.helpBody")}
+          {t("storefront.helpBodyBefore")}
+          <a
+            href={`mailto:${t("storefront.supportEmail")}`}
+            className="font-medium text-[var(--brand-orange)] underline-offset-4 hover:text-[var(--brand-orange)] hover:underline"
+          >
+            {t("storefront.supportEmail")}
+          </a>
+          {t("storefront.helpBodyAfter")}
         </p>
         <Button
           className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
