@@ -138,24 +138,42 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
     ? raw.packagingOptions.map((t) => String(t).toUpperCase())
     : ["EACH"]
 
-  const listCost = Number(preferred?.cost ?? preferredBase?.cost ?? NaN)
+  const listCost = Number(
+    preferred?.listCost ?? preferred?.cost ?? preferredBase?.listCost ?? preferredBase?.cost ?? NaN
+  )
+  const effectiveCost = Number(
+    preferred?.effectiveCost ??
+      preferred?.cost ??
+      preferredBase?.effectiveCost ??
+      preferredBase?.cost ??
+      NaN
+  )
   const offerDelivery = Number(preferred?.offerDeliveryCost ?? NaN)
   const offerCollection = Number(preferred?.offerCollectionCost ?? NaN)
-  const onOffer = Boolean(preferred?.onOffer)
-  const offerPrice = Number.isFinite(offerDelivery)
-    ? offerDelivery
-    : Number.isFinite(offerCollection)
-      ? offerCollection
-      : NaN
+  const hasDeal =
+    preferred?.activeDeal != null ||
+    (Number.isFinite(listCost) &&
+      Number.isFinite(effectiveCost) &&
+      effectiveCost < listCost)
+  const onOffer = Boolean(preferred?.onOffer) || hasDeal
+  const offerPrice = Number.isFinite(effectiveCost)
+    ? effectiveCost
+    : Number.isFinite(offerDelivery)
+      ? offerDelivery
+      : Number.isFinite(offerCollection)
+        ? offerCollection
+        : NaN
 
-  const unitPrice = onOffer && Number.isFinite(offerPrice)
+  const unitPrice = Number.isFinite(offerPrice)
     ? offerPrice
     : Number.isFinite(listCost)
       ? listCost
       : null
 
   const compareAtPrice =
-    onOffer && Number.isFinite(listCost) && unitPrice != null && listCost > unitPrice
+    Number.isFinite(listCost) &&
+    unitPrice != null &&
+    listCost > unitPrice
       ? listCost
       : null
 

@@ -17,7 +17,7 @@ import type {
   CatalogProduct,
   CatalogPagination,
 } from "@/lib/api/catalog"
-import type { CartLine } from "@/lib/api/cart"
+import type { CartLine, CartPricing } from "@/lib/api/cart"
 import { ListPagination } from "@/components/shared/list-filter-bar"
 import {
   Sheet,
@@ -48,6 +48,7 @@ type MarketShellProps = {
   activeBusinessId?: string | null
   businesses?: Array<{ id: string; name: string; postcode: string }>
   cartLines: CartLine[]
+  cartPricing?: CartPricing | null
   categories: CatalogCategory[]
   products: CatalogProduct[]
   pagination: CatalogPagination
@@ -69,6 +70,7 @@ export function MarketShell({
   activeBusinessId,
   businesses = [],
   cartLines,
+  cartPricing = null,
   categories,
   products,
   pagination,
@@ -181,7 +183,11 @@ export function MarketShell({
 
           <div className="hidden w-[300px] shrink-0 border-l border-[var(--sidebar-border)] xl:block">
             <div className="sticky top-16 h-[calc(100svh-4rem)]">
-              <StorefrontCartPanel lines={cartLines} businessId={businessId} />
+              <StorefrontCartPanel
+                lines={cartLines}
+                businessId={businessId}
+                pricing={cartPricing}
+              />
             </div>
           </div>
         </div>
@@ -208,6 +214,7 @@ export function MarketShell({
               lines={cartLines}
               businessId={businessId}
               className="h-full border-0"
+              pricing={cartPricing}
             />
           </SheetContent>
         </Sheet>

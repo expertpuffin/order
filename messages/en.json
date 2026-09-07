@@ -267,6 +267,18 @@
     "methodCollection": "Collection",
     "noDate": "No date set"
   },
+  "promotions": {
+    "coupon": "Coupon",
+    "couponPlaceholder": "Enter code",
+    "apply": "Apply",
+    "removeCoupon": "Remove coupon",
+    "couponApplied": "Coupon applied",
+    "couponInvalid": "This code isn't valid",
+    "dealDiscount": "Deal savings",
+    "campaignDiscount": "Campaign",
+    "couponDiscount": "Coupon",
+    "discount": "Discount"
+  },
   "cart": {
     "sectionLabel": "Basket",
     "checkoutLabel": "Order",

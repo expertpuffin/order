@@ -1,7 +1,7 @@
 import { cache } from "react"
 
 import { getSessionUser } from "@/lib/api/auth"
-import { getCart, type CartLine } from "@/lib/api/cart"
+import { getCart, type CartLine, type CartPricing } from "@/lib/api/cart"
 import { getBusinessContext } from "@/lib/business-context"
 import { hasTeamPermission } from "@/lib/permissions"
 import type { User } from "@/lib/types"
@@ -14,6 +14,7 @@ export type StorefrontSession = {
   businessStatus: string | null
   canOrder: boolean
   cartLines: CartLine[]
+  cartPricing: CartPricing | null
   businesses: Array<{ id: string; name: string; postcode: string }>
 }
 
@@ -29,6 +30,7 @@ export const getStorefrontSession = cache(
         businessStatus: null,
         canOrder: false,
         cartLines: [],
+        cartPricing: null,
         businesses: [],
       }
     }
@@ -43,6 +45,7 @@ export const getStorefrontSession = cache(
         businessStatus: null,
         canOrder: false,
         cartLines: [],
+        cartPricing: null,
         businesses: [],
       }
     }
@@ -52,12 +55,15 @@ export const getStorefrontSession = cache(
       hasTeamPermission(ctx.active.permissions, "orders")
 
     let cartLines: CartLine[] = []
+    let cartPricing: CartPricing | null = null
     if (canOrder) {
       try {
         const cart = await getCart(ctx.active.id)
         cartLines = cart.lines
+        cartPricing = cart.pricing
       } catch {
         cartLines = []
+        cartPricing = null
       }
     }
 
@@ -69,6 +75,7 @@ export const getStorefrontSession = cache(
       businessStatus: ctx.active.status,
       canOrder,
       cartLines,
+      cartPricing,
       businesses: ctx.businesses.map((business) => ({
         id: business.id,
         name: business.tradingName || business.businessName,

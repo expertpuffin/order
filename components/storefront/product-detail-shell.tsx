@@ -14,7 +14,7 @@ import {
   ProductDetailGallery,
   ProductDetailSections,
 } from "@/components/storefront/product-detail-sections"
-import type { CartLine } from "@/lib/api/cart"
+import type { CartLine, CartPricing } from "@/lib/api/cart"
 import {
   Sheet,
   SheetContent,
@@ -33,6 +33,7 @@ type ProductDetailShellProps = {
   userName?: string | null
   businesses?: Array<{ id: string; name: string; postcode: string }>
   cartLines: CartLine[]
+  cartPricing?: CartPricing | null
   categories: CatalogCategory[]
 }
 
@@ -64,6 +65,7 @@ export function ProductDetailShell({
   userName,
   businesses = [],
   cartLines,
+  cartPricing = null,
   categories,
 }: ProductDetailShellProps) {
   const t = useT()
@@ -189,7 +191,11 @@ export function ProductDetailShell({
 
           <div className="hidden w-[300px] shrink-0 border-l border-[var(--sidebar-border)] xl:block">
             <div className="sticky top-16 h-[calc(100svh-4rem)]">
-              <StorefrontCartPanel lines={cartLines} businessId={businessId} />
+              <StorefrontCartPanel
+                lines={cartLines}
+                businessId={businessId}
+                pricing={cartPricing}
+              />
             </div>
           </div>
         </div>
@@ -206,6 +212,7 @@ export function ProductDetailShell({
               lines={cartLines}
               businessId={businessId}
               className="h-full border-0"
+              pricing={cartPricing}
             />
           </SheetContent>
         </Sheet>

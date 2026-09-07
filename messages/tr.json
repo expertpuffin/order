@@ -267,6 +267,18 @@
     "methodCollection": "Gel-al",
     "noDate": "Tarih yok"
   },
+  "promotions": {
+    "coupon": "Kupon",
+    "couponPlaceholder": "Kodu girin",
+    "apply": "Uygula",
+    "removeCoupon": "Kuponu kaldır",
+    "couponApplied": "Kupon uygulandı",
+    "couponInvalid": "Bu kod geçerli değil",
+    "dealDiscount": "Deal indirimi",
+    "campaignDiscount": "Kampanya",
+    "couponDiscount": "Kupon",
+    "discount": "İndirim"
+  },
   "cart": {
     "sectionLabel": "Sepet",
     "checkoutLabel": "Sipariş",

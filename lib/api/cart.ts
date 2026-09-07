@@ -14,6 +14,21 @@ export type CheckoutGroup = {
   }>
 }
 
+export type CartPricing = {
+  subtotalBeforeDiscounts: number
+  skuDealDiscount: number
+  campaignDiscount: number
+  couponDiscount: number
+  totalDiscount: number
+  grandTotal: number
+  currency: string
+  applied: {
+    skuDeals: Array<{ dealId: string; offerId: string; amount: number }>
+    campaign: { id: string; name: string; amount: number } | null
+    coupon: { id: string; code: string; amount: number } | null
+  }
+}
+
 export type CartLine = {
   id: string
   productId: string
@@ -27,6 +42,7 @@ export type CartLine = {
   packagingOptions: string[]
   /** Görüntüleme amaçlı: ilgili packaging'ın preferred teklif fiyatı */
   unitPrice: number | null
+  listPrice: number | null
   currency: string
 }
 
@@ -59,7 +75,10 @@ export function mapCartLine(raw: Record<string, unknown>): CartLine {
       (a, b) => Number(a.priority ?? 999) - Number(b.priority ?? 999)
     )[0] ?? null
 
-  const cost = Number(preferred?.cost ?? NaN)
+  const effectiveCost = Number(
+    preferred?.effectiveCost ?? preferred?.cost ?? NaN
+  )
+  const listCost = Number(preferred?.listCost ?? preferred?.cost ?? NaN)
 
   return {
     id: asId(raw._id),
@@ -74,7 +93,8 @@ export function mapCartLine(raw: Record<string, unknown>): CartLine {
     packagingOptions: packagings.length
       ? packagings.map((p) => String(p.type ?? "EACH").toUpperCase())
       : [unit],
-    unitPrice: Number.isFinite(cost) ? cost : null,
+    unitPrice: Number.isFinite(effectiveCost) ? effectiveCost : null,
+    listPrice: Number.isFinite(listCost) ? listCost : null,
     currency: String(preferred?.currency ?? "GBP"),
   }
 }
@@ -85,6 +105,8 @@ async function fetchCartRaw(businessId: string) {
     checkoutSupplierIds?: string[]
     checkoutGroups?: CheckoutGroup[]
     checkoutError?: string | null
+    pricing?: CartPricing | null
+    couponError?: string | null
   }>(`/api/businesses/${businessId}/cart`)
 }
 
@@ -93,10 +115,14 @@ export async function getCart(businessId: string): Promise<{
   checkoutSupplierIds: string[]
   checkoutGroups: CheckoutGroup[]
   checkoutError: string | null
+  pricing: CartPricing | null
+  couponError: string | null
+  couponCode: string | null
 }> {
   const data = await fetchCartRaw(businessId)
-  const items = Array.isArray((data.cart as Record<string, unknown>).items)
-    ? ((data.cart as Record<string, unknown>).items as Record<string, unknown>[])
+  const cart = data.cart as Record<string, unknown>
+  const items = Array.isArray(cart.items)
+    ? (cart.items as Record<string, unknown>[])
     : []
   const checkoutSupplierIds = Array.isArray(data.checkoutSupplierIds)
     ? data.checkoutSupplierIds.map(String).filter(Boolean)
@@ -111,7 +137,25 @@ export async function getCart(businessId: string): Promise<{
     checkoutSupplierIds,
     checkoutGroups,
     checkoutError,
+    pricing: (data.pricing as CartPricing | null) ?? null,
+    couponError: typeof data.couponError === "string" ? data.couponError : null,
+    couponCode:
+      cart.couponCode != null ? String(cart.couponCode) : null,
   }
+}
+
+export async function applyCartCoupon(
+  businessId: string,
+  input: { code?: string; remove?: boolean }
+) {
+  return apiFetch<{
+    cart: Record<string, unknown>
+    pricing: CartPricing | null
+    couponError: string | null
+  }>(`/api/businesses/${businessId}/cart/coupon`, {
+    method: "POST",
+    body: input.remove ? { remove: true } : { code: input.code },
+  })
 }
 
 export async function addCartItem(

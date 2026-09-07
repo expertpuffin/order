@@ -13,19 +13,21 @@ import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { useT } from "@/components/i18n/i18n-provider"
 import { useAuthGate } from "@/components/storefront/auth-gate"
-import type { CartLine } from "@/lib/api/cart"
+import type { CartLine, CartPricing } from "@/lib/api/cart"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 type StorefrontCartPanelProps = {
   lines: CartLine[]
   businessId: string | null
+  pricing?: CartPricing | null
   className?: string
 }
 
 export function StorefrontCartPanel({
   lines,
   businessId,
+  pricing,
   className,
 }: StorefrontCartPanelProps) {
   const t = useT()
@@ -37,6 +39,7 @@ export function StorefrontCartPanel({
     if (line.unitPrice == null) return sum
     return sum + line.unitPrice * line.quantity
   }, 0)
+  const total = pricing?.grandTotal ?? subtotal
   const currency = lines[0]?.currency ?? "GBP"
   const money = (n: number) =>
     currency === "GBP" ? `£${n.toFixed(2)}` : `${n.toFixed(2)} ${currency}`
@@ -183,9 +186,15 @@ export function StorefrontCartPanel({
               {money(subtotal)}
             </dd>
           </div>
+          {pricing && pricing.totalDiscount > 0 ? (
+            <div className="flex justify-between gap-4 text-muted-foreground">
+              <dt>{t("promotions.discount")}</dt>
+              <dd className="tabular-nums">-{money(pricing.totalDiscount)}</dd>
+            </div>
+          ) : null}
           <div className="flex justify-between gap-4 border-t border-[var(--sidebar-border)] pt-2 text-base font-semibold text-[var(--brand-navy)]">
             <dt>{t("storefront.total")}</dt>
-            <dd className="tabular-nums">{money(subtotal)}</dd>
+            <dd className="tabular-nums">{money(total)}</dd>
           </div>
         </dl>
 

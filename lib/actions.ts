@@ -305,6 +305,24 @@ export async function clearCartAction(businessId: string) {
   }
 }
 
+export async function applyCartCouponAction(
+  businessId: string,
+  input: { code?: string; remove?: boolean }
+) {
+  try {
+    const { applyCartCoupon } = await import("@/lib/api/cart")
+    const data = await applyCartCoupon(businessId, input)
+    revalidatePath("/cart")
+    revalidatePath("/")
+    return {
+      success: true as const,
+      couponError: data.couponError ?? null,
+    }
+  } catch (error) {
+    return actionError(error)
+  }
+}
+
 /** Sepeti tedarikçi gruplarına bölerek siparişe çevirir */
 export async function checkoutAction(_prev: unknown, formData: FormData) {
   const businessId = formString(formData, "businessId")

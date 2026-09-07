@@ -38,6 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       userName={session.user?.name ?? null}
       businesses={session.businesses}
       cartLines={session.cartLines}
+      cartPricing={session.cartPricing}
       categories={categories}
     />
   )

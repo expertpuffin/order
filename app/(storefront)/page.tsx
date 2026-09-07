@@ -45,6 +45,7 @@ async function MarketPage({ searchParams }: PageProps) {
           activeBusinessId={session.businessId}
           businesses={session.businesses}
           cartLines={session.cartLines}
+          cartPricing={session.cartPricing}
           categories={categories}
           products={offerProducts}
           pagination={{
@@ -81,6 +82,7 @@ async function MarketPage({ searchParams }: PageProps) {
         activeBusinessId={session.businessId}
         businesses={session.businesses}
         cartLines={session.cartLines}
+        cartPricing={session.cartPricing}
         categories={categories}
         products={products}
         pagination={pagination}
@@ -134,6 +136,7 @@ async function MarketPage({ searchParams }: PageProps) {
       activeBusinessId={session.businessId}
       businesses={session.businesses}
       cartLines={session.cartLines}
+      cartPricing={session.cartPricing}
       categories={categories}
       products={[]}
       pagination={{ page: 1, limit: 24, total: 0, pages: 0 }}

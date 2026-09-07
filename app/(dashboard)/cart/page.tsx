@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { CartCouponPanel } from "@/components/order/cart-coupon-panel"
 import { CartEditor } from "@/components/order/cart-editor"
 import { CheckoutForm } from "@/components/order/checkout-form"
 import { Button } from "@/components/ui/button"
@@ -20,7 +21,8 @@ export default async function CartPage() {
     return <AccessDenied />
   }
 
-  const { lines, checkoutGroups, checkoutError } = await getCart(ctx.active.id)
+  const { lines, checkoutGroups, checkoutError, pricing, couponCode } =
+    await getCart(ctx.active.id)
   const checkoutSupplierId = checkoutGroups[0]?.supplierId ?? null
 
   return (
@@ -107,6 +109,11 @@ export default async function CartPage() {
                 {t("cart.checkoutTitle")}
               </h2>
             </div>
+            <CartCouponPanel
+              businessId={ctx.active.id}
+              initialCode={couponCode}
+              pricing={pricing}
+            />
             <CheckoutForm
               businessId={ctx.active.id}
               supplierId={checkoutSupplierId}
