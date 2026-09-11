@@ -7,7 +7,7 @@ export type BusinessStatus =
 
 export const BUSINESS_TYPES = [
   "Canteen",
-  "Cafe (Coffee Shop)",
+  "Cafe",
   "Cafe Bistro / Lounge",
   "Pizzeria",
   "Fish & Chips",
