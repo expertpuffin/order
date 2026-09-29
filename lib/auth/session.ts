@@ -5,7 +5,7 @@ export const REFRESH_COOKIE = "rl_refresh_token"
 export const USER_COOKIE = "rl_user"
 export const BUSINESS_COOKIE = "rl_business_id"
 
-// Prod: ".orderia.co.uk" gibi ayarlanır → aynı oturum iki panelde de geçerli
+// Prod: ".ordoria.com" gibi ayarlanır → aynı oturum iki panelde de geçerli
 const AUTH_COOKIE_DOMAIN = process.env.AUTH_COOKIE_DOMAIN || undefined
 
 export const ACCESS_MAX_AGE_SEC = 60 * 15
