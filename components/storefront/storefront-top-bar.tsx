@@ -114,14 +114,14 @@ export function StorefrontTopBar({
         <Link href="/" className="flex shrink-0 items-center gap-2 pr-2">
           <Image
             src="/icon.png"
-            alt="Restoloop"
+            alt="Orderia Business"
             width={36}
             height={36}
             className="size-9 object-contain"
             priority
           />
           <span className="hidden text-lg font-bold tracking-tight text-[var(--brand-navy)] sm:inline">
-            Restoloop
+            Orderia Business
           </span>
         </Link>
 

@@ -120,14 +120,14 @@ export function AppSidebar({
         >
           <Image
             src="/icon.png"
-            alt="Restoloop"
+            alt="Orderia Business"
             width={44}
             height={44}
             className="size-11 shrink-0 object-contain group-data-[collapsible=icon]:size-9"
             priority
           />
           <span className="text-sm font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
-            Restoloop
+            Orderia Business
           </span>
           <span className="ml-auto rounded-full bg-[var(--brand-orange)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--brand-orange)] group-data-[collapsible=icon]:hidden">
             {panelLabel}

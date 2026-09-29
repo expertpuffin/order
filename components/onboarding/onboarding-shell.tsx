@@ -35,7 +35,7 @@ export async function OnboardingShell({
             {stepLabel || t("onboarding.setupLabel")}
           </p>
           <p className="text-sm font-semibold tracking-tight text-[var(--brand-navy)]">
-            {t("common.restoloop")}
+            {t("common.orderia")}
           </p>
         </div>
       </div>

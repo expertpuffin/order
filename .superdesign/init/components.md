@@ -1,4 +1,4 @@
-# Components — Restoloop Order (storefront primitives)
+# Components — Orderia Business Order (storefront primitives)
 
 Framework: Next.js 16 App Router · React 19 · Tailwind v4 · shadcn/ui (Base UI) · Lucide icons
 

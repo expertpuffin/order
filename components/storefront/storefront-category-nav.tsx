@@ -201,7 +201,7 @@ export function StorefrontCategoryNav({
           {t("storefront.storeLabel")}
         </p>
         <p className="truncate text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
-          {businessName || t("common.restoloop")}
+          {businessName || t("common.orderia")}
         </p>
       </div>
 

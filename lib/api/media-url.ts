@@ -6,7 +6,7 @@ export function resolveMediaUrl(url: string | null | undefined): string | null {
   const trimmed = String(url).trim()
   if (!trimmed) return null
   if (
-    trimmed.includes("restoloop.example") ||
+    trimmed.includes("orderia.example") ||
     trimmed.includes("example.com")
   ) {
     return null

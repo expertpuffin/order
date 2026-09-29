@@ -1,4 +1,4 @@
-# Theme — Restoloop Order
+# Theme — Orderia Business Order
 
 ## Compact token summary
 

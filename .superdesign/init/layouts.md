@@ -1,4 +1,4 @@
-# Layouts — Restoloop Order storefront
+# Layouts — Orderia Business Order storefront
 
 ## StorefrontTopBar — `components/storefront/storefront-top-bar.tsx`
 Sticky storefront header: logo, delivery address picker, product search, auth/user, locale, favourites, cart. Desktop single row; mobile stacks delivery + search under the bar.
@@ -100,14 +100,14 @@ export function StorefrontTopBar({
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image
             src="/icon.png"
-            alt="Restoloop"
+            alt="Orderia Business"
             width={36}
             height={36}
             className="size-9 object-contain"
             priority
           />
           <span className="hidden text-lg font-bold tracking-tight text-[var(--brand-navy)] sm:inline">
-            Restoloop
+            Orderia Business
           </span>
         </Link>
 

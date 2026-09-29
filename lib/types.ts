@@ -310,7 +310,7 @@ export type OrderItem = {
   type: string
   productId: string | null
   supplierSku: string
-  restoLoopCode: string | null
+  orderiaCode: string | null
   quantity: number
   unit: OrderUnit
   brand: string | null
@@ -417,7 +417,7 @@ export type SupplierMembership = {
   createdAt: string | null
 }
 
-/** Restoloop Admin Panel staff permissions */
+/** Orderia Business Admin Panel staff permissions */
 export const STAFF_PERMISSIONS = [
   "dashboard.read",
   "businesses.read",

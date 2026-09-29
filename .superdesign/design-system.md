@@ -1,8 +1,8 @@
-# Restoloop Order — Design System
+# Orderia Business Order — Design System
 
 ## Brand
-- **Product:** Restoloop — B2B foodservice wholesale ordering
-- **Logo:** `public/icon.png` (orange mark) + wordmark “Restoloop” in navy
+- **Product:** Orderia Business — B2B foodservice wholesale ordering
+- **Logo:** `public/icon.png` (orange mark) + wordmark “Orderia Business” in navy
 - **Colors:** Navy `#002d62` (ink), Orange `#f58220` (primary / CTA), white paper, cool muted greys
 - **Tone:** Utilitarian B2B marketplace — dense, operational, not consumer e‑commerce fluff
 - **Anti-slop:** Avoid purple gradients, oversized rounded-2xl card stacks, pill-everything chrome, floating badge stickers on media

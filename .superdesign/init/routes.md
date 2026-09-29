@@ -1,4 +1,4 @@
-# Routes — Restoloop Order
+# Routes — Orderia Business Order
 
 | Path | File | Layout / shell |
 |------|------|----------------|
