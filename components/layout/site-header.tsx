@@ -44,7 +44,7 @@ export function SiteHeader() {
         <BreadcrumbList>
           <BreadcrumbItem className="hidden md:block">
             <BreadcrumbLink render={<Link href="/dashboard" />}>
-              {t("common.orderia")}
+              {t("common.ordoria")}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />

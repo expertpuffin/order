@@ -1,4 +1,4 @@
-# Routes — Orderia Business Order
+# Routes — Ordoria Business Order
 
 | Path | File | Layout / shell |
 |------|------|----------------|

@@ -310,7 +310,7 @@ export type OrderItem = {
   type: string
   productId: string | null
   supplierSku: string
-  orderiaCode: string | null
+  ordoriaCode: string | null
   quantity: number
   unit: OrderUnit
   brand: string | null
@@ -417,7 +417,7 @@ export type SupplierMembership = {
   createdAt: string | null
 }
 
-/** Orderia Business Admin Panel staff permissions */
+/** Ordoria Business Admin Panel staff permissions */
 export const STAFF_PERMISSIONS = [
   "dashboard.read",
   "businesses.read",

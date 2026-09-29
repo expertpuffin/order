@@ -235,7 +235,7 @@ export function AuthGateProvider({
                   className="size-6 object-contain"
                 />
                 <span className="text-sm font-semibold tracking-tight text-[var(--brand-navy)]">
-                  {t("common.orderia")}
+                  {t("common.ordoria")}
                 </span>
               </div>
               <PuffinIcon

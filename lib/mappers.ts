@@ -92,7 +92,7 @@ function mapOrderItem(raw: Record<string, unknown>): OrderItem {
     type: String(raw.type ?? ""),
     productId: raw.product ? asId(raw.product) : null,
     supplierSku: String(raw.supplierSku ?? ""),
-    orderiaCode: (raw.orderiaCode as string | null) ?? null,
+    ordoriaCode: (raw.ordoriaCode as string | null) ?? null,
     quantity: Number(raw.quantity ?? 0),
     unit: (raw.unit as OrderUnit) ?? "EACH",
     brand: (raw.brand as string | null) ?? null,

@@ -21,7 +21,7 @@ export default async function PendingOnboardingPage() {
 
   const { t } = await getTranslator()
   const name =
-    pending?.tradingName || pending?.businessName || t("common.orderia")
+    pending?.tradingName || pending?.businessName || t("common.ordoria")
 
   return (
     <OnboardingShell

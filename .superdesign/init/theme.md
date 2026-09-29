@@ -1,4 +1,4 @@
-# Theme — Orderia Business Order
+# Theme — Ordoria Business Order
 
 ## Compact token summary
 

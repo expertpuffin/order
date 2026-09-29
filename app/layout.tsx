@@ -21,11 +21,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Orderia Business Orders",
-    template: "%s · Orderia Business Orders",
+    default: "Ordoria Business Orders",
+    template: "%s · Ordoria Business Orders",
   },
   description:
-    "Orderia Business orders panel for the platform-wide order feed and fulfilment status.",
+    "Ordoria Business orders panel for the platform-wide order feed and fulfilment status.",
 }
 
 export default async function RootLayout({
