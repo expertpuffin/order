@@ -139,7 +139,10 @@
     "storage": "Storage",
     "barcode": "Barcode",
     "category": "Category",
-    "unitOfMeasure": "Unit of measure"
+    "unitOfMeasure": "Unit of measure",
+    "deliveryFee": "Delivery fee",
+    "free": "Free",
+    "freeDeliveryNudge": "Add {amount} more for free delivery"
   },
   "onboarding": {
     "setupLabel": "Setup",

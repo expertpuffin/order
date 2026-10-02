@@ -139,7 +139,10 @@
     "storage": "Saklama",
     "barcode": "Barkod",
     "category": "Kategori",
-    "unitOfMeasure": "Ölçü birimi"
+    "unitOfMeasure": "Ölçü birimi",
+    "deliveryFee": "Teslimat ücreti",
+    "free": "Ücretsiz",
+    "freeDeliveryNudge": "Ücretsiz teslimat için {amount} daha ekleyin"
   },
   "onboarding": {
     "setupLabel": "Kurulum",

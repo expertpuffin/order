@@ -39,7 +39,14 @@ export function StorefrontCartPanel({
     if (line.unitPrice == null) return sum
     return sum + line.unitPrice * line.quantity
   }, 0)
-  const total = pricing?.grandTotal ?? subtotal
+  const goodsTotal = pricing?.grandTotal ?? subtotal
+  const delivery = pricing?.delivery ?? null
+  const deliveryFee = delivery?.fee.amount ?? 0
+  const total = goodsTotal + deliveryFee
+  const freeDeliveryGap =
+    delivery && !delivery.fee.waived && delivery.fee.freeDeliveryOver != null
+      ? Math.max(0, delivery.fee.freeDeliveryOver - goodsTotal)
+      : null
   const currency = lines[0]?.currency ?? "GBP"
   const money = (n: number) =>
     currency === "GBP" ? `£${n.toFixed(2)}` : `${n.toFixed(2)} ${currency}`
@@ -191,6 +198,21 @@ export function StorefrontCartPanel({
               <dt>{t("promotions.discount")}</dt>
               <dd className="tabular-nums">-{money(pricing.totalDiscount)}</dd>
             </div>
+          ) : null}
+          {delivery && delivery.fee.standardAmount > 0 ? (
+            <div className="flex justify-between gap-4 text-muted-foreground">
+              <dt>{t("storefront.deliveryFee")}</dt>
+              <dd className="tabular-nums">
+                {delivery.fee.waived ? t("storefront.free") : money(deliveryFee)}
+              </dd>
+            </div>
+          ) : null}
+          {freeDeliveryGap != null && freeDeliveryGap > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {t("storefront.freeDeliveryNudge", {
+                amount: money(freeDeliveryGap),
+              })}
+            </p>
           ) : null}
           <div className="flex justify-between gap-4 border-t border-[var(--sidebar-border)] pt-2 text-base font-semibold text-[var(--brand-navy)]">
             <dt>{t("storefront.total")}</dt>

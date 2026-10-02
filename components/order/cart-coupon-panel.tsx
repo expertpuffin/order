@@ -95,6 +95,18 @@ export function CartCouponPanel({
           ) : null}
         </dl>
       ) : null}
+      {pricing?.delivery && pricing.delivery.fee.standardAmount > 0 ? (
+        <dl className="space-y-1 text-sm">
+          <div className="flex justify-between text-muted-foreground">
+            <dt>{t("storefront.deliveryFee")}</dt>
+            <dd>
+              {pricing.delivery.fee.waived
+                ? t("storefront.free")
+                : `£${pricing.delivery.fee.amount.toFixed(2)}`}
+            </dd>
+          </div>
+        </dl>
+      ) : null}
     </div>
   )
 }

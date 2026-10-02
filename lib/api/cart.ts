@@ -14,6 +14,20 @@ export type CheckoutGroup = {
   }>
 }
 
+/** Delivery for this cart — the serving depot's mile band, priced by the server */
+export type CartDelivery = {
+  warehouse: { id: string; name: string } | null
+  miles: number | null
+  minOrderAmount: number | null
+  fee: {
+    standardAmount: number
+    amount: number
+    waived: boolean
+    freeDeliveryOver: number | null
+    promotion: { id: string; name: string } | null
+  }
+}
+
 export type CartPricing = {
   subtotalBeforeDiscounts: number
   skuDealDiscount: number
@@ -27,6 +41,8 @@ export type CartPricing = {
     campaign: { id: string; name: string; amount: number } | null
     coupon: { id: string; code: string; amount: number } | null
   }
+  /** Folded in by getCart so the cart panels can show the fee */
+  delivery?: CartDelivery | null
 }
 
 export type CartLine = {
@@ -106,6 +122,7 @@ async function fetchCartRaw(businessId: string) {
     checkoutGroups?: CheckoutGroup[]
     checkoutError?: string | null
     pricing?: CartPricing | null
+    delivery?: CartDelivery | null
     couponError?: string | null
   }>(`/api/businesses/${businessId}/cart`)
 }
@@ -137,7 +154,9 @@ export async function getCart(businessId: string): Promise<{
     checkoutSupplierIds,
     checkoutGroups,
     checkoutError,
-    pricing: (data.pricing as CartPricing | null) ?? null,
+    pricing: data.pricing
+      ? { ...(data.pricing as CartPricing), delivery: data.delivery ?? null }
+      : null,
     couponError: typeof data.couponError === "string" ? data.couponError : null,
     couponCode:
       cart.couponCode != null ? String(cart.couponCode) : null,
