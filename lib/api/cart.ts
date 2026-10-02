@@ -23,6 +23,11 @@ export type CartDelivery = {
     standardAmount: number
     amount: number
     waived: boolean
+    /** Breakdown: flat + percent of the basket, capped at `cap` */
+    flatAmount?: number
+    percent?: number
+    cap?: number | null
+    capped?: boolean
     freeDeliveryOver: number | null
     promotion: { id: string; name: string } | null
   }

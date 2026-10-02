@@ -142,7 +142,8 @@
     "unitOfMeasure": "Ölçü birimi",
     "deliveryFee": "Teslimat ücreti",
     "free": "Ücretsiz",
-    "freeDeliveryNudge": "Ücretsiz teslimat için {amount} daha ekleyin"
+    "freeDeliveryNudge": "Ücretsiz teslimat için {amount} daha ekleyin",
+    "deliveryFeeBasis": "Teslimat ücreti (£{flat} + %{percent})"
   },
   "onboarding": {
     "setupLabel": "Kurulum",

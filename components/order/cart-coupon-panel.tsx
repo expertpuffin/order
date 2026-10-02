@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { applyCartCouponAction } from "@/lib/actions"
 import type { CartPricing } from "@/lib/api/cart"
+import { deliveryFeeLabel } from "@/lib/delivery-fee"
 import { toast } from "sonner"
 
 type CouponPanelProps = {
@@ -98,7 +99,7 @@ export function CartCouponPanel({
       {pricing?.delivery && pricing.delivery.fee.standardAmount > 0 ? (
         <dl className="space-y-1 text-sm">
           <div className="flex justify-between text-muted-foreground">
-            <dt>{t("storefront.deliveryFee")}</dt>
+            <dt>{deliveryFeeLabel(pricing.delivery.fee, t)}</dt>
             <dd>
               {pricing.delivery.fee.waived
                 ? t("storefront.free")

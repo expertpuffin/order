@@ -14,6 +14,7 @@ import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { useT } from "@/components/i18n/i18n-provider"
 import { useAuthGate } from "@/components/storefront/auth-gate"
 import type { CartLine, CartPricing } from "@/lib/api/cart"
+import { deliveryFeeLabel } from "@/lib/delivery-fee"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -201,7 +202,7 @@ export function StorefrontCartPanel({
           ) : null}
           {delivery && delivery.fee.standardAmount > 0 ? (
             <div className="flex justify-between gap-4 text-muted-foreground">
-              <dt>{t("storefront.deliveryFee")}</dt>
+              <dt>{deliveryFeeLabel(delivery.fee, t)}</dt>
               <dd className="tabular-nums">
                 {delivery.fee.waived ? t("storefront.free") : money(deliveryFee)}
               </dd>

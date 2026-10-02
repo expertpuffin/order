@@ -142,7 +142,8 @@
     "unitOfMeasure": "Unit of measure",
     "deliveryFee": "Delivery fee",
     "free": "Free",
-    "freeDeliveryNudge": "Add {amount} more for free delivery"
+    "freeDeliveryNudge": "Add {amount} more for free delivery",
+    "deliveryFeeBasis": "Delivery fee (£{flat} + {percent}%)"
   },
   "onboarding": {
     "setupLabel": "Setup",
