@@ -27,7 +27,7 @@ function isPublic(pathname: string) {
   )
 }
 
-export async function proxy(request: NextRequest) {
+async function route(request: NextRequest): Promise<NextResponse> {
   const blocked = edgeWaf(request)
   if (blocked) return blocked
 
@@ -88,6 +88,24 @@ export async function proxy(request: NextRequest) {
       request: { headers: requestHeaders },
     })
   )
+}
+
+/**
+ * Server actions (form submits) must reach the action: a redirect here makes
+ * the client throw "An unexpected response was received from the server" —
+ * e.g. submitting the login form after a session appeared in another tab.
+ * Let them through, keeping any cookies (a refreshed session) we set.
+ */
+export async function proxy(request: NextRequest) {
+  const response = await route(request)
+  if (!request.headers.has("next-action") || !response.headers.has("location")) {
+    return response
+  }
+  const passThrough = NextResponse.next()
+  for (const cookie of response.cookies.getAll()) {
+    passThrough.cookies.set(cookie)
+  }
+  return withSecurityHeaders(passThrough)
 }
 
 export const config = {
