@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { ChevronDown, CircleHelp, LogOut, UserRound } from "lucide-react"
+import { ChevronDown, CircleHelp, LogOut, MessageSquareHeart, UserRound } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
+import { useFeedback } from "@/components/feedback/feedback-dialog"
 import { useAuthGate } from "@/components/storefront/auth-gate"
 import { logoutAction } from "@/lib/actions"
 import { translateNavTitle } from "@/lib/i18n/nav-label"
@@ -28,6 +29,7 @@ export function StorefrontUserMenu({
 }: StorefrontUserMenuProps) {
   const t = useT()
   const { canOrder } = useAuthGate()
+  const { openFeedback } = useFeedback()
   const firstName = userName.trim().split(/\s+/)[0] || userName
 
   const navItems = mainNav.filter((item) => {
@@ -74,6 +76,10 @@ export function StorefrontUserMenu({
         <DropdownMenuItem render={<Link href="/help" />} className="gap-3 py-2.5">
           <CircleHelp className="size-[18px] stroke-[1.75]" />
           {t("storefront.menuHelp")}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="gap-3 py-2.5" onClick={openFeedback}>
+          <MessageSquareHeart className="size-[18px] stroke-[1.75]" />
+          {t("feedback.menu")}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

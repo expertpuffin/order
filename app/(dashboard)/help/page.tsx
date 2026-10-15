@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { PuffinIcon, PUFFIN_ICONS } from "@/components/brand/puffin-icon"
+import { SendFeedbackButton } from "@/components/feedback/send-feedback-button"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
 import { Button } from "@/components/ui/button"
 import { getTranslator } from "@/lib/i18n"
@@ -52,6 +53,16 @@ export default async function HelpPage() {
         >
           {t("storefront.keepBrowsing")}
         </Button>
+      </section>
+
+      <section className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5">
+        <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
+          {t("feedback.helpTitle")}
+        </h2>
+        <p className="mt-1 mb-4 text-sm leading-relaxed text-muted-foreground">
+          {t("feedback.helpBody")}
+        </p>
+        <SendFeedbackButton />
       </section>
     </div>
   )
