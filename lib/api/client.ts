@@ -118,6 +118,7 @@ export async function apiFetch<T>(
     message?: string
     error?: string
     errors?: string[]
+    code?: string
     data?: T
   } | null
 
@@ -125,7 +126,8 @@ export async function apiFetch<T>(
     throw new ApiError(
       json?.message || json?.error || `Request failed (${res.status})`,
       res.status,
-      json?.errors
+      json?.errors,
+      json?.code
     )
   }
 

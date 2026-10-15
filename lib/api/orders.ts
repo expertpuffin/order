@@ -101,3 +101,39 @@ export async function getNextCutoff(
     return null
   }
 }
+
+export type ApprovalCheck = {
+  enabled: boolean
+  required: boolean
+  rule: { code: "role" | "member" | "amount"; limit: number | null; amount: number } | null
+  canApprove: boolean
+}
+
+/** Will this person's order (of this goods total) need a manager's OK first? */
+export async function checkOrderApproval(
+  businessId: string,
+  amount: number
+): Promise<ApprovalCheck | null> {
+  try {
+    return await apiFetch<ApprovalCheck>(`/api/businesses/${businessId}/order-approval/check`, {
+      searchParams: { amount },
+    })
+  } catch {
+    return null
+  }
+}
+
+export async function withdrawApproval(orderNumber: string, version: number) {
+  const data = await apiFetch<{ order: Record<string, unknown> }>(
+    `/api/orders/${encodeURIComponent(orderNumber)}/approval/withdraw`,
+    { method: "POST", body: { version } }
+  )
+  return data
+}
+
+export async function approvalToCart(orderNumber: string) {
+  return apiFetch<{ lineCount: number; supplierId: string }>(
+    `/api/orders/${encodeURIComponent(orderNumber)}/approval/to-cart`,
+    { method: "POST" }
+  )
+}

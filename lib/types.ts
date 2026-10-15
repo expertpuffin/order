@@ -125,6 +125,7 @@ export type Category = {
 
 export const TEAM_PERMISSIONS = [
   "orders",
+  "orders_approve",
   "inventory",
   "billing",
   "team",
@@ -372,6 +373,21 @@ export type Order = {
   }
   specialNote: string | null
   items: OrderItem[]
+  /** Restaurant-internal manager sign-off ("Yönetici izni") — not the supplier's confirmation */
+  managerApproval: OrderManagerApproval | null
+}
+
+export type ManagerApprovalState = "pending" | "approving" | "approved" | "rejected" | "withdrawn"
+
+export type OrderManagerApproval = {
+  state: ManagerApprovalState
+  version: number
+  ruleCode: "role" | "member" | "amount" | null
+  ruleLimit: number | null
+  requestedByName: string | null
+  decidedByName: string | null
+  decidedAt: string | null
+  reason: string | null
 }
 
 export const PLATFORM_ROLES = ["user", "admin", "master", "supplier"] as const

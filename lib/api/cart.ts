@@ -231,6 +231,8 @@ export type PlacedOrder = {
   supplierName: string | null
   itemCount: number
   publicUrl: string | null
+  /** Waits for a manager's OK (not sent to the supplier yet) */
+  pendingApproval: boolean
 }
 
 /** Tedarikçi başına sipariş oluşur — dönen liste genelde 1 elemanlıdır. */
@@ -240,6 +242,7 @@ export async function checkoutCart(
 ): Promise<PlacedOrder[]> {
   const data = await apiFetch<{
     orders: Record<string, unknown>[]
+    pendingApproval?: boolean
   }>(`/api/businesses/${businessId}/cart/checkout`, {
     method: "POST",
     body: input,
@@ -254,6 +257,7 @@ export async function checkoutCart(
       supplierName: (supplier.name as string | null) ?? null,
       itemCount: items.length,
       publicUrl: (raw.publicUrl as string | null) ?? null,
+      pendingApproval: Boolean(data.pendingApproval),
     }
   })
 }

@@ -11,7 +11,12 @@ import {
   removeCartItem,
   updateCartItem,
 } from "@/lib/api/cart"
-import { cancelOrder, getOrder } from "@/lib/api/orders"
+import {
+  approvalToCart,
+  cancelOrder,
+  getOrder,
+  withdrawApproval,
+} from "@/lib/api/orders"
 import {
   addFavoriteItem,
   getFavorites,
@@ -349,7 +354,9 @@ export async function checkoutAction(_prev: unknown, formData: FormData) {
   revalidatePath("/orders")
   revalidatePath("/cart")
   if (orders.length === 1) {
-    redirect(`/orders/${orders[0].orderNumber}?placed=1`)
+    redirect(
+      `/orders/${orders[0].orderNumber}?placed=1${orders[0].pendingApproval ? "&approval=1" : ""}`
+    )
   }
   redirect(`/orders?placed=${orders.length}`)
 }
@@ -484,6 +491,32 @@ export async function cancelOrderAction(orderNumber: string, note?: string) {
     await cancelOrder(orderNumber, note ?? "Cancelled by business")
     revalidatePath("/orders")
     revalidatePath(`/orders/${encodeURIComponent(orderNumber)}`)
+    return { success: true as const }
+  } catch (error) {
+    return actionError(error)
+  }
+}
+
+/** The person who asked takes back a request still waiting for a manager. */
+export async function withdrawApprovalAction(orderNumber: string, version: number) {
+  try {
+    await withdrawApproval(orderNumber, version)
+    revalidatePath("/orders")
+    revalidatePath(`/orders/${encodeURIComponent(orderNumber)}`)
+    return { success: true as const }
+  } catch (error) {
+    if (error instanceof ApiError && error.code === "APPROVAL_CHANGED") {
+      return { error: "APPROVAL_CHANGED" }
+    }
+    return actionError(error)
+  }
+}
+
+/** A declined / withdrawn request back into my cart. */
+export async function approvalToCartAction(orderNumber: string) {
+  try {
+    await approvalToCart(orderNumber)
+    revalidatePath("/cart")
     return { success: true as const }
   } catch (error) {
     return actionError(error)

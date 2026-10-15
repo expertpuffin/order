@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useEffect, useMemo, useState } from "react"
-import { Loader2, Store, Truck } from "lucide-react"
+import { Loader2, ShieldCheck, Store, Truck } from "lucide-react"
 
 import { checkoutAction } from "@/lib/actions"
 import { useActionToast } from "@/lib/action-toast"
@@ -37,6 +37,8 @@ type CheckoutFormProps = {
   lineCount: number
   businessName?: string | null
   businessPostcode?: string | null
+  /** Set when this order will wait for a manager's OK first */
+  approval?: { code: "role" | "member" | "amount"; limit: number | null } | null
 }
 
 export function CheckoutForm({
@@ -48,6 +50,7 @@ export function CheckoutForm({
   lineCount,
   businessName,
   businessPostcode,
+  approval = null,
 }: CheckoutFormProps) {
   const t = useT()
   const { locale } = useI18n()
@@ -412,6 +415,22 @@ export function CheckoutForm({
         ) : null}
       </div>
 
+      {approval ? (
+        <div className="flex gap-2 rounded-[2px] border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm text-amber-900">
+          <ShieldCheck className="mt-0.5 size-4 shrink-0" />
+          <div>
+            <p className="font-medium">
+              {t(`approval.rule.${approval.code}`, {
+                limit: new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(
+                  approval.limit ?? 0
+                ),
+              })}
+            </p>
+            <p className="text-xs text-amber-800/80">{t("approval.checkoutNote")}</p>
+          </div>
+        </div>
+      ) : null}
+
       {state && "error" in state && state.error ? (
         <p className="rounded-[2px] border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
           {state.error}
@@ -429,7 +448,11 @@ export function CheckoutForm({
           scheduleLoading
         }
       >
-        {pending ? t("cart.checkoutSubmitting") : t("cart.checkoutSubmit")}
+        {pending
+          ? t("cart.checkoutSubmitting")
+          : approval
+            ? t("approval.checkoutSubmit")
+            : t("cart.checkoutSubmit")}
       </Button>
     </form>
   )

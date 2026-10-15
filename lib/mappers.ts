@@ -105,6 +105,27 @@ function mapOrderItem(raw: Record<string, unknown>): OrderItem {
   }
 }
 
+function mapManagerApproval(raw: unknown): Order["managerApproval"] {
+  if (!raw || typeof raw !== "object") return null
+  const row = raw as Record<string, unknown>
+  if (!row.state) return null
+  const rule = (row.rule ?? {}) as Record<string, unknown>
+  const name = (value: unknown) =>
+    value && typeof value === "object"
+      ? (((value as Record<string, unknown>).name as string | null) ?? null)
+      : null
+  return {
+    state: row.state as NonNullable<Order["managerApproval"]>["state"],
+    version: Number(row.version ?? 1),
+    ruleCode: (rule.code as NonNullable<Order["managerApproval"]>["ruleCode"]) ?? null,
+    ruleLimit: typeof rule.limit === "number" ? rule.limit : null,
+    requestedByName: name(row.requestedBy),
+    decidedByName: name(row.decidedBy),
+    decidedAt: row.decidedAt ? String(row.decidedAt) : null,
+    reason: (row.reason as string | null) ?? null,
+  }
+}
+
 export function mapOrder(raw: Record<string, unknown>): Order {
   const snapshot = (raw.snapshot ?? {}) as Record<string, unknown>
   const address = (snapshot.address ?? {}) as Record<string, unknown>
@@ -174,6 +195,7 @@ export function mapOrder(raw: Record<string, unknown>): Order {
       email: (salesperson.email as string | null) ?? null,
     },
     specialNote: (raw.specialNote as string | null) ?? null,
+    managerApproval: mapManagerApproval(raw.managerApproval),
     items: Array.isArray(raw.items)
       ? raw.items.map((i) => mapOrderItem(i as Record<string, unknown>))
       : [],

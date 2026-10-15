@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
 import { StatusBadge } from "@/components/shared/status-badge"
+import { ApprovalBadge } from "@/components/order/approval-badge"
 import { OrderActions } from "@/components/order/order-actions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -24,7 +25,7 @@ import { getOrderTotal } from "@/lib/mappers"
 
 type OrderDetailPageProps = {
   params: Promise<{ orderNumber: string }>
-  searchParams: Promise<{ placed?: string }>
+  searchParams: Promise<{ placed?: string; approval?: string }>
 }
 
 function DetailRow({
@@ -66,6 +67,9 @@ export default async function OrderDetailPage({
   if (order.businessId !== ctx.active.id) return <AccessDenied />
 
   const total = getOrderTotal(order)
+  const approvalDraft = order.status === "draft" && order.managerApproval != null
+  const canApprove = ctx.active.permissions.includes("orders_approve")
+  const businessPanelUrl = process.env.NEXT_PUBLIC_BUSINESS_PANEL_URL?.replace(/\/$/, "") || null
   const reorderable = order.items.some((item) => item.productId)
   const methodLabel =
     order.fulfillmentMethod === "collection"
@@ -90,7 +94,9 @@ export default async function OrderDetailPage({
         actions={
           <div className="flex items-center gap-2">
             {query.placed ? (
-              <Badge variant="default">{t("orders.placedOne")}</Badge>
+              <Badge variant="default">
+                {query.approval ? t("approval.placedPending") : t("orders.placedOne")}
+              </Badge>
             ) : null}
             <Button
               variant="outline"
@@ -102,6 +108,48 @@ export default async function OrderDetailPage({
           </div>
         }
       />
+
+      {approvalDraft && order.managerApproval ? (
+        <div
+          className={
+            order.managerApproval.state === "rejected"
+              ? "rounded-2xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-900"
+              : "rounded-2xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-sm text-amber-900"
+          }
+        >
+          <div className="mb-1">
+            <ApprovalBadge state={order.managerApproval.state} />
+          </div>
+          <p>
+            {order.managerApproval.state === "rejected"
+              ? t("approval.bannerRejected", { name: order.managerApproval.decidedByName ?? "—" })
+              : order.managerApproval.state === "withdrawn"
+                ? t("approval.bannerWithdrawn")
+                : t("approval.bannerPending")}
+          </p>
+          {order.managerApproval.reason ? (
+            <p className="mt-1">{t("approval.reason", { reason: order.managerApproval.reason })}</p>
+          ) : null}
+          {canApprove && order.managerApproval.state === "pending" ? (
+            <p className="mt-2 text-xs">
+              {businessPanelUrl ? (
+                <a
+                  className="font-medium underline underline-offset-4"
+                  href={`${businessPanelUrl}/approvals/${encodeURIComponent(order.orderNumber)}`}
+                >
+                  {t("approval.decideInPanel")}
+                </a>
+              ) : (
+                t("approval.approverHint")
+              )}
+            </p>
+          ) : null}
+        </div>
+      ) : order.managerApproval?.state === "approved" ? (
+        <p className="text-sm text-muted-foreground">
+          {t("approval.bannerApproved", { name: order.managerApproval.decidedByName ?? "—" })}
+        </p>
+      ) : null}
 
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-5">
@@ -117,7 +165,11 @@ export default async function OrderDetailPage({
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <StatusBadge status={order.fulfillmentMethod} />
-                <StatusBadge status={order.status} />
+                {approvalDraft && order.managerApproval ? (
+                  <ApprovalBadge state={order.managerApproval.state} />
+                ) : (
+                  <StatusBadge status={order.status} />
+                )}
               </div>
             </div>
 
@@ -236,6 +288,8 @@ export default async function OrderDetailPage({
               orderNumber={order.orderNumber}
               status={order.status}
               hasReorderableItems={reorderable}
+              managerApproval={order.managerApproval}
+              isRequester={order.createdBy === ctx.user.id}
             />
             <p className="mt-3 text-xs text-muted-foreground">
               {t("orders.actionsHint")}

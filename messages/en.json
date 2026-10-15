@@ -405,5 +405,35 @@
     "open": "Open",
     "uncollectible": "Uncollectible",
     "void": "Void"
+  },
+  "approval": {
+    "state": {
+      "pending": "Waiting for a manager",
+      "approving": "Being sent",
+      "approved": "Let through",
+      "rejected": "Not let through",
+      "withdrawn": "Withdrawn"
+    },
+    "rule": {
+      "role": "Your role needs a manager's OK for orders.",
+      "member": "Your orders always go to a manager first.",
+      "amount": "Orders over {limit} need a manager's OK."
+    },
+    "checkoutNote": "This order goes to a manager first. Nothing reaches the supplier until they let it through.",
+    "checkoutSubmit": "Send to a manager",
+    "placedPending": "Sent to a manager",
+    "bannerPending": "Waiting for a manager's OK — this order hasn't gone to the supplier yet. You'll get a notification when they decide.",
+    "bannerApproved": "{name} let this order through — it went to the supplier.",
+    "bannerRejected": "{name} didn't let this order through.",
+    "bannerWithdrawn": "You withdrew this request — it never went to the supplier.",
+    "reason": "Reason: {reason}",
+    "withdraw": "Withdraw my request",
+    "withdrawConfirm": "Withdraw this request? It won't go to the supplier.",
+    "withdrawn": "Request withdrawn",
+    "toCart": "Put back in my cart",
+    "toCartDone": "Back in your cart",
+    "decideInPanel": "Open in the business panel",
+    "approverHint": "You can let this order through in the business panel or the app.",
+    "conflict": "This request changed a moment ago — reload the page to see the latest."
   }
 }

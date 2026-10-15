@@ -6,6 +6,7 @@ import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { ExportTableButton } from "@/components/shared/export-table-button"
 import { ListFilterBar, ListPagination } from "@/components/shared/list-filter-bar"
+import { ApprovalBadge } from "@/components/order/approval-badge"
 import { StatusBadge } from "@/components/shared/status-badge"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
 import { OrderStatusTabs } from "@/components/storefront/order-status-tabs"
@@ -303,7 +304,11 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                         )}
                       </TableCell>
                       <TableCell>
-                        <StatusBadge status={order.status} />
+                        {order.status === "draft" && order.managerApproval ? (
+                          <ApprovalBadge state={order.managerApproval.state} />
+                        ) : (
+                          <StatusBadge status={order.status} />
+                        )}
                       </TableCell>
                       <TableCell className="text-right font-medium tabular-nums text-[var(--brand-navy)]">
                         {total > 0

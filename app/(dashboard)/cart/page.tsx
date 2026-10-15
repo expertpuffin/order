@@ -9,6 +9,7 @@ import { CartEditor } from "@/components/order/cart-editor"
 import { CheckoutForm } from "@/components/order/checkout-form"
 import { Button } from "@/components/ui/button"
 import { getCart } from "@/lib/api/cart"
+import { checkOrderApproval } from "@/lib/api/orders"
 import { getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
 import { hasTeamPermission } from "@/lib/permissions"
@@ -24,6 +25,10 @@ export default async function CartPage() {
   const { lines, checkoutGroups, checkoutError, pricing, couponCode } =
     await getCart(ctx.active.id)
   const checkoutSupplierId = checkoutGroups[0]?.supplierId ?? null
+  // Will this order wait for a manager? (the backend decides again at checkout)
+  const approval = lines.length
+    ? await checkOrderApproval(ctx.active.id, pricing?.grandTotal ?? 0)
+    : null
 
   return (
     <div className="space-y-5">
@@ -123,6 +128,11 @@ export default async function CartPage() {
               lineCount={lines.length}
               businessName={ctx.active.tradingName || ctx.active.businessName}
               businessPostcode={ctx.active.postcode}
+              approval={
+                approval?.required && approval.rule
+                  ? { code: approval.rule.code, limit: approval.rule.limit }
+                  : null
+              }
             />
           </div>
         </div>

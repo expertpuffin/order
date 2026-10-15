@@ -405,5 +405,35 @@
     "open": "Açık",
     "uncollectible": "Tahsil edilemez",
     "void": "Geçersiz"
+  },
+  "approval": {
+    "state": {
+      "pending": "Yönetici izni bekliyor",
+      "approving": "Gönderiliyor",
+      "approved": "İzin verildi",
+      "rejected": "İzin verilmedi",
+      "withdrawn": "Geri çekildi"
+    },
+    "rule": {
+      "role": "Rolün siparişler için yönetici izni gerektiriyor.",
+      "member": "Siparişlerin her zaman önce yöneticiye gider.",
+      "amount": "{limit} üstündeki siparişler yönetici izni gerektirir."
+    },
+    "checkoutNote": "Bu sipariş önce yöneticiye gider. Yönetici izin verene kadar tedarikçiye hiçbir şey gitmez.",
+    "checkoutSubmit": "Yöneticiye gönder",
+    "placedPending": "Yöneticiye gönderildi",
+    "bannerPending": "Yönetici izni bekleniyor — bu sipariş henüz tedarikçiye gitmedi. Karar verilince bildirim alacaksın.",
+    "bannerApproved": "{name} bu siparişe izin verdi — sipariş tedarikçiye gitti.",
+    "bannerRejected": "{name} bu siparişe izin vermedi.",
+    "bannerWithdrawn": "Bu isteği geri çektin — tedarikçiye hiç gitmedi.",
+    "reason": "Neden: {reason}",
+    "withdraw": "İsteğimi geri çek",
+    "withdrawConfirm": "Bu istek geri çekilsin mi? Tedarikçiye gitmeyecek.",
+    "withdrawn": "İstek geri çekildi",
+    "toCart": "Sepetime geri koy",
+    "toCartDone": "Sepetine geri kondu",
+    "decideInPanel": "İşletme panelinde aç",
+    "approverHint": "Bu siparişe işletme panelinden ya da uygulamadan izin verebilirsin.",
+    "conflict": "Bu istek az önce değişti — son hâlini görmek için sayfayı yenile."
   }
 }
