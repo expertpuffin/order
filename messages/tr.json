@@ -438,6 +438,7 @@
   },
   "feedback": {
     "menu": "Geri bildirim gönder",
+    "button": "Geri bildirim",
     "title": "Geri bildirim gönderin",
     "subtitle": "Ordoria sizin için nasıl çalışıyor? İyi gideni ya da işinizi zorlaştıranı bize yazın.",
     "ratingLabel": "Deneyiminiz nasıldı?",

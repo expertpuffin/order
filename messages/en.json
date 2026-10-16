@@ -438,6 +438,7 @@
   },
   "feedback": {
     "menu": "Send feedback",
+    "button": "Feedback",
     "title": "Send us feedback",
     "subtitle": "How is Ordoria working for you? Tell us what went well or what got in the way.",
     "ratingLabel": "How was it?",

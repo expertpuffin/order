@@ -2,9 +2,10 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Heart, Menu, Search, ShoppingBag } from "lucide-react"
+import { Heart, Menu, MessageSquareHeart, Search, ShoppingBag } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
+import { useFeedback } from "@/components/feedback/feedback-dialog"
 import { useAuthGate } from "@/components/storefront/auth-gate"
 import {
   DeliveryBusinessPicker,
@@ -42,6 +43,7 @@ export function StorefrontTopBar({
 }: StorefrontTopBarProps) {
   const t = useT()
   const { isAuthenticated, openAuthGate } = useAuthGate()
+  const { openFeedback } = useFeedback()
 
   const cartBadge =
     cartCount > 0 ? (
@@ -158,6 +160,18 @@ export function StorefrontTopBar({
           )}
 
           <div className="flex items-center divide-x divide-[var(--sidebar-border)] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+            {isAuthenticated ? (
+              <button
+                type="button"
+                onClick={openFeedback}
+                className={cn(railCell, "gap-2 px-2.5 text-sm font-medium lg:px-3")}
+                aria-label={t("feedback.menu")}
+              >
+                <MessageSquareHeart className="size-[18px] stroke-[1.75] text-[var(--brand-orange)]" />
+                <span className="hidden lg:inline">{t("feedback.button")}</span>
+              </button>
+            ) : null}
+
             <StorefrontLocaleMenu variant="rail" />
 
             <Link
