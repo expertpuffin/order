@@ -486,5 +486,40 @@
     "close": "Close",
     "helpTitle": "Tell us how it's going",
     "helpBody": "Found a problem or have an idea? Send feedback, with a screenshot if it helps. It goes straight to the Ordoria team."
+  },
+  "payment": {
+    "loading": "Loading payment options…",
+    "title": "Payment",
+    "account": "On my supplier account",
+    "accountSub": "The supplier invoices you · {days} days to pay",
+    "accountCredit": "{amount} credit left",
+    "ordoria": "Pay by card (Ordoria)",
+    "ordoriaSub": "{amount} held on your card, taken when the supplier confirms",
+    "ordoriaVat": "Includes {vat} VAT and the service fee · anything not delivered goes back to your card",
+    "ordoriaFeeIncluded": "Includes the service fee · anything not delivered goes back to your card",
+    "closed": {
+      "CREDIT_LIMIT": "Your supplier account is at its limit — you can pay for this order by card.",
+      "OVERDUE": "You have an overdue invoice — you can pay for this order by card.",
+      "NO_ACCOUNT": "You don't have an account with this supplier — the order is paid by card through Ordoria."
+    },
+    "blocked": "The supplier has put your account on hold. Contact them to order.",
+    "payOrderWith": "{amount} from this card",
+    "payFeeWith": "{amount} service fee from this card",
+    "feeHoldHint": "Held on your card now and only taken when the supplier confirms.",
+    "cards": "Saved cards",
+    "expired": "Expired",
+    "addCard": "Add a card",
+    "saveCard": "Save card",
+    "cardNotSaved": "The card wasn't saved.",
+    "cardRequired": "Choose or add a card first.",
+    "cardDeclined": "The card couldn't be used — try another card.",
+    "cardsUnavailable": "Card payments can't load right now. Try again in a moment.",
+    "orderLabel": "Payment",
+    "orderHeld": "By card · {amount} held",
+    "orderTaken": "By card · {amount} taken",
+    "orderPartlyRefunded": "By card · {amount} paid, {refund} refunded",
+    "orderRefunded": "By card · {amount} refunded",
+    "orderReleased": "By card · hold released, nothing taken",
+    "orderExpired": "By card · hold expired"
   }
 }

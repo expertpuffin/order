@@ -339,6 +339,14 @@ export type Order = {
   statusHistory: OrderStatusHistory[]
   fulfillmentMethod: "delivery" | "collection"
   paymentOption: string | null
+  /** Paid with Ordoria ("ordoria"): one card hold for the whole order, fee included */
+  payment: {
+    mode: "account" | "ordoria"
+    status: "none" | "authorized" | "paid" | "partially_refunded" | "refunded" | "released" | "expired"
+    authorizedAmount: number
+    capturedAmount: number
+    refundedAmount: number
+  }
   customerNo: string | null
   snapshot: {
     businessNumber: string | null

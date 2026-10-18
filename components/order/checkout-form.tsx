@@ -1,9 +1,12 @@
 "use client"
 
-import { useActionState, useEffect, useMemo, useState } from "react"
+import { startTransition, useActionState, useEffect, useMemo, useRef, useState, type FormEvent } from "react"
 import { Loader2, ShieldCheck, Store, Truck } from "lucide-react"
 
 import { checkoutAction } from "@/lib/actions"
+import { holdServiceFeeAction } from "@/lib/actions/payments"
+import { confirmCardHold } from "@/lib/stripe-client"
+import { CheckoutPayment, useCheckoutPayment } from "@/components/order/checkout-payment"
 import { useActionToast } from "@/lib/action-toast"
 import {
   loadSupplierAvailability,
@@ -54,10 +57,42 @@ export function CheckoutForm({
 }: CheckoutFormProps) {
   const t = useT()
   const { locale } = useI18n()
-  const [state, formAction, pending] = useActionState(checkoutAction, null)
-  useActionToast(state)
-
   const [fulfillment, setFulfillment] = useState<FulfillmentMethod>("delivery")
+  const payment = useCheckoutPayment(businessId, supplierId, fulfillment, {
+    managerApproval: Boolean(approval),
+  })
+  const [paying, setPaying] = useState(false)
+  const [payError, setPayError] = useState<string | null>(null)
+  const paymentRef = useRef(payment)
+  useEffect(() => {
+    paymentRef.current = payment
+  })
+
+  // Paid with Ordoria and the bank wants 3D Secure: show its step, then place the
+  // order again on the confirmed hold. A closed account that can pay by card switches.
+  const [state, formAction, pending] = useActionState(
+    async (prev: Awaited<ReturnType<typeof checkoutAction>> | null, fd: FormData) => {
+      const res = await checkoutAction(prev, fd)
+      if (!res || !("code" in res)) return res
+      const details = ("details" in res ? res.details : null) as Record<string, unknown> | null
+      if (res.code === "CREDIT_HOLD" && details?.cardAvailable) {
+        paymentRef.current.setChoice("ordoria")
+        return res
+      }
+      const key = paymentRef.current.publishableKey
+      if (res.code !== "PAYMENT_ACTION_REQUIRED" || !key) return res
+      const step = await confirmCardHold(key, String(details?.clientSecret ?? ""))
+      if (step.status === "canceled") return null
+      if (step.status === "failed") return { error: step.message }
+      const retry = new FormData()
+      fd.forEach((value, name) => retry.set(name, value))
+      retry.delete("paymentMethodId")
+      retry.set("orderPaymentIntentId", String(details?.paymentIntentId ?? ""))
+      return checkoutAction(prev, retry)
+    },
+    null
+  )
+  useActionToast(state)
   const [showNote, setShowNote] = useState(false)
   const [daysLoading, setDaysLoading] = useState(false)
   const [slotsLoading, setSlotsLoading] = useState(false)
@@ -204,8 +239,54 @@ export function CheckoutForm({
 
   const scheduleLoading = daysLoading || slotsLoading
 
+  const send = (fd: FormData) => startTransition(() => formAction(fd))
+
+  /** Card first (fee hold, or the whole order by card), then the order. */
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const fd = new FormData(event.currentTarget)
+    setPayError(null)
+    if (payment.options?.moduleOn) fd.set("paymentMode", payment.mode)
+    if (payment.cardNeeded && !payment.cardId) {
+      setPayError(t("payment.cardRequired"))
+      return
+    }
+    if (payment.payByCard && payment.cardId) {
+      // The server holds the exact amount on this card while it places the order.
+      fd.set("paymentMethodId", payment.cardId)
+      send(fd)
+      return
+    }
+    if (payment.feeDue && payment.cardId) {
+      setPaying(true)
+      try {
+        const res = await holdServiceFeeAction(businessId, payment.cardId)
+        if ("error" in res || !res.hold) {
+          setPayError(("error" in res && res.error) || t("payment.cardDeclined"))
+          return
+        }
+        if (res.hold.status === "requires_action") {
+          if (!payment.publishableKey) {
+            setPayError(t("payment.cardsUnavailable"))
+            return
+          }
+          const step = await confirmCardHold(payment.publishableKey, res.hold.clientSecret)
+          if (step.status === "canceled") return
+          if (step.status === "failed") {
+            setPayError(step.message)
+            return
+          }
+        }
+        fd.set("serviceFeePaymentIntentId", res.hold.paymentIntentId)
+      } finally {
+        setPaying(false)
+      }
+    }
+    send(fd)
+  }
+
   return (
-    <form action={formAction} className="space-y-5">
+    <form onSubmit={(e) => void submit(e)} className="space-y-5">
       <input type="hidden" name="businessId" value={businessId} />
       <input type="hidden" name="fulfillmentMethod" value={fulfillment} />
       <input type="hidden" name="requestedDeliveryDate" value={deliveryDate} />
@@ -415,6 +496,8 @@ export function CheckoutForm({
         ) : null}
       </div>
 
+      <CheckoutPayment businessId={businessId} payment={payment} />
+
       {approval ? (
         <div className="flex gap-2 rounded-[2px] border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm text-amber-900">
           <ShieldCheck className="mt-0.5 size-4 shrink-0" />
@@ -431,9 +514,9 @@ export function CheckoutForm({
         </div>
       ) : null}
 
-      {state && "error" in state && state.error ? (
+      {payError || (state && "error" in state && state.error) ? (
         <p className="rounded-[2px] border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-          {state.error}
+          {payError || (state && "error" in state ? state.error : null)}
         </p>
       ) : null}
 
@@ -442,13 +525,16 @@ export function CheckoutForm({
         className="h-11 w-full rounded-[2px] btn-brand text-base font-semibold text-white"
         disabled={
           pending ||
+          paying ||
+          payment.loading ||
+          payment.blocked ||
           lineCount === 0 ||
           !deliveryDate ||
           !deliveryTime ||
           scheduleLoading
         }
       >
-        {pending
+        {pending || paying
           ? t("cart.checkoutSubmitting")
           : approval
             ? t("approval.checkoutSubmit")

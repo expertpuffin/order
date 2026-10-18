@@ -40,6 +40,26 @@ function actionError(error: unknown) {
   return { error: "Something went wrong" }
 }
 
+/**
+ * Checkout errors the form acts on, with just what it needs: the bank's 3D Secure
+ * step (PAYMENT_ACTION_REQUIRED) and whether a closed account can pay by card.
+ */
+function checkoutError(error: unknown) {
+  if (!(error instanceof ApiError)) return actionError(error)
+  const d = error.details ?? {}
+  if (error.code === "PAYMENT_ACTION_REQUIRED") {
+    return {
+      error: error.message,
+      code: error.code,
+      details: { paymentIntentId: String(d.paymentIntentId ?? ""), clientSecret: String(d.clientSecret ?? "") },
+    }
+  }
+  if (error.code === "CREDIT_HOLD") {
+    return { error: error.message, code: error.code, details: { cardAvailable: Boolean(d.cardAvailable) } }
+  }
+  return { error: error.message, code: error.code ?? null }
+}
+
 export async function loginAction(_prev: unknown, formData: FormData) {
   const email = formString(formData, "email")
   const password = formString(formData, "password")
@@ -336,6 +356,7 @@ export async function checkoutAction(_prev: unknown, formData: FormData) {
     return { error: "Delivery date is required" }
   }
 
+  const paymentMode = formString(formData, "paymentMode")
   let orders
   try {
     orders = await checkoutCart(businessId, {
@@ -346,9 +367,13 @@ export async function checkoutAction(_prev: unknown, formData: FormData) {
           : "delivery",
       deliveryTime: formString(formData, "deliveryTime") || null,
       specialNote: formString(formData, "specialNote") || null,
+      serviceFeePaymentIntentId: formString(formData, "serviceFeePaymentIntentId") || undefined,
+      paymentMode: paymentMode === "ordoria" || paymentMode === "account" ? paymentMode : undefined,
+      paymentMethodId: formString(formData, "paymentMethodId") || undefined,
+      orderPaymentIntentId: formString(formData, "orderPaymentIntentId") || undefined,
     })
   } catch (error) {
-    return actionError(error)
+    return checkoutError(error)
   }
 
   revalidatePath("/orders")

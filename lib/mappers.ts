@@ -164,6 +164,16 @@ export function mapOrder(raw: Record<string, unknown>): Order {
       }
     }),
     paymentOption: (raw.paymentOption as string | null) ?? null,
+    payment: (() => {
+      const p = (raw.payment ?? {}) as Record<string, unknown>
+      return {
+        mode: p.mode === "ordoria" ? ("ordoria" as const) : ("account" as const),
+        status: (p.status as Order["payment"]["status"]) ?? "none",
+        authorizedAmount: Number(p.authorizedAmount ?? 0),
+        capturedAmount: Number(p.capturedAmount ?? 0),
+        refundedAmount: Number(p.refundedAmount ?? 0),
+      }
+    })(),
     customerNo: (raw.customerNo as string | null) ?? null,
     snapshot: {
       businessNumber: (snapshot.businessNumber as string | null) ?? null,

@@ -53,6 +53,8 @@ export type CartPricing = {
 export type CartLine = {
   id: string
   productId: string
+  /** Supplier listing behind the line — what the pricing preview prices */
+  listingId: string | null
   name: string
   brand: string | null
   imageUrl: string | null
@@ -104,6 +106,7 @@ export function mapCartLine(raw: Record<string, unknown>): CartLine {
   return {
     id: asId(raw._id),
     productId: asId(product._id),
+    listingId: raw.listing ? asId(raw.listing) : null,
     name: String(product.name ?? ""),
     brand: (product.brand as string | null) ?? null,
     imageUrl: (product.imageUrl as string | null) ?? null,
@@ -223,6 +226,12 @@ export type CheckoutInput = {
   fulfillmentMethod?: "delivery" | "collection"
   deliveryTime?: string | null
   specialNote?: string | null
+  /** Account mode: the service fee hold taken before checkout */
+  serviceFeePaymentIntentId?: string
+  /** "ordoria" = the server holds the whole order on `paymentMethodId` (or this hold) */
+  paymentMode?: "account" | "ordoria"
+  paymentMethodId?: string
+  orderPaymentIntentId?: string
 }
 
 export type PlacedOrder = {

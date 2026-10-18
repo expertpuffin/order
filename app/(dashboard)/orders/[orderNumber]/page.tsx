@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { getOrder } from "@/lib/api/orders"
+import type { Order } from "@/lib/types"
 import { getBusinessContext } from "@/lib/business-context"
 import { ApiError } from "@/lib/api/errors"
 import { getTranslator } from "@/lib/i18n"
@@ -43,6 +44,35 @@ function DetailRow({
       </span>
     </div>
   )
+}
+
+/** Paid with Ordoria: where the order's money is now ("By card · £84.20 taken"). */
+function orderPaymentLabel(
+  order: Order,
+  t: (key: string, params?: Record<string, string>) => string
+) {
+  const gbp = (n: number) =>
+    new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n)
+  const p = order.payment
+  switch (p.status) {
+    case "authorized":
+      return t("payment.orderHeld", { amount: gbp(p.authorizedAmount) })
+    case "paid":
+      return t("payment.orderTaken", { amount: gbp(p.capturedAmount) })
+    case "partially_refunded":
+      return t("payment.orderPartlyRefunded", {
+        amount: gbp(p.capturedAmount - p.refundedAmount),
+        refund: gbp(p.refundedAmount),
+      })
+    case "refunded":
+      return t("payment.orderRefunded", { amount: gbp(p.refundedAmount) })
+    case "released":
+      return t("payment.orderReleased")
+    case "expired":
+      return t("payment.orderExpired")
+    default:
+      return t("payment.ordoria")
+  }
 }
 
 export default async function OrderDetailPage({
@@ -203,6 +233,9 @@ export default async function OrderDetailPage({
                   .join(", ") || null
               }
             />
+            {order.payment.mode === "ordoria" ? (
+              <DetailRow label={t("payment.orderLabel")} value={orderPaymentLabel(order, t)} />
+            ) : null}
             <Separator className="my-2" />
             <DetailRow label={t("orders.specialNote")} value={order.specialNote} />
             <DetailRow

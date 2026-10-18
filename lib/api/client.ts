@@ -119,6 +119,7 @@ export async function apiFetch<T>(
     error?: string
     errors?: string[]
     code?: string
+    details?: Record<string, unknown>
     data?: T
   } | null
 
@@ -127,7 +128,8 @@ export async function apiFetch<T>(
       json?.message || json?.error || `Request failed (${res.status})`,
       res.status,
       json?.errors,
-      json?.code
+      json?.code,
+      json?.details
     )
   }
 

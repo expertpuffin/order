@@ -486,5 +486,40 @@
     "close": "Kapat",
     "helpTitle": "Nasıl gittiğini bize anlatın",
     "helpBody": "Bir sorun mu buldunuz ya da bir fikriniz mi var? Gerekirse ekran görüntüsüyle geri bildirim gönderin; doğrudan Ordoria ekibine ulaşır."
+  },
+  "payment": {
+    "loading": "Ödeme seçenekleri yükleniyor…",
+    "title": "Ödeme",
+    "account": "Tedarikçi hesabıma",
+    "accountSub": "Tedarikçi faturalar · {days} gün vade",
+    "accountCredit": "kalan limit {amount}",
+    "ordoria": "Kartla öde (Ordoria)",
+    "ordoriaSub": "{amount} kartında bloke edilir, tedarikçi onaylayınca çekilir",
+    "ordoriaVat": "KDV {vat} ve hizmet ücreti dahil · eksik gelen ürün kartına iade edilir",
+    "ordoriaFeeIncluded": "Hizmet ücreti dahil · eksik gelen ürün kartına iade edilir",
+    "closed": {
+      "CREDIT_LIMIT": "Tedarikçi hesabında limit doldu — bu siparişi kartla ödeyebilirsin.",
+      "OVERDUE": "Vadesi geçmiş faturan var — bu siparişi kartla ödeyebilirsin.",
+      "NO_ACCOUNT": "Bu tedarikçiyle hesabın yok — sipariş Ordoria üzerinden kartla ödenir."
+    },
+    "blocked": "Tedarikçi hesabını beklemeye aldı. Sipariş için onlarla görüş.",
+    "payOrderWith": "{amount} bu karttan",
+    "payFeeWith": "{amount} hizmet ücreti bu karttan",
+    "feeHoldHint": "Şimdi kartında bloke edilir, yalnızca tedarikçi onaylayınca çekilir.",
+    "cards": "Kayıtlı kartlar",
+    "expired": "Süresi doldu",
+    "addCard": "Kart ekle",
+    "saveCard": "Kartı kaydet",
+    "cardNotSaved": "Kart kaydedilemedi.",
+    "cardRequired": "Önce bir kart seç ya da ekle.",
+    "cardDeclined": "Kart kullanılamadı — başka bir kart dene.",
+    "cardsUnavailable": "Kart ödemesi şu an yüklenemiyor. Biraz sonra tekrar dene.",
+    "orderLabel": "Ödeme",
+    "orderHeld": "Kartla · {amount} bloke",
+    "orderTaken": "Kartla · {amount} çekildi",
+    "orderPartlyRefunded": "Kartla · {amount} ödendi, {refund} iade edildi",
+    "orderRefunded": "Kartla · {amount} iade edildi",
+    "orderReleased": "Kartla · bloke kaldırıldı, ücret çekilmedi",
+    "orderExpired": "Kartla · bloke süresi doldu"
   }
 }
