@@ -28,11 +28,11 @@ export function CartCouponPanel({
   const apply = (remove = false) => {
     startTransition(async () => {
       const result = await applyCartCouponAction(businessId, remove ? { remove: true } : { code })
-      if (result?.error) {
+      if ("error" in result) {
         toast.error(result.error)
         return
       }
-      if (result?.couponError) {
+      if (result.couponError) {
         toast.error(t("promotions.couponInvalid"))
       } else if (!remove && code) {
         toast.success(t("promotions.couponApplied"))

@@ -87,10 +87,10 @@ export function BusinessApplyForm() {
             ? t("onboarding.business.lookupUnavailable")
             : result.error
         )
-        setAddresses(result.addresses ?? [])
+        setAddresses([...(result.addresses ?? [])])
         return
       }
-      const list = result.addresses ?? []
+      const list = [...(result.addresses ?? [])]
       setAddresses(list)
       if (!list.length) {
         setLookupError(t("onboarding.business.noAddresses"))
