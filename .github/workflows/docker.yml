@@ -1,0 +1,37 @@
+# Builds the production image and pushes it to GitHub Container Registry.
+# NEXT_PUBLIC_* can be overridden with repository variables (Settings → Variables).
+# The server picks it up with: kubectl -n ordoria rollout restart deploy/<name>
+name: Docker image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'https://api.ordoria.com' }}
+            NEXT_PUBLIC_BUSINESS_PANEL_URL=${{ vars.NEXT_PUBLIC_BUSINESS_PANEL_URL || 'https://app.ordoria.com' }}
+          tags: |
+            ghcr.io/expertpuffin/ordoria-order-panel:latest
+            ghcr.io/expertpuffin/ordoria-order-panel:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
