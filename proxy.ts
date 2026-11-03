@@ -4,6 +4,7 @@ import {
   ACCESS_COOKIE,
   REFRESH_COOKIE,
   applySessionToResponseCookies,
+  cookieOptions,
 } from "@/lib/auth/session"
 import {
   callRefreshApi,
@@ -17,6 +18,8 @@ const PUBLIC_PATHS = [
   "/catalog",
   "/verify-email",
   "/onboarding",
+  // Arrival from the business panel: signs the user in (app/api/auth/handoff)
+  "/api/auth/handoff",
 ]
 
 function isPublic(pathname: string) {
@@ -67,8 +70,9 @@ async function route(request: NextRequest): Promise<NextResponse> {
       const response = NextResponse.redirect(
         new URL(authGateHref({ tab: "login", next: pathname }), request.url)
       )
-      response.cookies.set(ACCESS_COOKIE, "", { path: "/", maxAge: 0 })
-      response.cookies.set(REFRESH_COOKIE, "", { path: "/", maxAge: 0 })
+      // Same domain the cookies were set on (AUTH_COOKIE_DOMAIN), or they'd survive
+      response.cookies.set(ACCESS_COOKIE, "", cookieOptions(0))
+      response.cookies.set(REFRESH_COOKIE, "", cookieOptions(0))
       return withSecurityHeaders(response)
     }
   }

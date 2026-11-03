@@ -105,19 +105,12 @@ export async function logoutSession() {
     /* ignore network errors on logout */
   }
 
-  // Explicit expire — jar.delete alone can leave cookies readable by proxy
-  const clear = {
-    httpOnly: true,
-    sameSite: "lax" as const,
-    path: "/",
-    maxAge: 0,
-  }
-  jar.set(ACCESS_COOKIE, "", clear)
-  jar.set(REFRESH_COOKIE, "", clear)
-  jar.set(USER_COOKIE, "", clear)
-  jar.delete(ACCESS_COOKIE)
-  jar.delete(REFRESH_COOKIE)
-  jar.delete(USER_COOKIE)
+  // Explicit expire — jar.delete alone can leave cookies readable by proxy.
+  // Session cookies live on AUTH_COOKIE_DOMAIN (".ordoria.com", shared with the
+  // business panel), so they must be cleared with that same domain or they
+  // survive logout. (One Set-Cookie per name per response — the jar keys by name.)
+  const clear = cookieOptions(0)
+  for (const name of [ACCESS_COOKIE, REFRESH_COOKIE, USER_COOKIE]) jar.set(name, "", clear)
 }
 
 export async function getSessionUser(): Promise<User | null> {
