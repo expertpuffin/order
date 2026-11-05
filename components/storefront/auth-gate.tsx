@@ -32,6 +32,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { CatalogProduct } from "@/lib/api/catalog"
 import { ProductAddSheet } from "@/components/storefront/product-add-sheet"
+import { safeNextPath } from "@/lib/safe-redirect"
 
 export type AuthGateIntent =
   | "browse"
@@ -341,10 +342,7 @@ function AuthQuerySync({
     const auth = searchParams.get("auth")
     if (auth !== "login" && auth !== "register") return
     const rawNext = searchParams.get("next")
-    const next =
-      rawNext?.startsWith("/") && !rawNext.startsWith("//")
-        ? rawNext
-        : "/onboarding"
+    const next = safeNextPath(rawNext, "/onboarding")
     if (isAuthenticated && auth === "login") {
       onClearAuthenticatedLogin()
       return
