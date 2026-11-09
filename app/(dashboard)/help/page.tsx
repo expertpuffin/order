@@ -5,6 +5,7 @@ import { SendFeedbackButton } from "@/components/feedback/send-feedback-button"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
 import { Button } from "@/components/ui/button"
 import { getTranslator } from "@/lib/i18n"
+import { STATUS_PAGE_URL } from "@/lib/status-page"
 
 export default async function HelpPage() {
   const { t } = await getTranslator()
@@ -45,6 +46,16 @@ export default async function HelpPage() {
             {t("storefront.supportEmail")}
           </a>
           {t("storefront.helpBodyAfter")}
+        </p>
+        <p className="-mt-3 mb-5 text-sm leading-relaxed text-muted-foreground">
+          <a
+            href={STATUS_PAGE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-[var(--brand-orange)] underline-offset-4 hover:text-[var(--brand-orange)] hover:underline"
+          >
+            {t("common.systemStatus")}
+          </a>
         </p>
         <Button
           className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
