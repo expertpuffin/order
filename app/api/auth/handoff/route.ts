@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server"
-
 import { getApiBaseUrl } from "@/lib/api/config"
+import { localRedirect } from "@/lib/local-redirect"
 import {
   applySessionToResponseCookies,
   BUSINESS_COOKIE,
@@ -10,8 +9,11 @@ import {
 
 export const runtime = "nodejs"
 
-/** Relative path on this panel only — never an open redirect. */
-const safeNext = (v: string | null) => (v && v.startsWith("/") && !v.startsWith("//") && !v.startsWith("/\\") ? v : "/")
+/** Relative path on this panel only — never an open redirect or header injection. */
+const safeNext = (v: string | null) =>
+  v && v.startsWith("/") && !v.startsWith("//") && !v.startsWith("/\\") && !/[\u0000-\u001f\u007f]/.test(v)
+    ? v
+    : "/"
 
 /**
  * GET /api/auth/handoff?code=…&next=/products&business=<id>
@@ -24,8 +26,8 @@ export async function GET(request: Request) {
   const next = safeNext(url.searchParams.get("next"))
   const code = url.searchParams.get("code") ?? ""
   const business = url.searchParams.get("business") ?? ""
-  const target = new URL(next, url.origin)
-  const done = NextResponse.redirect(target)
+  // Relative Location: request.url here is the pod's bind address (0.0.0.0:3000)
+  const done = localRedirect(next)
   done.headers.set("Cache-Control", "no-store")
   done.headers.set("Referrer-Policy", "no-referrer")
   if (!/^[a-f0-9]{64}$/.test(code)) return done
