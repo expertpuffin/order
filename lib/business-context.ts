@@ -17,20 +17,23 @@ export type BusinessContext = {
   active: MerchantBusiness & { permissions: TeamPermission[] }
 }
 
+type Resolved = { ctx: BusinessContext | null; sessionExpired: boolean }
+
 /**
  * İstek başına bir kez çözümlenir. Aktif işletme rl_business_id cookie'sinden
  * seçilir; cookie yoksa/stale ise ilk işletme kullanılır.
  */
-export const getBusinessContext = cache(async (): Promise<BusinessContext | null> => {
+const resolveBusinessContext = cache(async (): Promise<Resolved> => {
   let user = await getSessionUser()
-  if (!user) return null
+  if (!user) return { ctx: null, sessionExpired: false }
 
   let businesses: Awaited<ReturnType<typeof getMyBusinesses>>
   try {
     businesses = await getMyBusinesses()
   } catch (error) {
     const status = (error as { status?: number }).status
-    if (status === 401) return null
+    // Oturum backend'de ölmüş (refresh de başarısız) — "işletmesi yok" değil
+    if (status === 401) return { ctx: null, sessionExpired: true }
     // Token geçersiz değilse cookie'deki kullanıcıyla devam etmeyi denemeye gerek yok
     throw error
   }
@@ -40,16 +43,26 @@ export const getBusinessContext = cache(async (): Promise<BusinessContext | null
       const me = await apiFetch<{ user: Record<string, unknown> }>("/api/users/me")
       user = mapUser(me.user)
     } catch {
-      return null
+      return { ctx: null, sessionExpired: false }
     }
   }
 
-  if (!businesses.length) return null
+  if (!businesses.length) return { ctx: null, sessionExpired: false }
 
   const jar = await cookies()
   const selectedId = jar.get(BUSINESS_COOKIE)?.value
   const active =
     businesses.find((business) => business.id === selectedId) ?? businesses[0]
 
-  return { user, businesses, active }
+  return { ctx: { user, businesses, active }, sessionExpired: false }
 })
+
+export const getBusinessContext = cache(
+  async (): Promise<BusinessContext | null> =>
+    (await resolveBusinessContext()).ctx
+)
+
+/** True when the rl_user cookie is present but the backend rejected the session (401). */
+export const isSessionExpired = cache(
+  async (): Promise<boolean> => (await resolveBusinessContext()).sessionExpired
+)
