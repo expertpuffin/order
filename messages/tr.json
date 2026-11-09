@@ -1,6 +1,7 @@
 {
   "common": {
     "logOut": "Çıkış yap",
+    "systemStatus": "Sistem durumu",
     "email": "E-posta",
     "password": "Şifre",
     "notifications": "Bildirimler",
