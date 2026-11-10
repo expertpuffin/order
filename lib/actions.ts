@@ -29,6 +29,7 @@ import {
   cookieOptions,
 } from "@/lib/auth/session"
 import { ApiError } from "@/lib/api/errors"
+import { safeNextPath } from "@/lib/safe-redirect"
 
 function formString(formData: FormData, key: string) {
   const value = formData.get(key)
@@ -71,7 +72,7 @@ export async function loginAction(_prev: unknown, formData: FormData) {
   } catch (error) {
     return actionError(error)
   }
-  redirect(next.startsWith("/") ? next : "/")
+  redirect(safeNextPath(next, "/"))
 }
 
 export async function logoutAction() {
