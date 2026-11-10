@@ -1,6 +1,7 @@
 {
   "common": {
     "logOut": "Log out",
+    "systemStatus": "System status",
     "email": "Email",
     "password": "Password",
     "notifications": "Notifications",

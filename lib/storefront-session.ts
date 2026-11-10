@@ -2,7 +2,7 @@ import { cache } from "react"
 
 import { getSessionUser } from "@/lib/api/auth"
 import { getCart, type CartLine, type CartPricing } from "@/lib/api/cart"
-import { getBusinessContext } from "@/lib/business-context"
+import { getBusinessContext, isSessionExpired } from "@/lib/business-context"
 import { hasTeamPermission } from "@/lib/permissions"
 import type { User } from "@/lib/types"
 
@@ -20,22 +20,25 @@ export type StorefrontSession = {
 
 export const getStorefrontSession = cache(
   async (): Promise<StorefrontSession> => {
-    const user = await getSessionUser()
-    if (!user) {
-      return {
-        user: null,
-        businessId: null,
-        businessName: null,
-        businessPostcode: null,
-        businessStatus: null,
-        canOrder: false,
-        cartLines: [],
-        cartPricing: null,
-        businesses: [],
-      }
+    const loggedOut: StorefrontSession = {
+      user: null,
+      businessId: null,
+      businessName: null,
+      businessPostcode: null,
+      businessStatus: null,
+      canOrder: false,
+      cartLines: [],
+      cartPricing: null,
+      businesses: [],
     }
 
+    const user = await getSessionUser()
+    if (!user) return loggedOut
+
     const ctx = await getBusinessContext()
+    // Stale rl_user cookie but the backend rejected the session: treat as
+    // logged out (login modal) instead of "no business yet" (→ /onboarding).
+    if (!ctx && (await isSessionExpired())) return loggedOut
     if (!ctx) {
       return {
         user,

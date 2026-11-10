@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server"
-
 import { refreshSession, logoutSession } from "@/lib/api/auth"
 import { authGateHref } from "@/lib/auth-gate-url"
 import { safeNextPath } from "@/lib/safe-redirect"
+import { localRedirect } from "@/lib/local-redirect"
 
 /**
  * Cookie-writable refresh endpoint — used when RSC cannot call cookies().set.
@@ -11,14 +10,19 @@ import { safeNextPath } from "@/lib/safe-redirect"
 export async function GET(request: Request) {
   const url = new URL(request.url)
   const safeNext = safeNextPath(url.searchParams.get("next"), "/")
+  const nextPath = url.searchParams.get("next") || "/"
+  const safeNext =
+    nextPath.startsWith("/") &&
+    !nextPath.startsWith("//") &&
+    !/[\u0000-\u001f\u007f]/.test(nextPath)
+      ? nextPath
+      : "/"
 
   const access = await refreshSession()
   if (!access) {
     await logoutSession().catch(() => {})
-    return NextResponse.redirect(
-      new URL(authGateHref({ tab: "login", next: safeNext }), url.origin)
-    )
+    return localRedirect(authGateHref({ tab: "login", next: safeNext }))
   }
 
-  return NextResponse.redirect(new URL(safeNext, url.origin))
+  return localRedirect(safeNext)
 }

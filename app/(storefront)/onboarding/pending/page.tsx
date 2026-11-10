@@ -1,17 +1,15 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
 
-import { getSessionUser } from "@/lib/api/auth"
-import { authGateHref } from "@/lib/auth-gate-url"
 import { OnboardingShell } from "@/components/onboarding/onboarding-shell"
-import { getMyBusinessesSafe } from "@/lib/onboarding-routing"
+import {
+  getMyBusinessesSafe,
+  requireOnboardingUser,
+} from "@/lib/onboarding-routing"
 import { getTranslator } from "@/lib/i18n"
 
 export default async function PendingOnboardingPage() {
-  const user = await getSessionUser()
-  if (!user) {
-    redirect(authGateHref({ tab: "login", next: "/onboarding/pending" }))
-  }
+  await requireOnboardingUser("/onboarding/pending")
 
   const businesses = await getMyBusinessesSafe()
   const pending = businesses.find((b) => b.status === "pending")
