@@ -14,6 +14,9 @@ permissions:
 
 jobs:
   build:
+    # Production pulls :latest, so only the reviewed main branch may publish —
+    # a manual run from any other branch does nothing.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

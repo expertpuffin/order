@@ -21,14 +21,18 @@ type RequestOptions = {
 }
 
 /** Single-flight refresh so parallel RSC fetches don't rotate thrash. */
-let refreshInFlight: Promise<string | null> | null = null
+// Keyed by the caller's own refresh token: the server process is shared by
+// every user, so a refresh started for one user must never hand its new
+// access token to another user's request.
+const refreshInFlight = new Map<string, Promise<string | null>>()
 
 async function refreshAccessForRequest(): Promise<string | null> {
-  if (refreshInFlight) return refreshInFlight
+  const refreshToken = await getRefreshToken()
+  if (!refreshToken) return null
+  const pending = refreshInFlight.get(refreshToken)
+  if (pending) return pending
 
-  refreshInFlight = (async () => {
-    const refreshToken = await getRefreshToken()
-    if (!refreshToken) return null
+  const flight = (async () => {
     const session = await callRefreshApi(refreshToken)
     if (!session) return null
     try {
@@ -38,10 +42,10 @@ async function refreshAccessForRequest(): Promise<string | null> {
     }
     return session.accessToken
   })().finally(() => {
-    refreshInFlight = null
+    refreshInFlight.delete(refreshToken)
   })
-
-  return refreshInFlight
+  refreshInFlight.set(refreshToken, flight)
+  return flight
 }
 
 export async function apiFetch<T>(
