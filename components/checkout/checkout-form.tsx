@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useActionToast } from "@/lib/action-toast"
 import { formatDayCard } from "@/lib/fulfilment-slots"
 import type { ApprovalRuleCode, FulfillmentMethod } from "@/lib/domain"
-import { formatMoney } from "@/lib/format"
+import { businessLabel, formatMoney } from "@/lib/format"
 import { cn } from "@/lib/utils"
 import { FormError } from "@/components/brand/form-error"
 
@@ -58,7 +58,7 @@ export function CheckoutForm({
   const { placeOrder, state, busy, error } = usePlaceOrder(businessId, payment)
   useActionToast(state)
 
-  const deliveryLabel = [businessName, businessPostcode].filter(Boolean).join(" · ") || null
+  const deliveryLabel = businessName || businessPostcode ? businessLabel(businessName, businessPostcode) : null
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

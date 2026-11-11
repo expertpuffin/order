@@ -79,7 +79,6 @@ export function StorefrontTopBar({
       isAuthenticated={isAuthenticated}
       onRequireAuth={() => openAuthGate()}
       className="w-full lg:max-w-[280px]"
-      variant="ledger"
     />
   )
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 
@@ -36,7 +36,7 @@ export function StorefrontCategoryNav({
     return map
   }, [categories])
 
-  const roots = byParent.get(null) ?? []
+  const roots = useMemo(() => byParent.get(null) ?? [], [byParent])
 
   const activeAncestors = useMemo(() => {
     const ids = new Set<string>()
@@ -53,18 +53,9 @@ export function StorefrontCategoryNav({
     return ids
   }, [activeSlug, categories])
 
-  const [openIds, setOpenIds] = useState<Set<string>>(
-    () => new Set(activeAncestors)
-  )
-
-  useEffect(() => {
-    if (activeAncestors.size === 0) return
-    setOpenIds((prev) => {
-      const next = new Set(prev)
-      for (const id of activeAncestors) next.add(id)
-      return next
-    })
-  }, [activeAncestors])
+  // The active category's branch is open unless the user closed it; other branches open when clicked
+  const [toggled, setToggled] = useState<Record<string, boolean>>({})
+  const isOpenBranch = (id: string) => toggled[id] ?? activeAncestors.has(id)
 
   const descendantSlugSet = useMemo(() => {
     const map = new Map<string, Set<string>>()
@@ -83,28 +74,18 @@ export function StorefrontCategoryNav({
     return map
   }, [byParent, roots])
 
-  const toggle = (id: string) => {
-    setOpenIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
-
-  const rowActive = (isActive: boolean, childActive: boolean) =>
-    isActive || childActive
+  const toggle = (id: string) => setToggled((prev) => ({ ...prev, [id]: !isOpenBranch(id) }))
 
   const renderBranch = (nodes: CatalogCategory[], depth: number) =>
     nodes.map((category) => {
       const children = byParent.get(category.id) ?? []
       const hasChildren = children.length > 0
-      const isOpen = openIds.has(category.id)
+      const isOpen = isOpenBranch(category.id)
       const isActive = activeSlug === category.slug
       const childActive =
         Boolean(activeSlug) &&
         (descendantSlugSet.get(category.id)?.has(activeSlug!) ?? false)
-      const selected = rowActive(isActive, childActive)
+      const selected = isActive || childActive
 
       return (
         <div key={category.id} className="min-w-0">

@@ -11,6 +11,11 @@ export function formatMoney(amount: number, currency: string = DEFAULT_CURRENCY)
   return new Intl.NumberFormat("en-GB", { style: "currency", currency: code }).format(amount)
 }
 
+/** "The Grill · E1 6AN" — a business named with where it is. */
+export function businessLabel(name: string | null | undefined, postcode: string | null | undefined) {
+  return [name?.trim(), postcode?.trim()].filter(Boolean).join(" · ") || "—"
+}
+
 /** "12 Nov 2026" */
 export function formatDate(iso: string, locale: Locale) {
   return new Date(iso).toLocaleDateString(intlLocale(locale), { day: "numeric", month: "short", year: "numeric" })

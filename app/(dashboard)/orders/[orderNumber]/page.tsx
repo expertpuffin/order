@@ -84,7 +84,6 @@ export default async function OrderDetailPage({
   const placed = readPlacedQuery(query)
   const canApprove = ctx.active.permissions.includes("orders_approve")
   const businessPanelUrl = process.env.NEXT_PUBLIC_BUSINESS_PANEL_URL?.replace(/\/$/, "") || null
-  const reorderable = order.items.some((item) => item.productId)
   const methodLabel =
     order.fulfillmentMethod === "collection"
       ? t("orders.methodCollection")
@@ -290,10 +289,7 @@ export default async function OrderDetailPage({
             </h2>
             <OrderActions
               businessId={ctx.active.id}
-              orderNumber={order.orderNumber}
-              status={order.status}
-              hasReorderableItems={reorderable}
-              managerApproval={order.managerApproval}
+              order={order}
               isRequester={order.createdBy === ctx.user.id}
             />
             <p className="mt-3 text-xs text-muted-foreground">

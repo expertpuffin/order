@@ -12,7 +12,6 @@ type BannerCarouselProps = {
   banners: MarketBanner[]
 }
 
-const GAP_PX = 0
 const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1544025162-d76694265947?w=1200&h=480&fit=crop",
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=480&fit=crop",
@@ -33,12 +32,11 @@ function SlideCard({
   width: number
   imageIndex: number
 }) {
-  const [src, setSrc] = useState(() => slideImageUrl(slide, imageIndex))
+  // Remember which image failed, so a new slide image gets its own chance
+  const primary = slideImageUrl(slide, imageIndex)
   const fallback = FALLBACK_IMAGES[imageIndex % FALLBACK_IMAGES.length]
-
-  useEffect(() => {
-    setSrc(slideImageUrl(slide, imageIndex))
-  }, [slide, imageIndex])
+  const [failed, setFailed] = useState<string | null>(null)
+  const src = failed === primary ? fallback : primary
 
   const card = (
     <div
@@ -52,7 +50,7 @@ function SlideCard({
         className="absolute inset-0 z-0 size-full object-cover"
         loading={imageIndex < 2 ? "eager" : "lazy"}
         onError={() => {
-          if (src !== fallback) setSrc(fallback)
+          if (src !== fallback) setFailed(primary)
         }}
       />
       <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[var(--brand-navy)]/80 via-[var(--brand-navy)]/35 to-transparent" />
@@ -113,14 +111,11 @@ export function BannerCarousel({
   const [viewportWidth, setViewportWidth] = useState(0)
   const [index, setIndex] = useState(0)
 
-  const slidesPerView = 1
   const slideWidth = viewportWidth > 0 ? viewportWidth : 0
-  const maxIndex = Math.max(0, slides.length - slidesPerView)
-
-  const clampIndex = useCallback(
-    (i: number) => Math.max(0, Math.min(i, maxIndex)),
-    [maxIndex]
-  )
+  const maxIndex = Math.max(0, slides.length - 1)
+  const clampIndex = useCallback((i: number) => Math.max(0, Math.min(i, maxIndex)), [maxIndex])
+  // Banners can shrink between renders; the shown slide is always a valid one
+  const current = clampIndex(index)
 
   useEffect(() => {
     const el = viewportRef.current
@@ -135,11 +130,7 @@ export function BannerCarousel({
   }, [])
 
   useEffect(() => {
-    setIndex((i) => clampIndex(i))
-  }, [clampIndex, slidesPerView, slides.length])
-
-  useEffect(() => {
-    if (slides.length <= slidesPerView) return
+    if (slides.length <= 1) return
     const timer = window.setInterval(() => {
       setIndex((i) => {
         const next = i >= maxIndex ? 0 : i + 1
@@ -147,13 +138,13 @@ export function BannerCarousel({
       })
     }, 5500)
     return () => window.clearInterval(timer)
-  }, [slides.length, slidesPerView, maxIndex, clampIndex])
+  }, [slides.length, maxIndex, clampIndex])
 
   const go = (dir: -1 | 1) => {
     setIndex((i) => clampIndex(i + dir))
   }
 
-  const offset = index * (slideWidth + GAP_PX)
+  const offset = current * slideWidth
 
   return (
     <div className="relative">
@@ -161,7 +152,6 @@ export function BannerCarousel({
         <div
           className="flex transition-transform duration-300 ease-out"
           style={{
-            gap: GAP_PX,
             transform: slideWidth > 0 ? `translateX(-${offset}px)` : undefined,
           }}
         >
@@ -176,12 +166,12 @@ export function BannerCarousel({
         </div>
       </div>
 
-      {slides.length > slidesPerView ? (
+      {slides.length > 1 ? (
         <>
           <button
             type="button"
             onClick={() => go(-1)}
-            disabled={index <= 0}
+            disabled={current <= 0}
             className="absolute top-1/2 left-2 z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40 sm:flex"
             aria-label={t("storefront.previousSlide")}
           >
@@ -190,7 +180,7 @@ export function BannerCarousel({
           <button
             type="button"
             onClick={() => go(1)}
-            disabled={index >= maxIndex}
+            disabled={current >= maxIndex}
             className="absolute top-1/2 right-2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40"
             aria-label={t("storefront.nextSlide")}
           >
@@ -205,7 +195,7 @@ export function BannerCarousel({
                 onClick={() => setIndex(clampIndex(i))}
                 className={cn(
                   "h-1 w-4 rounded-[1px] transition-colors",
-                  i === index
+                  i === current
                     ? "bg-[var(--brand-navy)]"
                     : "bg-muted-foreground/30"
                 )}

@@ -10,29 +10,26 @@ import { notifyActionResult } from "@/lib/action-toast"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { ERROR_CODES } from "@/lib/domain"
-import { isApprovalDraft, isCancellable, type OrderManagerApproval, type OrderStatus } from "@/lib/order"
+import { isApprovalDraft, isCancellable, type Order } from "@/lib/order"
 
 export function OrderActions({
   businessId,
-  orderNumber,
-  status,
-  hasReorderableItems,
-  managerApproval = null,
-  isRequester = false,
+  order,
+  isRequester,
 }: {
   businessId: string
-  orderNumber: string
-  status: OrderStatus
-  hasReorderableItems: boolean
-  managerApproval?: OrderManagerApproval | null
-  isRequester?: boolean
+  order: Pick<Order, "orderNumber" | "status" | "managerApproval" | "items">
+  /** The signed-in user placed this order */
+  isRequester: boolean
 }) {
   const t = useT()
   const router = useRouter()
   const [pending, startTransition] = useTransition()
-  const order = { status, managerApproval }
+  const { orderNumber } = order
+  // Lines whose product still exists can go back into the cart
+  const hasReorderableItems = order.items.some((item) => item.productId)
   // A draft that went to a manager moves only through the approval actions
-  const approval = isApprovalDraft(order) ? managerApproval : null
+  const approval = isApprovalDraft(order) ? order.managerApproval : null
 
   return (
     <div className="flex flex-wrap gap-2">

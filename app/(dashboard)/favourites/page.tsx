@@ -38,21 +38,7 @@ export default async function FavouritesPage() {
         }
       />
 
-      {listId ? (
-        <FavouritesPanel
-          businessId={ctx.active.id}
-          listId={listId}
-          items={items}
-          businessName={businessName}
-        />
-      ) : (
-        <FavouritesPanel
-          businessId={ctx.active.id}
-          listId=""
-          items={[]}
-          businessName={businessName}
-        />
-      )}
+      <FavouritesPanel businessId={ctx.active.id} listId={listId ?? ""} items={items} businessName={businessName} />
     </div>
   )
 }
