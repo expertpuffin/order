@@ -44,13 +44,13 @@ export function OrderActions({
             startTransition(async () => {
               notifyActionResult(
                 await reorderOrderAction(businessId, orderNumber),
-                "Items added to cart"
+                t("orders.reordered")
               )
             })
           }
         >
           <RotateCcw data-icon="inline-start" />
-          Reorder
+          {t("orders.reorder")}
         </Button>
       ) : null}
       {approval?.state === "pending" && isRequester ? (
@@ -93,17 +93,17 @@ export function OrderActions({
           variant="outline"
           disabled={pending}
           onClick={() => {
-            if (!window.confirm(`Cancel order ${orderNumber}?`)) return
+            if (!window.confirm(t("orders.cancelConfirm", { number: orderNumber }))) return
             startTransition(async () => {
               notifyActionResult(
                 await cancelOrderAction(orderNumber),
-                "Order cancelled"
+                t("orders.cancelled")
               )
             })
           }}
         >
           <XCircle data-icon="inline-start" />
-          Cancel order
+          {t("orders.cancel")}
         </Button>
       ) : null}
     </div>

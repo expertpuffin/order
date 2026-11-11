@@ -234,7 +234,12 @@
     "sentBy": "Sent by",
     "methodDelivery": "Delivery",
     "methodCollection": "Collection",
-    "noDate": "No date set"
+    "noDate": "No date set",
+    "reorder": "Reorder",
+    "reordered": "Items added to cart",
+    "cancel": "Cancel order",
+    "cancelConfirm": "Cancel order {number}?",
+    "cancelled": "Order cancelled"
   },
   "promotions": {
     "coupon": "Coupon",
@@ -473,5 +478,11 @@
     "orderRefunded": "By card · {amount} refunded",
     "orderReleased": "By card · hold released, nothing taken",
     "orderExpired": "By card · hold expired"
+  },
+  "access": {
+    "eyebrow": "Access",
+    "title": "Access denied",
+    "body": "Your role in this business does not include this section.",
+    "backHome": "Back to home"
   }
 }

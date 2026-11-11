@@ -4,29 +4,12 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
+import { DetailRow } from "@/components/shared/detail-row"
 import { ProductDetailGallery, ProductDetailSections } from "@/components/storefront/product-detail-sections"
 import { ProductOrderPanel } from "@/components/storefront/product-order-panel"
 import { StorefrontFrame } from "@/components/storefront/storefront-frame"
 import type { CatalogCategory, CatalogProductDetail } from "@/lib/api/catalog"
 import type { StorefrontSession } from "@/lib/storefront-session"
-
-function SpecRow({
-  label,
-  value,
-}: {
-  label: string
-  value: string | null | undefined
-}) {
-  if (!value?.trim()) return null
-  return (
-    <div className="flex justify-between gap-4 border-b border-[var(--border-subtle)] py-2.5 text-sm last:border-0">
-      <dt className="text-muted-foreground">{label}</dt>
-      <dd className="max-w-[60%] text-right font-medium text-[var(--brand-navy)]">
-        {value}
-      </dd>
-    </div>
-  )
-}
 
 export function ProductDetailShell({
   product,
@@ -80,34 +63,34 @@ export function ProductDetailShell({
                   <h2 className="mb-3 text-sm font-semibold text-[var(--brand-navy)]">
                     {t("storefront.productSpec")}
                   </h2>
-                  <dl>
-                    <SpecRow label={t("storefront.sku")} value={product.itemCode} />
-                    <SpecRow label={t("storefront.brand")} value={product.brand} />
-                    <SpecRow
+                  <div>
+                    <DetailRow hideEmpty label={t("storefront.sku")} value={product.itemCode} />
+                    <DetailRow hideEmpty label={t("storefront.brand")} value={product.brand} />
+                    <DetailRow hideEmpty
                       label={t("storefront.packSize")}
                       value={product.packSize || product.sizeLabel}
                     />
-                    <SpecRow
+                    <DetailRow hideEmpty
                       label={t("storefront.availableUnits")}
                       value={units || null}
                     />
-                    <SpecRow
+                    <DetailRow hideEmpty
                       label={t("storefront.category")}
                       value={product.categoryName}
                     />
-                    <SpecRow
+                    <DetailRow hideEmpty
                       label={t("storefront.barcode")}
                       value={product.barcode}
                     />
-                    <SpecRow
+                    <DetailRow hideEmpty
                       label={t("storefront.storage")}
                       value={product.storage}
                     />
-                    <SpecRow
+                    <DetailRow hideEmpty
                       label={t("storefront.unitOfMeasure")}
                       value={product.unitOfMeasure}
                     />
-                  </dl>
+                  </div>
                 </section>
 
                 <ProductDetailSections product={product} />

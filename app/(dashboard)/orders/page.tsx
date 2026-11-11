@@ -154,7 +154,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             </p>
           </div>
           {orders.length > 0 ? (
-            <ExportTableButton filename="orders" label={t("common.export")} />
+            <ExportTableButton filename="orders" />
           ) : null}
         </div>
 

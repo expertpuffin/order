@@ -22,29 +22,13 @@ import { getOrder } from "@/lib/api/orders"
 import { isApprovalDraft, orderTotal, readPlacedQuery, type Order } from "@/lib/order"
 import { getBusinessContext } from "@/lib/business-context"
 import { ApiError } from "@/lib/backend/errors"
+import { DetailRow } from "@/components/shared/detail-row"
 import { getTranslator } from "@/lib/i18n"
 import { formatDate, formatDateTime, formatMoney } from "@/lib/format"
 
 type OrderDetailPageProps = {
   params: Promise<{ orderNumber: string }>
   searchParams: Promise<{ placed?: string; approval?: string }>
-}
-
-function DetailRow({
-  label,
-  value,
-}: {
-  label: string
-  value: string | number | null | undefined
-}) {
-  return (
-    <div className="flex justify-between gap-4 border-b border-border/50 py-2.5 text-sm last:border-0">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="max-w-[60%] text-right font-medium text-[var(--brand-navy)]">
-        {value || "—"}
-      </span>
-    </div>
-  )
 }
 
 /** Paid with Ordoria: where the order's money is now ("By card · £84.20 taken"). */

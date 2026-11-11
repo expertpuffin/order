@@ -234,7 +234,12 @@
     "sentBy": "Gönderen",
     "methodDelivery": "Teslimat",
     "methodCollection": "Gel-al",
-    "noDate": "Tarih yok"
+    "noDate": "Tarih yok",
+    "reorder": "Tekrar sipariş ver",
+    "reordered": "Ürünler sepete eklendi",
+    "cancel": "Siparişi iptal et",
+    "cancelConfirm": "{number} numaralı sipariş iptal edilsin mi?",
+    "cancelled": "Sipariş iptal edildi"
   },
   "promotions": {
     "coupon": "Kupon",
@@ -473,5 +478,11 @@
     "orderRefunded": "Kartla · {amount} iade edildi",
     "orderReleased": "Kartla · bloke kaldırıldı, ücret çekilmedi",
     "orderExpired": "Kartla · bloke süresi doldu"
+  },
+  "access": {
+    "eyebrow": "Erişim",
+    "title": "Erişim yok",
+    "body": "Bu işletmedeki rolünüz bu bölümü kapsamıyor.",
+    "backHome": "Ana sayfaya dön"
   }
 }

@@ -5,26 +5,8 @@ import { AccountPageHeader } from "@/components/storefront/account-page-header"
 import { BusinessSwitcher } from "@/components/storefront/business-switcher"
 import { StatusBadge } from "@/components/shared/status-badge"
 import { getBusinessContext } from "@/lib/business-context"
+import { DetailRow } from "@/components/shared/detail-row"
 import { getTranslator } from "@/lib/i18n"
-
-function DetailRow({
-  label,
-  value,
-}: {
-  label: string
-  value: string | null | undefined
-}) {
-  return (
-    <div className="flex justify-between gap-4 border-b border-[var(--border-subtle)] py-3 text-sm last:border-0">
-      <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
-      </span>
-      <span className="max-w-[65%] text-right font-medium text-[var(--brand-navy)]">
-        {value?.trim() ? value : "—"}
-      </span>
-    </div>
-  )
-}
 
 export default async function AccountPage() {
   const { t } = await getTranslator()
