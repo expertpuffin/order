@@ -31,7 +31,7 @@ export function slotEndFromStart(
   return fromMinutes(toMinutes(start) + slotIntervalMinutes(method))
 }
 
-/** Sipariş alanı — delivery: "07:00-09:00", collection: "07:30" */
+/** The value sent with the order — delivery: "07:00-09:00", collection: "07:30" */
 export function slotOrderValue(
   start: string,
   method: FulfillmentMethod
@@ -40,7 +40,6 @@ export function slotOrderValue(
   return `${start}-${slotEndFromStart(start, method)}`
 }
 
-/** UI etiketi */
 export function slotDisplayLabel(
   start: string,
   method: FulfillmentMethod

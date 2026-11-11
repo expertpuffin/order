@@ -82,7 +82,7 @@ function mapItems(list: Record<string, unknown>): FavoriteItem[] {
   })
 }
 
-/** Tek listeli model — "My Favourites". Liste yoksa oluşturur. */
+/** One list per business ("My Favourites"), created when missing. */
 export async function getFavorites(
   businessId: string
 ): Promise<{ listId: string | null; items: FavoriteItem[] }> {

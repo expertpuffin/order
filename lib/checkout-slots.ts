@@ -1,4 +1,4 @@
-/** Mobil checkoutSlots ile uyumlu — teslimat günü / method-aware fallback */
+/** Mirrors the mobile app's checkoutSlots: delivery days and the opening-hours fallback slots. */
 
 import type { FulfillmentMethod } from "@/lib/domain"
 import { intlLocale, type Locale } from "@/lib/i18n/config"

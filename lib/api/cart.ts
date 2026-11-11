@@ -65,7 +65,7 @@ export type CartLine = {
   unit: string
   comment: string | null
   packagingOptions: string[]
-  /** Görüntüleme amaçlı: ilgili packaging'ın preferred teklif fiyatı */
+  /** For display: the preferred offer's price for this packaging */
   unitPrice: number | null
   listPrice: number | null
   currency: string
@@ -250,7 +250,7 @@ export type PlacedOrder = {
   pendingApproval: boolean
 }
 
-/** Tedarikçi başına sipariş oluşur — dönen liste genelde 1 elemanlıdır. */
+/** One order per supplier; usually just one. */
 export async function checkoutCart(
   businessId: string,
   input: CheckoutInput

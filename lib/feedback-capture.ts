@@ -77,7 +77,6 @@ export async function capturePage(): Promise<Blob> {
     },
   })
 
-  // Crop the full render to the visible viewport.
   const view = document.createElement("canvas")
   const vw = Math.round(window.innerWidth * scale)
   const vh = Math.round(window.innerHeight * scale)

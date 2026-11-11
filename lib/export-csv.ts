@@ -1,4 +1,3 @@
-/** Client-side CSV export for table download buttons */
 
 export function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob)

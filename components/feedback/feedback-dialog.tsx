@@ -39,7 +39,7 @@ type FeedbackContextValue = { openFeedback: () => void }
 
 const FeedbackContext = React.createContext<FeedbackContextValue | null>(null)
 
-/** Opens the panel's feedback dialog (account menus). */
+/** Opens the panel's feedback dialog (top bar, account menu, help page). */
 export function useFeedback() {
   const ctx = React.useContext(FeedbackContext)
   if (!ctx) throw new Error("useFeedback must be used within FeedbackProvider")

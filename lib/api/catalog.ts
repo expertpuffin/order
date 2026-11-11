@@ -21,14 +21,14 @@ export type CatalogProduct = {
   sizeLabel: string | null
   ageRestricted: boolean
   packagingOptions: string[]
-  /** preferred (lowest priority) teklifin fiyatı — görüntüleme amaçlı */
+  /** For display: the price of the preferred (lowest priority) offer */
   unitPrice: number | null
-  /** onOffer ise eski / liste fiyatı */
+  /** The list price, when on offer */
   compareAtPrice: number | null
   onOffer: boolean
   discountPercent: number | null
   currency: string
-  /** Birim → ProductOffer id (sepete eklerken) */
+  /** Unit → ProductOffer id, sent when adding to the cart */
   offerIdsByUnit: Record<string, string>
 }
 
@@ -70,7 +70,7 @@ export type CatalogNutrition = {
   extras: Array<{ label: string; value: number | null; unit: string }>
 }
 
-/** Tam ürün detayı — GET /api/products/by-code/:itemCode */
+/** Full product detail — GET /api/products/by-code/:itemCode */
 export type CatalogProductDetail = CatalogProduct & {
   longDescription: string | null
   ingredients: string | null
@@ -365,7 +365,7 @@ export async function getProductByItemCode(
   }
 }
 
-/** onOffer ürünleri — public listede filtre yok, sayfalardan tarar */
+/** Products on offer. The public list can't filter by it, so this scans a few pages. */
 export async function listOfferProducts(limit = 12): Promise<CatalogProduct[]> {
   const collected: CatalogProduct[] = []
   for (let page = 1; page <= 3 && collected.length < limit; page += 1) {

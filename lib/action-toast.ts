@@ -8,8 +8,8 @@ import type { ActionResult as ServerActionResult } from "@/lib/actions/result"
 type ActionResult = ServerActionResult<{ message?: string }> | null | undefined
 
 /**
- * useActionState sonuçlarını toast’a çevirir.
- * Redirect eden action’larda genelde sadece error görünür.
+ * Turns useActionState results into toasts. Actions that redirect only ever
+ * come back with an error.
  */
 export function useActionToast(
   state: ActionResult,
@@ -31,7 +31,6 @@ export function useActionToast(
   }, [state, opts?.successMessage, opts?.showSuccess])
 }
 
-/** startTransition / onClick sonuçları için */
 export function notifyActionResult(
   result: ActionResult | void,
   successMessage = "Saved"
