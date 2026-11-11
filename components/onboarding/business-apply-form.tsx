@@ -1,9 +1,9 @@
 "use client"
 
-import { useActionState, useEffect, useMemo, useState, useTransition } from "react"
+import { useActionState, useState, useTransition } from "react"
 
-import { createBusinessAction, listTeamRoleNamesAction, lookupPostcodeAction } from "@/lib/actions/onboarding"
-import { FALLBACK_TEAM_ROLE_NAMES } from "@/lib/team-roles"
+import { createBusinessAction, lookupPostcodeAction } from "@/lib/actions/onboarding"
+import { OWNER_ROLE } from "@/lib/team-roles"
 import { BUSINESS_TYPES } from "@/lib/domain"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
@@ -36,7 +36,8 @@ const primaryBtn =
 const outlineBtn =
   "rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
 
-export function BusinessApplyForm() {
+/** `roleNames`: the applicant role choices, loaded by the page. */
+export function BusinessApplyForm({ roleNames }: { roleNames: string[] }) {
   const t = useT()
   const [step, setStep] = useState(0)
   const [state, formAction, pending] = useActionState(createBusinessAction, null)
@@ -51,26 +52,10 @@ export function BusinessApplyForm() {
   const [latitude, setLatitude] = useState("")
   const [longitude, setLongitude] = useState("")
   const [isOwner, setIsOwner] = useState(true)
-  const [roleNames, setRoleNames] = useState<string[]>([
-    ...FALLBACK_TEAM_ROLE_NAMES,
-  ])
   const [applicantRole, setApplicantRole] = useState("")
   const [contactError, setContactError] = useState<string | null>(null)
 
-  const selectableRoles = useMemo(
-    () => roleNames.filter((r) => r !== "Owner"),
-    [roleNames]
-  )
-
-  useEffect(() => {
-    let cancelled = false
-    void listTeamRoleNamesAction().then((res) => {
-      if (!cancelled && res.names.length) setRoleNames(res.names)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const selectableRoles = roleNames.filter((r) => r !== OWNER_ROLE)
 
   const runLookup = () => {
     setLookupError(null)

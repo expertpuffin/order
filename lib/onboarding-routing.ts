@@ -32,6 +32,7 @@ async function resolveOnboardingStep(next: string): Promise<OnboardingStep> {
   const signIn = authGateHref({ tab: "login", next })
   if (!user) redirect(signIn)
   // The user cookie alone isn't enough: a session the backend rejected signs in again
+  // Before email verification the businesses call fails with a non-401 error: not a dead session
   if (await isSessionExpired().catch(() => false)) redirect(signIn)
 
   if (!user.isEmailVerified) return { step: "verify", email: user.email }

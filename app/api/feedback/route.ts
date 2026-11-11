@@ -3,7 +3,8 @@ import { NextResponse } from "next/server"
 import { apiFetch } from "@/lib/api/client"
 import { ApiError } from "@/lib/backend/errors"
 import { FEEDBACK_ERRORS, MAX_SHOTS, MAX_SHOTS_BYTES } from "@/lib/feedback-contract"
-import { getStorefrontSession } from "@/lib/storefront-session"
+import { getBusinessContext } from "@/lib/business-context"
+import { getSessionUser } from "@/lib/session/cookies"
 
 export const runtime = "nodejs"
 
@@ -13,8 +14,8 @@ export const runtime = "nodejs"
  * passed through here; the business and source are set server-side.
  */
 export async function POST(request: Request) {
-  const session = await getStorefrontSession()
-  if (!session.user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  if (!(await getSessionUser())) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  const businessId = (await getBusinessContext())?.active.id
 
   let form: FormData
   try {
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
   out.set("message", String(form.get("message") ?? ""))
   out.set("meta", String(form.get("meta") ?? "{}"))
   out.set("source", "order_web")
-  if (session.businessId) out.set("businessId", session.businessId)
+  if (businessId) out.set("businessId", businessId)
   shots.forEach((file, i) => out.append("screenshots", file, file.name || `screenshot-${i + 1}.webp`))
 
   try {

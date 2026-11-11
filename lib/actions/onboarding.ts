@@ -4,7 +4,6 @@ import { redirect } from "next/navigation"
 
 import {
   createBusinessApplication,
-  listTeamRoleNames,
   lookupPostcode,
   resendVerificationEmail,
   saveAcquisition,
@@ -14,6 +13,7 @@ import { actionError, failure, formString } from "@/lib/actions/result"
 import { ApiError } from "@/lib/backend/errors"
 import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 import { DEFAULT_DELIVERY_WINDOW, DEFAULT_HOURS } from "@/lib/fulfilment-slots"
+import { OWNER_ROLE } from "@/lib/team-roles"
 
 export async function verifyEmailAction(_prev: unknown, formData: FormData) {
   const code = formString(formData, "code")
@@ -119,7 +119,7 @@ export async function createBusinessAction(_prev: unknown, formData: FormData) {
             phone: ownerPhone || null,
           }
         : undefined,
-      applicantRole: isOwner ? "Owner" : applicantRole || undefined,
+      applicantRole: isOwner ? OWNER_ROLE : applicantRole || undefined,
       openTime,
       closeTime,
       deliveryTime,
@@ -144,8 +144,4 @@ export async function lookupPostcodeAction(postcode: string) {
     if (status === 404) return { ...(await failure("onboarding.business.noAddresses")), code: "no_addresses", addresses: [] as const }
     return { ...(await actionError(error)), addresses: [] as const }
   }
-}
-
-export async function listTeamRoleNamesAction() {
-  return { names: await listTeamRoleNames() }
 }

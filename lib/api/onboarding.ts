@@ -50,37 +50,24 @@ export async function lookupPostcode(postcode: string) {
   })
 }
 
-/** GET /api/roles (fallback /api/businesses/team-roles) — names for applicant role chips. */
+/**
+ * Role names for the applicant's role chips: the platform list, else the business
+ * team-roles list, else the static list shared with the mobile app. An unavailable
+ * list is not an error here — the form still works with the fallback.
+ */
 export async function listTeamRoleNames(): Promise<string[]> {
-  try {
-    const data = await apiFetch<{
-      names?: string[]
-      roles?: Array<{ name?: string }>
-    }>("/api/roles")
-    if (data.names?.length) return data.names
-    const fromRoles = (data.roles ?? [])
-      .map((r) => r.name?.trim())
-      .filter((n): n is string => Boolean(n))
-    if (fromRoles.length) return fromRoles
-  } catch {
-    /* try business fallback */
+  for (const path of ["/api/roles", "/api/businesses/team-roles"]) {
+    try {
+      const data = await apiFetch<{ names?: string[]; roles?: Array<{ name?: string }> }>(path)
+      const names = data.names?.length
+        ? data.names
+        : (data.roles ?? []).map((r) => r.name?.trim()).filter((n): n is string => Boolean(n))
+      if (names.length) return names
+    } catch {
+      // Next source
+    }
   }
-
-  try {
-    const data = await apiFetch<{
-      names?: string[]
-      roles?: Array<{ name?: string }>
-    }>("/api/businesses/team-roles")
-    if (data.names?.length) return data.names
-    const fromRoles = (data.roles ?? [])
-      .map((r) => r.name?.trim())
-      .filter((n): n is string => Boolean(n))
-    if (fromRoles.length) return fromRoles
-  } catch {
-    /* use static fallback */
-  }
-
-  return [...FALLBACK_TEAM_ROLE_NAMES]
+  return FALLBACK_TEAM_ROLE_NAMES
 }
 
 export type CreateBusinessInput = {
