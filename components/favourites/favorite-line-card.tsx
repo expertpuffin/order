@@ -1,10 +1,13 @@
 "use client"
 
 import Link from "next/link"
-import { Minus, Plus, Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
+import { toast } from "sonner"
 import { useState, useTransition } from "react"
 
-import { removeFavoriteItemAction, updateFavoriteItemAction } from "@/lib/actions/favourites"
+import { removeFavoriteItemAction, restoreFavoriteItemAction, updateFavoriteItemAction } from "@/lib/actions/favourites"
+import { ProductImage } from "@/components/brand/product-image"
+import { QuantityStepper } from "@/components/cart/quantity-stepper"
 import { notifyActionResult } from "@/lib/action-toast"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
@@ -51,12 +54,23 @@ export function FavoriteLineCard({
 
   const remove = () => {
     startTransition(async () => {
-      const result = await removeFavoriteItemAction(
-        businessId,
-        listId,
-        item.itemId
-      )
-      notifyActionResult(result, t("favourites.removed"))
+      const result = await removeFavoriteItemAction(businessId, listId, item.itemId)
+      if ("error" in result) {
+        notifyActionResult(result)
+        return
+      }
+      toast.success(t("favourites.removed"), {
+        action: {
+          label: t("common.undo"),
+          onClick: () =>
+            startTransition(async () => {
+              notifyActionResult(
+                await restoreFavoriteItemAction(businessId, listId, { productId: item.productId, quantity: qty, unit }),
+                t("storefront.restored")
+              )
+            }),
+        },
+      })
     })
   }
 
@@ -69,37 +83,12 @@ export function FavoriteLineCard({
     >
       <div className="flex gap-3">
         {productHref ? (
-          <Link
-            href={productHref}
-            className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#f3f4f6]"
-          >
-            {item.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={item.imageUrl}
-                alt=""
-                className="size-full object-cover"
-              />
-            ) : (
-              <span className="text-sm font-semibold text-muted-foreground">
-                {item.name.slice(0, 1)}
-              </span>
-            )}
+          <Link href={productHref} className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#f3f4f6]">
+            <ProductImage src={item.imageUrl} name={item.name} className="text-sm" />
           </Link>
         ) : (
           <div className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#f3f4f6]">
-            {item.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={item.imageUrl}
-                alt=""
-                className="size-full object-cover"
-              />
-            ) : (
-              <span className="text-sm font-semibold text-muted-foreground">
-                {item.name.slice(0, 1)}
-              </span>
-            )}
+            <ProductImage src={item.imageUrl} name={item.name} className="text-sm" />
           </div>
         )}
 
@@ -177,41 +166,16 @@ export function FavoriteLineCard({
         <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
           {t("favourites.quantity")}
         </p>
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon-sm"
-            className="size-8 rounded-[2px] border-[var(--sidebar-border)]"
-            disabled={pending}
-            aria-label={t("favourites.decreaseQty")}
-            onClick={() => {
-              if (qty <= 1) return remove()
-              setQty(qty - 1)
-              patch({ quantity: qty - 1 })
-            }}
-          >
-            <Minus className="size-3.5" />
-          </Button>
-          <span className="min-w-[28px] text-center text-base font-semibold tabular-nums text-[var(--brand-navy)]">
-            {qty}
-          </span>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon-sm"
-            className="size-8 rounded-[2px] border-[var(--sidebar-border)]"
-            disabled={pending}
-            aria-label={t("favourites.increaseQty")}
-            onClick={() => {
-              const next = qty + 1
-              setQty(next)
-              patch({ quantity: next })
-            }}
-          >
-            <Plus className="size-3.5" />
-          </Button>
-        </div>
+        <QuantityStepper
+          value={qty}
+          label={item.name}
+          disabled={pending}
+          onChange={(next) => {
+            setQty(next)
+            patch({ quantity: next })
+          }}
+          onRemove={remove}
+        />
       </div>
     </article>
   )

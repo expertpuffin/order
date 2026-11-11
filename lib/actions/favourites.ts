@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation"
 
 import { addLinesToCart } from "@/lib/api/cart"
-import { getFavorites, removeFavoriteItem, updateFavoriteItem } from "@/lib/api/favorites"
+import { addFavoriteItem, getFavorites, removeFavoriteItem, updateFavoriteItem } from "@/lib/api/favorites"
 import { actionError, refreshAllPages } from "@/lib/actions/result"
 
 /** Quantity changes on a favourite line. Steppers never send less than 1; removing has its own action. */
@@ -25,6 +25,21 @@ export async function updateFavoriteItemAction(
 export async function removeFavoriteItemAction(businessId: string, listId: string, itemId: string) {
   try {
     await removeFavoriteItem(businessId, listId, itemId)
+    refreshAllPages()
+    return { success: true as const }
+  } catch (error) {
+    return actionError(error)
+  }
+}
+
+/** Undo of a removal. */
+export async function restoreFavoriteItemAction(
+  businessId: string,
+  listId: string,
+  input: { productId: string; quantity: number; unit: string }
+) {
+  try {
+    await addFavoriteItem(businessId, listId, input)
     refreshAllPages()
     return { success: true as const }
   } catch (error) {

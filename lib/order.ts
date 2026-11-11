@@ -8,7 +8,9 @@ export const ORDER_STATUSES = [
   "sent",
   "confirmed",
   "out_for_delivery",
+  "ready_for_collection",
   "delivered",
+  "collected",
   "cancelled",
 ] as const
 

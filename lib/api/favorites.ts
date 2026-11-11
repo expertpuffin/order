@@ -107,6 +107,15 @@ export async function getFavorites(
   }
 }
 
+/** Undo of a removal: the product back on the list with its quantity and unit. */
+export async function addFavoriteItem(
+  businessId: string,
+  listId: string,
+  input: { productId: string; quantity: number; unit: string }
+) {
+  await apiFetch(`/api/businesses/${businessId}/favorite-lists/${listId}/items`, { method: "POST", body: input })
+}
+
 export async function updateFavoriteItem(
   businessId: string,
   listId: string,

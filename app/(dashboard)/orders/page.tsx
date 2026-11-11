@@ -6,10 +6,10 @@ import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { ExportTableButton } from "@/components/shared/export-table-button"
 import { ListFilterBar, ListPagination } from "@/components/shared/list-filter-bar"
-import { ApprovalBadge } from "@/components/order/approval-badge"
+import { OrderStatusBadge } from "@/components/orders/order-status-badge"
 import { StatusBadge } from "@/components/shared/status-badge"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
-import { OrderStatusTabs } from "@/components/storefront/order-status-tabs"
+import { OrderStatusTabs } from "@/components/orders/order-status-tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,7 +23,9 @@ import {
 import { listBusinessOrders } from "@/lib/api/orders"
 import { getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
-import { orderTotal } from "@/lib/order"
+import { orderTotal, readPlacedQuery } from "@/lib/order"
+import { hasOrderFilters, orderFilters, orderListHref, parseOrderListQuery } from "@/lib/order-list-query"
+import { formatDate, formatMoney } from "@/lib/format"
 
 type OrdersPageProps = {
   searchParams: Promise<{
@@ -39,69 +41,21 @@ type OrdersPageProps = {
   }>
 }
 
-function buildQueryHref(base: Record<string, string | undefined>) {
-  const params = new URLSearchParams()
-  for (const [key, value] of Object.entries(base)) {
-    if (value) params.set(key, value)
-  }
-  const qs = params.toString()
-  return qs ? `/orders?${qs}` : "/orders"
-}
-
 export default async function OrdersPage({ searchParams }: OrdersPageProps) {
-  const { t } = await getTranslator()
+  const { t, locale } = await getTranslator()
   const ctx = await getBusinessContext()
   if (!ctx) return <AccessDenied />
 
-  const params = await searchParams
-  const status = params.status || ""
-  const page = Math.max(1, Number(params.page) || 1)
-  const q = params.q?.trim() || ""
-  const method = params.method || ""
-  const deliveryFrom = params.deliveryFrom || ""
-  const deliveryTo = params.deliveryTo || ""
-  const orderDateFrom = params.orderDateFrom || ""
-  const orderDateTo = params.orderDateTo || ""
-
-  const filterValues = {
-    q,
-    method,
-    deliveryFrom,
-    deliveryTo,
-    orderDateFrom,
-    orderDateTo,
-  }
-
-  const preserveForTabs = {
-    ...filterValues,
-    placed: params.placed,
-  }
-
-  const queryForPager = {
-    status: status || undefined,
-    ...filterValues,
-  }
-
+  const query = parseOrderListQuery(await searchParams)
+  const filters = orderFilters(query)
   const { orders, pagination } = await listBusinessOrders(ctx.active.id, {
-    status: status || undefined,
-    page,
+    status: query.status || undefined,
+    page: query.page,
     limit: 20,
-    q: q || undefined,
-    method: method || undefined,
-    deliveryFrom: deliveryFrom || undefined,
-    deliveryTo: deliveryTo || undefined,
-    orderDateFrom: orderDateFrom || undefined,
-    orderDateTo: orderDateTo || undefined,
+    ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)),
   })
-
-  const hasActiveFilters = Boolean(
-    q || method || deliveryFrom || deliveryTo || orderDateFrom || orderDateTo
-  )
-
-  const clearFiltersHref = buildQueryHref({
-    status: status || undefined,
-    placed: params.placed,
-  })
+  const hasActiveFilters = hasOrderFilters(query)
+  const { placedCount } = readPlacedQuery(query)
 
   return (
     <div className="space-y-5">
@@ -112,31 +66,28 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
           count: String(pagination.total),
         })}
         actions={
-          params.placed ? (
+          placedCount ? (
             <Badge
               variant="default"
               className="rounded-[2px] bg-[var(--brand-orange)] text-white"
             >
-              {params.placed === "1"
+              {placedCount === 1
                 ? t("orders.placedOne")
-                : t("orders.placedMany", { count: params.placed })}
+                : t("orders.placedMany", { count: String(placedCount) })}
             </Badge>
           ) : null
         }
       />
 
-      <OrderStatusTabs active={status} preserve={preserveForTabs} />
+      <OrderStatusTabs query={query} />
 
       <ListFilterBar
         action="/orders"
-        values={filterValues}
-        preserve={{
-          status: status || undefined,
-          placed: params.placed,
-        }}
+        values={filters}
+        preserve={{ status: query.status || undefined, placed: query.placed || undefined }}
         submitLabel={t("common.search")}
         clearLabel={t("common.clear")}
-        clearHref={clearFiltersHref}
+        clearHref={orderListHref({ status: query.status, placed: query.placed })}
         className="rounded-[2px] border border-[var(--sidebar-border)] bg-white shadow-none"
         fields={[
           {
@@ -285,13 +236,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                       <TableCell className="whitespace-nowrap text-sm">
                         {order.requestedDeliveryDate ? (
                           <>
-                            {new Date(
-                              order.requestedDeliveryDate
-                            ).toLocaleDateString("en-GB", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })}
+                            {formatDate(order.requestedDeliveryDate, locale)}
                             {order.deliveryTime ? (
                               <span className="text-muted-foreground">
                                 {" "}
@@ -304,18 +249,10 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                         )}
                       </TableCell>
                       <TableCell>
-                        {order.status === "draft" && order.managerApproval ? (
-                          <ApprovalBadge state={order.managerApproval.state} />
-                        ) : (
-                          <StatusBadge status={order.status} />
-                        )}
+                        <OrderStatusBadge order={order} />
                       </TableCell>
                       <TableCell className="text-right font-medium tabular-nums text-[var(--brand-navy)]">
-                        {total > 0
-                          ? `£${total.toLocaleString("en-GB", {
-                              minimumFractionDigits: 2,
-                            })}`
-                          : "—"}
+                        {total > 0 ? formatMoney(total, order.currency) : "—"}
                       </TableCell>
                       <TableCell>
                         <Button
@@ -344,7 +281,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             <ListPagination
               basePath="/orders"
               pagination={pagination}
-              searchParams={queryForPager}
+              searchParams={{ status: query.status || undefined, ...filters }}
             />
           </div>
         ) : null}

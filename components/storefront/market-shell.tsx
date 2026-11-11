@@ -10,7 +10,7 @@ import { ProductRail } from "@/components/storefront/product-rail"
 import { ProductCard } from "@/components/storefront/product-card"
 import { StorefrontTopBar } from "@/components/storefront/storefront-top-bar"
 import { StorefrontCategoryNav } from "@/components/storefront/storefront-category-nav"
-import { StorefrontCartPanel } from "@/components/storefront/storefront-cart-panel"
+import { CartPanel } from "@/components/cart/cart-panel"
 import type { MarketBanner } from "@/lib/api/app-content"
 import type {
   CatalogCategory,
@@ -183,7 +183,7 @@ export function MarketShell({
 
           <div className="hidden w-[300px] shrink-0 border-l border-[var(--sidebar-border)] xl:block">
             <div className="sticky top-16 h-[calc(100svh-4rem)]">
-              <StorefrontCartPanel
+              <CartPanel
                 lines={cartLines}
                 businessId={businessId}
                 pricing={cartPricing}
@@ -210,7 +210,7 @@ export function MarketShell({
             <SheetHeader className="sr-only">
               <SheetTitle>{t("storefront.yourCart")}</SheetTitle>
             </SheetHeader>
-            <StorefrontCartPanel
+            <CartPanel
               lines={cartLines}
               businessId={businessId}
               className="h-full border-0"

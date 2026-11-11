@@ -1,5 +1,6 @@
 {
   "common": {
+    "undo": "Geri al",
     "logOut": "Çıkış yap",
     "systemStatus": "Sistem durumu",
     "email": "E-posta",
@@ -72,6 +73,7 @@
     "viewApplication": "Başvuru durumunu gör",
     "keepBrowsing": "Gezmeye devam et",
     "removed": "Kaldırıldı",
+    "restored": "Geri eklendi",
     "updated": "Güncellendi",
     "menuAccount": "Hesabım",
     "menuHelp": "Yardım Merkezi",
@@ -118,7 +120,7 @@
     "deliveryFee": "Teslimat ücreti",
     "free": "Ücretsiz",
     "freeDeliveryNudge": "Ücretsiz teslimat için {amount} daha ekleyin",
-    "deliveryFeeBasis": "Teslimat ücreti (£{flat} + %{percent})"
+    "deliveryFeeBasis": "Teslimat ücreti ({flat} + %{percent})"
   },
   "onboarding": {
     "setupLabel": "Kurulum",
@@ -271,6 +273,7 @@
     "checkoutMorning": "Sabah",
     "checkoutAfternoon": "Öğleden sonra",
     "checkoutNoSlots": "Bu gün için uygun saat yok.",
+    "checkoutSlotsFailed": "Saatler yüklenemedi. Tekrar denemek için sayfayı yenileyin.",
     "checkoutLoadingSchedule": "Teslimat takvimi yükleniyor…",
     "checkoutNoDates": "Seçilebilir teslimat günü yok.",
     "decreaseQty": "Azalt",
@@ -278,10 +281,7 @@
     "lineNotePlaceholder": "Satır notu (opsiyonel)",
     "clearCart": "Sepeti temizle",
     "clearConfirm": "Sepetteki tüm ürünler kaldırılsın mı?",
-    "cleared": "Sepet temizlendi",
-    "removeTitle": "Ürünü kaldır",
-    "removeBody": "{name} ürününü sepetten kaldırmak istediğinize emin misiniz?",
-    "removeConfirm": "Kaldır"
+    "cleared": "Sepet temizlendi"
   },
   "favourites": {
     "sectionLabel": "Kayıtlı",
@@ -297,8 +297,6 @@
     "addAll": "Tümünü ekle",
     "placeOrder": "Sipariş ver",
     "removeFromList": "Listeden kaldır",
-    "decreaseQty": "Adedi azalt",
-    "increaseQty": "Adedi artır",
     "removed": "Kaldırıldı",
     "addedToCartMessage": "“{name}” listesinden {n} ürün sepete eklendi.",
     "other": "Diğer"
@@ -441,8 +439,8 @@
     "helpBody": "Bir sorun mu buldunuz ya da bir fikriniz mi var? Gerekirse ekran görüntüsüyle geri bildirim gönderin; doğrudan Ordoria ekibine ulaşır."
   },
   "payment": {
-    "loading": "Ãdeme seÃ§enekleri yÃ¼kleniyorâ¦",
-    "loadFailed": "Ãdeme seÃ§enekleri yÃ¼klenemedi, bu yÃ¼zden sipariÅ henÃ¼z verilemiyor. Tekrar denemek iÃ§in sayfayÄ± yenileyin.",
+    "loading": "Ödeme seçenekleri yükleniyor…",
+    "loadFailed": "Ödeme seçenekleri yüklenemedi, bu yüzden sipariş henüz verilemiyor. Tekrar denemek için sayfayı yenileyin.",
     "title": "Ödeme",
     "account": "Tedarikçi hesabıma",
     "accountSub": "Tedarikçi faturalar · {days} gün vade",

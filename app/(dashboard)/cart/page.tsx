@@ -4,11 +4,14 @@ import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
-import { CartCouponPanel } from "@/components/order/cart-coupon-panel"
-import { CartEditor } from "@/components/order/cart-editor"
-import { CheckoutForm } from "@/components/order/checkout-form"
+import { CartSummary } from "@/components/cart/cart-summary"
+import { CouponField } from "@/components/cart/coupon-field"
+import { CartEditor } from "@/components/cart/cart-editor"
+import { CheckoutForm } from "@/components/checkout/checkout-form"
 import { Button } from "@/components/ui/button"
 import { getCart } from "@/lib/api/cart"
+import { summarizeCart } from "@/lib/cart-summary"
+import { businessDisplayName } from "@/lib/api/businesses"
 import { checkOrderApproval } from "@/lib/api/orders"
 import { canOrderFor, getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
@@ -107,11 +110,8 @@ export default async function CartPage() {
                 {t("cart.checkoutTitle")}
               </h2>
             </div>
-            <CartCouponPanel
-              businessId={ctx.active.id}
-              initialCode={couponCode}
-              pricing={pricing}
-            />
+            <CartSummary summary={summarizeCart(pricing, lines)} variant="full" />
+            <CouponField businessId={ctx.active.id} initialCode={couponCode} />
             <CheckoutForm
               businessId={ctx.active.id}
               supplierId={checkoutSupplierId}
@@ -119,7 +119,7 @@ export default async function CartPage() {
               openTime={ctx.active.openTime}
               closeTime={ctx.active.closeTime}
               lineCount={lines.length}
-              businessName={ctx.active.tradingName || ctx.active.businessName}
+              businessName={businessDisplayName(ctx.active)}
               businessPostcode={ctx.active.postcode}
               approval={
                 approval?.required && approval.rule

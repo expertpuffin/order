@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react"
 import { useT } from "@/components/i18n/i18n-provider"
 import { AuthGateProvider } from "@/components/storefront/auth-gate"
 import { ProductOrderPanel } from "@/components/storefront/product-order-panel"
-import { StorefrontCartPanel } from "@/components/storefront/storefront-cart-panel"
+import { CartPanel } from "@/components/cart/cart-panel"
 import { StorefrontCategoryNav } from "@/components/storefront/storefront-category-nav"
 import { StorefrontTopBar } from "@/components/storefront/storefront-top-bar"
 import type { CatalogCategory, CatalogProductDetail } from "@/lib/api/catalog"
@@ -191,7 +191,7 @@ export function ProductDetailShell({
 
           <div className="hidden w-[300px] shrink-0 border-l border-[var(--sidebar-border)] xl:block">
             <div className="sticky top-16 h-[calc(100svh-4rem)]">
-              <StorefrontCartPanel
+              <CartPanel
                 lines={cartLines}
                 businessId={businessId}
                 pricing={cartPricing}
@@ -208,7 +208,7 @@ export function ProductDetailShell({
             <SheetHeader className="sr-only">
               <SheetTitle>{t("storefront.yourCart")}</SheetTitle>
             </SheetHeader>
-            <StorefrontCartPanel
+            <CartPanel
               lines={cartLines}
               businessId={businessId}
               className="h-full border-0"

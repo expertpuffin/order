@@ -1,0 +1,65 @@
+"use client"
+
+import { useState, useTransition } from "react"
+import { toast } from "sonner"
+
+import { useT } from "@/components/i18n/i18n-provider"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { applyCartCouponAction } from "@/lib/actions/cart"
+
+export function CouponField({ businessId, initialCode }: { businessId: string; initialCode?: string | null }) {
+  const t = useT()
+  const [code, setCode] = useState(initialCode ?? "")
+  const [pending, startTransition] = useTransition()
+
+  const apply = (remove = false) => {
+    startTransition(async () => {
+      const result = await applyCartCouponAction(businessId, remove ? { remove: true } : { code })
+      if ("error" in result) {
+        toast.error(result.error)
+        return
+      }
+      if (result.couponError) {
+        toast.error(t("promotions.couponInvalid"))
+      } else if (!remove && code) {
+        toast.success(t("promotions.couponApplied"))
+      }
+    })
+  }
+
+  return (
+    <div className="space-y-2 border-t border-[var(--sidebar-border)] pt-3">
+      <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{t("promotions.coupon")}</p>
+      <div className="flex gap-2">
+        <Input
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          placeholder={t("promotions.couponPlaceholder")}
+          className="h-9 rounded-[2px] font-mono uppercase"
+        />
+        <Button
+          type="button"
+          size="sm"
+          className="h-9 rounded-[2px] btn-brand shrink-0 text-white"
+          disabled={pending || !code.trim()}
+          onClick={() => apply(false)}
+        >
+          {t("promotions.apply")}
+        </Button>
+      </div>
+      {initialCode ? (
+        <button
+          type="button"
+          className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+          onClick={() => {
+            setCode("")
+            apply(true)
+          }}
+        >
+          {t("promotions.removeCoupon")}
+        </button>
+      ) : null}
+    </div>
+  )
+}

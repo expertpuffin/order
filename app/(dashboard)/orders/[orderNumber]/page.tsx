@@ -4,8 +4,9 @@ import { notFound } from "next/navigation"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
 import { StatusBadge } from "@/components/shared/status-badge"
-import { ApprovalBadge } from "@/components/order/approval-badge"
-import { OrderActions } from "@/components/order/order-actions"
+import { ApprovalBadge } from "@/components/orders/approval-badge"
+import { OrderStatusBadge } from "@/components/orders/order-status-badge"
+import { OrderActions } from "@/components/orders/order-actions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -18,10 +19,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { getOrder } from "@/lib/api/orders"
-import { orderTotal, type Order } from "@/lib/order"
+import { isApprovalDraft, orderTotal, readPlacedQuery, type Order } from "@/lib/order"
 import { getBusinessContext } from "@/lib/business-context"
 import { ApiError } from "@/lib/backend/errors"
 import { getTranslator } from "@/lib/i18n"
+import { formatDate, formatDateTime, formatMoney } from "@/lib/format"
 
 type OrderDetailPageProps = {
   params: Promise<{ orderNumber: string }>
@@ -50,21 +52,19 @@ function orderPaymentLabel(
   order: Order,
   t: (key: string, params?: Record<string, string>) => string
 ) {
-  const gbp = (n: number) =>
-    new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n)
   const p = order.payment
   switch (p.status) {
     case "authorized":
-      return t("payment.orderHeld", { amount: gbp(p.authorizedAmount) })
+      return t("payment.orderHeld", { amount: formatMoney(p.authorizedAmount) })
     case "paid":
-      return t("payment.orderTaken", { amount: gbp(p.capturedAmount) })
+      return t("payment.orderTaken", { amount: formatMoney(p.capturedAmount) })
     case "partially_refunded":
       return t("payment.orderPartlyRefunded", {
-        amount: gbp(p.capturedAmount - p.refundedAmount),
-        refund: gbp(p.refundedAmount),
+        amount: formatMoney(p.capturedAmount - p.refundedAmount),
+        refund: formatMoney(p.refundedAmount),
       })
     case "refunded":
-      return t("payment.orderRefunded", { amount: gbp(p.refundedAmount) })
+      return t("payment.orderRefunded", { amount: formatMoney(p.refundedAmount) })
     case "released":
       return t("payment.orderReleased")
     case "expired":
@@ -78,7 +78,7 @@ export default async function OrderDetailPage({
   params,
   searchParams,
 }: OrderDetailPageProps) {
-  const { t } = await getTranslator()
+  const { t, locale } = await getTranslator()
   const ctx = await getBusinessContext()
   if (!ctx) return <AccessDenied />
 
@@ -96,7 +96,8 @@ export default async function OrderDetailPage({
   if (order.businessId !== ctx.active.id) return <AccessDenied />
 
   const total = orderTotal(order)
-  const approvalDraft = order.status === "draft" && order.managerApproval != null
+  const approval = isApprovalDraft(order) ? order.managerApproval : null
+  const placed = readPlacedQuery(query)
   const canApprove = ctx.active.permissions.includes("orders_approve")
   const businessPanelUrl = process.env.NEXT_PUBLIC_BUSINESS_PANEL_URL?.replace(/\/$/, "") || null
   const reorderable = order.items.some((item) => item.productId)
@@ -105,11 +106,7 @@ export default async function OrderDetailPage({
       ? t("orders.methodCollection")
       : t("orders.methodDelivery")
   const deliveryDateLabel = order.requestedDeliveryDate
-    ? new Date(order.requestedDeliveryDate).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
+    ? formatDate(order.requestedDeliveryDate, locale)
     : t("orders.noDate")
 
   return (
@@ -122,9 +119,9 @@ export default async function OrderDetailPage({
         })}
         actions={
           <div className="flex items-center gap-2">
-            {query.placed ? (
+            {placed.placedCount ? (
               <Badge variant="default">
-                {query.approval ? t("approval.placedPending") : t("orders.placedOne")}
+                {placed.awaitingApproval ? t("approval.placedPending") : t("orders.placedOne")}
               </Badge>
             ) : null}
             <Button
@@ -138,28 +135,28 @@ export default async function OrderDetailPage({
         }
       />
 
-      {approvalDraft && order.managerApproval ? (
+      {approval ? (
         <div
           className={
-            order.managerApproval.state === "rejected"
+            approval.state === "rejected"
               ? "rounded-2xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-900"
               : "rounded-2xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-sm text-amber-900"
           }
         >
           <div className="mb-1">
-            <ApprovalBadge state={order.managerApproval.state} />
+            <ApprovalBadge state={approval.state} />
           </div>
           <p>
-            {order.managerApproval.state === "rejected"
-              ? t("approval.bannerRejected", { name: order.managerApproval.decidedByName ?? "—" })
-              : order.managerApproval.state === "withdrawn"
+            {approval.state === "rejected"
+              ? t("approval.bannerRejected", { name: approval.decidedByName ?? "—" })
+              : approval.state === "withdrawn"
                 ? t("approval.bannerWithdrawn")
                 : t("approval.bannerPending")}
           </p>
-          {order.managerApproval.reason ? (
-            <p className="mt-1">{t("approval.reason", { reason: order.managerApproval.reason })}</p>
+          {approval.reason ? (
+            <p className="mt-1">{t("approval.reason", { reason: approval.reason })}</p>
           ) : null}
-          {canApprove && order.managerApproval.state === "pending" ? (
+          {canApprove && approval.state === "pending" ? (
             <p className="mt-2 text-xs">
               {businessPanelUrl ? (
                 <a
@@ -194,11 +191,7 @@ export default async function OrderDetailPage({
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <StatusBadge status={order.fulfillmentMethod} />
-                {approvalDraft && order.managerApproval ? (
-                  <ApprovalBadge state={order.managerApproval.state} />
-                ) : (
-                  <StatusBadge status={order.status} />
-                )}
+                <OrderStatusBadge order={order} />
               </div>
             </div>
 
@@ -213,7 +206,7 @@ export default async function OrderDetailPage({
             />
             <DetailRow
               label={t("orders.orderDate")}
-              value={new Date(order.orderDate).toLocaleString("en-GB")}
+              value={formatDateTime(order.orderDate, locale)}
             />
             <DetailRow
               label={t("orders.contact")}
@@ -291,7 +284,7 @@ export default async function OrderDetailPage({
                       <TableCell>{item.unit}</TableCell>
                       <TableCell className="text-right tabular-nums">
                         {item.unitCost != null
-                          ? `${item.currency} ${(item.unitCost * item.quantity).toFixed(2)}`
+                          ? formatMoney(item.unitCost * item.quantity, item.currency)
                           : "—"}
                       </TableCell>
                     </TableRow>
@@ -301,11 +294,7 @@ export default async function OrderDetailPage({
             </div>
             <div className="flex justify-end border-t px-4 py-3 text-sm font-semibold text-[var(--brand-navy)] sm:px-6">
               {t("orders.total")}:{" "}
-              {total > 0
-                ? `£${total.toLocaleString("en-GB", {
-                    minimumFractionDigits: 2,
-                  })}`
-                : "—"}
+              {total > 0 ? formatMoney(total, order.currency) : "—"}
             </div>
           </div>
         </div>
@@ -346,7 +335,7 @@ export default async function OrderDetailPage({
                     <div className="mb-1 flex items-center justify-between gap-2">
                       <StatusBadge status={entry.status} />
                       <span className="text-xs text-muted-foreground">
-                        {new Date(entry.at).toLocaleString("en-GB")}
+                        {formatDateTime(entry.at, locale)}
                       </span>
                     </div>
                     {entry.note ? (

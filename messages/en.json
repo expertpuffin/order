@@ -1,5 +1,6 @@
 {
   "common": {
+    "undo": "Undo",
     "logOut": "Log out",
     "systemStatus": "System status",
     "email": "Email",
@@ -72,6 +73,7 @@
     "viewApplication": "View application status",
     "keepBrowsing": "Keep browsing",
     "removed": "Removed",
+    "restored": "Added back",
     "updated": "Updated",
     "menuAccount": "My account",
     "menuHelp": "Help center",
@@ -118,7 +120,7 @@
     "deliveryFee": "Delivery fee",
     "free": "Free",
     "freeDeliveryNudge": "Add {amount} more for free delivery",
-    "deliveryFeeBasis": "Delivery fee (£{flat} + {percent}%)"
+    "deliveryFeeBasis": "Delivery fee ({flat} + {percent}%)"
   },
   "onboarding": {
     "setupLabel": "Setup",
@@ -271,6 +273,7 @@
     "checkoutMorning": "Morning",
     "checkoutAfternoon": "Afternoon",
     "checkoutNoSlots": "No time slots available for this day.",
+    "checkoutSlotsFailed": "Time slots couldn't be loaded. Refresh the page to try again.",
     "checkoutLoadingSchedule": "Loading delivery schedule…",
     "checkoutNoDates": "No delivery days available.",
     "decreaseQty": "Decrease quantity",
@@ -278,10 +281,7 @@
     "lineNotePlaceholder": "Line note (optional)",
     "clearCart": "Clear cart",
     "clearConfirm": "Remove all items from the cart?",
-    "cleared": "Cart cleared",
-    "removeTitle": "Remove item",
-    "removeBody": "Are you sure you want to remove {name} from your cart?",
-    "removeConfirm": "Remove"
+    "cleared": "Cart cleared"
   },
   "favourites": {
     "sectionLabel": "Saved",
@@ -297,8 +297,6 @@
     "addAll": "Add all",
     "placeOrder": "Place order",
     "removeFromList": "Remove from list",
-    "decreaseQty": "Decrease quantity",
-    "increaseQty": "Increase quantity",
     "removed": "Removed",
     "addedToCartMessage": "{n} item(s) from “{name}” were added to your cart.",
     "other": "Other"

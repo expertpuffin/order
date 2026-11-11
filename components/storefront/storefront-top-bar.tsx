@@ -15,6 +15,7 @@ import { StorefrontLocaleMenu } from "@/components/storefront/storefront-locale-
 import { StorefrontUserMenu } from "@/components/storefront/storefront-user-menu"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { toEnglishChars } from "@/lib/englishInput"
 import { cn } from "@/lib/utils"
 
 type StorefrontTopBarProps = {
@@ -84,18 +85,18 @@ export function StorefrontTopBar({
     />
   )
 
-  const searchField = (compact?: boolean) => (
-    <div
-      className={cn(
-        "relative flex w-full items-center rounded-[2px] border border-[var(--sidebar-border)] bg-background",
-        compact ? "h-10" : "h-10"
-      )}
-    >
+  const searchField = () => (
+    <div className="relative flex h-10 w-full items-center rounded-[2px] border border-[var(--sidebar-border)] bg-background">
       <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         name="q"
         defaultValue={q}
         placeholder={t("storefront.searchProducts")}
+        onChange={(event) => {
+          // The catalogue is English: fold Turkish letters so searches still match
+          const folded = toEnglishChars(event.target.value)
+          if (folded !== event.target.value) event.target.value = folded
+        }}
         className="h-full w-full min-w-0 rounded-none border-0 bg-transparent pl-9 shadow-none focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
       />
     </div>
@@ -195,7 +196,7 @@ export function StorefrontTopBar({
 
       <div className="space-y-2 border-t border-[var(--sidebar-border)] px-3 py-2 md:hidden">
         {deliveryPicker}
-        <form action="/">{searchField(true)}</form>
+        <form action="/">{searchField()}</form>
       </div>
     </header>
   )

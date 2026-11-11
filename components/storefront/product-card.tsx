@@ -9,6 +9,9 @@ import { productPagePath } from "@/lib/storefront-paths"
 import type { CatalogProduct } from "@/lib/api/catalog"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { ProductImage } from "@/components/brand/product-image"
+import { formatMoney } from "@/lib/format"
+import { productMeta } from "@/lib/product"
 
 type ProductCardProps = {
   product: CatalogProduct
@@ -19,10 +22,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
   const t = useT()
   const { requestAddToCart } = useAuthGate()
   const unitHint = product.packagingOptions.slice(0, 3).join(" · ")
-  const meta =
-    [product.brand, product.packSize || product.sizeLabel]
-      .filter(Boolean)
-      .join(" · ") || product.itemCode
+  const meta = productMeta(product)
 
   return (
     <article
@@ -46,18 +46,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
           className="absolute inset-0 z-0"
           aria-label={product.name}
         >
-          {product.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={product.imageUrl}
-              alt=""
-              className="size-full object-cover"
-            />
-          ) : (
-            <div className="flex size-full items-center justify-center text-3xl font-semibold text-muted-foreground/40">
-              {product.name.slice(0, 1)}
-            </div>
-          )}
+          <ProductImage src={product.imageUrl} name={product.name} className="text-3xl text-muted-foreground/40" />
         </Link>
         <Button
           size="icon"
@@ -83,11 +72,11 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
         {product.unitPrice != null ? (
           <div className="flex flex-wrap items-baseline gap-1.5">
             <p className="text-base font-semibold tabular-nums text-[var(--brand-navy)]">
-              £{product.unitPrice.toFixed(2)}
+              {formatMoney(product.unitPrice, product.currency)}
             </p>
             {product.compareAtPrice != null ? (
               <p className="text-xs text-muted-foreground line-through tabular-nums">
-                £{product.compareAtPrice.toFixed(2)}
+                {formatMoney(product.compareAtPrice, product.currency)}
               </p>
             ) : null}
           </div>

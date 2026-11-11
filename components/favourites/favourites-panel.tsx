@@ -6,7 +6,7 @@ import { useMemo, useState, useTransition } from "react"
 
 import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
-import { FavoriteLineCard } from "@/components/order/favorite-line-card"
+import { FavoriteLineCard } from "@/components/favourites/favorite-line-card"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { addAllFavoritesToCartAction } from "@/lib/actions/favourites"

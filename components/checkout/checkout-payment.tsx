@@ -11,9 +11,7 @@ import { getStripe } from "@/lib/stripe-client"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-
-const gbp = (n: number) =>
-  new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n)
+import { formatMoney } from "@/lib/format"
 
 export type CheckoutPaymentState = ReturnType<typeof useCheckoutPayment>
 
@@ -138,12 +136,12 @@ export function CheckoutPayment({
       : null
 
   const subtitle = (m: PaymentMode) => {
-    if (m === "ordoria") return t("payment.ordoriaSub", { amount: gbp(options.card.total) })
+    if (m === "ordoria") return t("payment.ordoriaSub", { amount: formatMoney(options.card.total) })
     const acc = options.account
     if (!acc) return ""
     const terms = t("payment.accountSub", { days: String(acc.termsDays) })
     return acc.availableCredit != null
-      ? `${terms} · ${t("payment.accountCredit", { amount: gbp(acc.availableCredit) })}`
+      ? `${terms} · ${t("payment.accountCredit", { amount: formatMoney(acc.availableCredit) })}`
       : terms
   }
 
@@ -189,7 +187,7 @@ export function CheckoutPayment({
                       {row.mode === "ordoria" ? (
                         <span className="block text-xs text-muted-foreground/80">
                           {options.card.vat > 0
-                            ? t("payment.ordoriaVat", { vat: gbp(options.card.vat) })
+                            ? t("payment.ordoriaVat", { vat: formatMoney(options.card.vat) })
                             : t("payment.ordoriaFeeIncluded")}
                         </span>
                       ) : null}
@@ -210,8 +208,8 @@ export function CheckoutPayment({
         <div className="space-y-2">
           <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {payByCard
-              ? t("payment.payOrderWith", { amount: gbp(options.card.total) })
-              : t("payment.payFeeWith", { amount: gbp(options.card.serviceFee) })}
+              ? t("payment.payOrderWith", { amount: formatMoney(options.card.total) })
+              : t("payment.payFeeWith", { amount: formatMoney(options.card.serviceFee) })}
           </p>
           {!payByCard ? <p className="text-xs text-muted-foreground">{t("payment.feeHoldHint")}</p> : null}
           {cards.length ? (

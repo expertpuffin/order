@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import { AccessDenied } from "@/components/shared/access-denied"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
-import { FavouritesPanel } from "@/components/order/favourites-panel"
+import { FavouritesPanel } from "@/components/favourites/favourites-panel"
 import { Button } from "@/components/ui/button"
 import { getFavorites } from "@/lib/api/favorites"
 import { canOrderFor, getBusinessContext } from "@/lib/business-context"
