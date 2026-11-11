@@ -13,6 +13,7 @@ import {
 import { actionError, failure, formString } from "@/lib/actions/result"
 import { ApiError } from "@/lib/backend/errors"
 import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
+import { DEFAULT_DELIVERY_WINDOW, DEFAULT_HOURS } from "@/lib/fulfilment-slots"
 
 export async function verifyEmailAction(_prev: unknown, formData: FormData) {
   const code = formString(formData, "code")
@@ -74,9 +75,9 @@ export async function createBusinessAction(_prev: unknown, formData: FormData) {
   const ownerEmail = formString(formData, "ownerEmail")
   const ownerPhone = formString(formData, "ownerPhone")
   const applicantRole = formString(formData, "applicantRole")
-  const openTime = formString(formData, "openTime") || "09:00"
-  const closeTime = formString(formData, "closeTime") || "22:00"
-  const deliveryTime = formString(formData, "deliveryTime") || "11:00-13:00"
+  const openTime = formString(formData, "openTime") || DEFAULT_HOURS.open
+  const closeTime = formString(formData, "closeTime") || DEFAULT_HOURS.close
+  const deliveryTime = formString(formData, "deliveryTime") || DEFAULT_DELIVERY_WINDOW
 
   if (!businessName || !businessType || !line1 || !postcode || !contactFirstName || !contactPhone) {
     return failure("errors.businessFieldsRequired")

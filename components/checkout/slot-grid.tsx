@@ -2,9 +2,8 @@
 
 import { useT } from "@/components/i18n/i18n-provider"
 import { choiceClass } from "@/components/brand/choice"
-import { isMorningSlot } from "@/lib/checkout-slots"
 import type { FulfillmentMethod } from "@/lib/domain"
-import { slotDisplayLabel, slotOrderValue } from "@/lib/slot-format"
+import { isMorningSlot, slotDisplayLabel, slotOrderValue } from "@/lib/fulfilment-slots"
 import { cn } from "@/lib/utils"
 
 /** Time slots of one day, split into morning and afternoon. */

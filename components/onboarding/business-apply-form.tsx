@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { DEFAULT_DELIVERY_WINDOW, DEFAULT_HOURS, USUAL_DELIVERY_WINDOWS } from "@/lib/fulfilment-slots"
 
 type AddressHit = {
   line_1?: string
@@ -488,7 +489,7 @@ export function BusinessApplyForm() {
             <Input
               id="openTime"
               name="openTime"
-              defaultValue="09:00"
+              defaultValue={DEFAULT_HOURS.open}
               className={field}
             />
           </div>
@@ -499,7 +500,7 @@ export function BusinessApplyForm() {
             <Input
               id="closeTime"
               name="closeTime"
-              defaultValue="22:00"
+              defaultValue={DEFAULT_HOURS.close}
               className={field}
             />
           </div>
@@ -512,9 +513,9 @@ export function BusinessApplyForm() {
             id="deliveryTime"
             name="deliveryTime"
             className={selectCls}
-            defaultValue="11:00-13:00"
+            defaultValue={DEFAULT_DELIVERY_WINDOW}
           >
-            {["07:00-09:00", "09:00-11:00", "11:00-13:00", "13:00-15:00", "15:00-17:00"].map(
+            {USUAL_DELIVERY_WINDOWS.map(
               (slot) => (
                 <option key={slot} value={slot}>
                   {slot}
