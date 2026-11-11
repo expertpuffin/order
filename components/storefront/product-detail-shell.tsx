@@ -4,38 +4,11 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
-import { AuthGateProvider } from "@/components/storefront/auth-gate"
+import { ProductDetailGallery, ProductDetailSections } from "@/components/storefront/product-detail-sections"
 import { ProductOrderPanel } from "@/components/storefront/product-order-panel"
-import { CartPanel } from "@/components/cart/cart-panel"
-import { StorefrontCategoryNav } from "@/components/storefront/storefront-category-nav"
-import { StorefrontTopBar } from "@/components/storefront/storefront-top-bar"
+import { StorefrontFrame } from "@/components/storefront/storefront-frame"
 import type { CatalogCategory, CatalogProductDetail } from "@/lib/api/catalog"
-import {
-  ProductDetailGallery,
-  ProductDetailSections,
-} from "@/components/storefront/product-detail-sections"
-import type { CartLine, CartPricing } from "@/lib/api/cart"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
-import { useState } from "react"
-
-type ProductDetailShellProps = {
-  product: CatalogProductDetail
-  isAuthenticated: boolean
-  canOrder: boolean
-  businessId: string | null
-  businessName: string | null
-  businessStatus: string | null
-  userName?: string | null
-  businesses?: Array<{ id: string; name: string; postcode: string }>
-  cartLines: CartLine[]
-  cartPricing?: CartPricing | null
-  categories: CatalogCategory[]
-}
+import type { StorefrontSession } from "@/lib/storefront-session"
 
 function SpecRow({
   label,
@@ -57,52 +30,20 @@ function SpecRow({
 
 export function ProductDetailShell({
   product,
-  isAuthenticated,
-  canOrder,
-  businessId,
-  businessName,
-  businessStatus,
-  userName,
-  businesses = [],
-  cartLines,
-  cartPricing = null,
+  session,
   categories,
-}: ProductDetailShellProps) {
+}: {
+  product: CatalogProductDetail
+  session: StorefrontSession
+  categories: CatalogCategory[]
+}) {
   const t = useT()
-  const [cartOpen, setCartOpen] = useState(false)
-  const meta =
-    [product.brand, product.packSize || product.sizeLabel]
-      .filter(Boolean)
-      .join(" · ") || null
+  const businessId = session.businessId
+  const meta = [product.brand, product.packSize || product.sizeLabel].filter(Boolean).join(" · ") || null
   const units = product.packagingOptions.join(" · ")
 
   return (
-    <AuthGateProvider
-      isAuthenticated={isAuthenticated}
-      canOrder={canOrder}
-      businessId={businessId}
-      businessStatus={businessStatus}
-    >
-      <div className="flex min-h-svh flex-col bg-[#f7f7f8]">
-        <StorefrontTopBar
-          businesses={businesses}
-          activeBusinessId={businessId}
-          userName={userName}
-          cartCount={cartLines.length}
-          onOpenCart={() => setCartOpen(true)}
-        />
-
-        <div className="mx-auto flex w-full max-w-[1440px] flex-1">
-          <div className="hidden w-[260px] shrink-0 border-r border-[var(--sidebar-border)] bg-background lg:block">
-            <div className="sticky top-16 h-[calc(100svh-4rem)]">
-              <StorefrontCategoryNav
-                categories={categories}
-                businessName={businessName}
-              />
-            </div>
-          </div>
-
-          <main className="min-w-0 flex-1 px-3 py-4 sm:px-5 lg:px-6">
+    <StorefrontFrame session={session} categories={categories}>
             <Link
               href="/"
               className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-[var(--brand-navy)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
@@ -187,36 +128,6 @@ export function ProductDetailShell({
                 />
               </div>
             </div>
-          </main>
-
-          <div className="hidden w-[300px] shrink-0 border-l border-[var(--sidebar-border)] xl:block">
-            <div className="sticky top-16 h-[calc(100svh-4rem)]">
-              <CartPanel
-                lines={cartLines}
-                businessId={businessId}
-                pricing={cartPricing}
-              />
-            </div>
-          </div>
-        </div>
-
-        <Sheet open={cartOpen} onOpenChange={setCartOpen}>
-          <SheetContent
-            side="right"
-            className="w-full max-w-[min(100vw,360px)] border-l border-[var(--sidebar-border)] p-0 sm:max-w-[360px]"
-          >
-            <SheetHeader className="sr-only">
-              <SheetTitle>{t("storefront.yourCart")}</SheetTitle>
-            </SheetHeader>
-            <CartPanel
-              lines={cartLines}
-              businessId={businessId}
-              className="h-full border-0"
-              pricing={cartPricing}
-            />
-          </SheetContent>
-        </Sheet>
-      </div>
-    </AuthGateProvider>
+    </StorefrontFrame>
   )
 }

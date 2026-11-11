@@ -35,27 +35,9 @@ async function MarketPage({ searchParams }: PageProps) {
       const offerProducts = await listOfferProducts(48)
       return (
         <MarketShell
-          mode="browse"
-          isAuthenticated={Boolean(session.user)}
-          canOrder={session.canOrder}
-          businessId={session.businessId}
-          businessName={session.businessName}
-          businessStatus={session.businessStatus}
-          userName={session.user?.name ?? null}
-          activeBusinessId={session.businessId}
-          businesses={session.businesses}
-          cartLines={session.cartLines}
-          cartPricing={session.cartPricing}
+          session={session}
           categories={categories}
-          products={offerProducts}
-          pagination={{
-            page: 1,
-            limit: offerProducts.length || 24,
-            total: offerProducts.length,
-            pages: 1,
-          }}
-          banners={[]}
-          rails={[]}
+          content={{ mode: "browse", products: offerProducts, pagination: null, offers: true }}
           q={params.q}
           category={params.category}
           activeView="offers"
@@ -72,22 +54,9 @@ async function MarketPage({ searchParams }: PageProps) {
 
     return (
       <MarketShell
-        mode="browse"
-        isAuthenticated={Boolean(session.user)}
-        canOrder={session.canOrder}
-        businessId={session.businessId}
-        businessName={session.businessName}
-        businessStatus={session.businessStatus}
-        userName={session.user?.name ?? null}
-        activeBusinessId={session.businessId}
-        businesses={session.businesses}
-        cartLines={session.cartLines}
-        cartPricing={session.cartPricing}
+        session={session}
         categories={categories}
-        products={products}
-        pagination={pagination}
-        banners={[]}
-        rails={[]}
+        content={{ mode: "browse", products, pagination, offers: false }}
         q={params.q}
         category={params.category}
         activeView={view === "all" ? "all" : undefined}
@@ -126,22 +95,9 @@ async function MarketPage({ searchParams }: PageProps) {
 
   return (
     <MarketShell
-      mode="home"
-      isAuthenticated={Boolean(session.user)}
-      canOrder={session.canOrder}
-      businessId={session.businessId}
-      businessName={session.businessName}
-      businessStatus={session.businessStatus}
-      userName={session.user?.name ?? null}
-      activeBusinessId={session.businessId}
-      businesses={session.businesses}
-      cartLines={session.cartLines}
-      cartPricing={session.cartPricing}
+      session={session}
       categories={categories}
-      products={[]}
-      pagination={{ page: 1, limit: 24, total: 0, pages: 0 }}
-      banners={banners}
-      rails={rails}
+      content={{ mode: "home", banners, rails }}
       q={params.q}
       category={params.category}
     />

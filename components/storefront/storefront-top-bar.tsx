@@ -24,7 +24,6 @@ type StorefrontTopBarProps = {
   userName?: string | null
   q?: string
   cartCount?: number
-  cartHref?: string
   onOpenCategories?: () => void
   onOpenCart?: () => void
 }
@@ -38,7 +37,6 @@ export function StorefrontTopBar({
   userName,
   q,
   cartCount = 0,
-  cartHref = "/cart",
   onOpenCategories,
   onOpenCart,
 }: StorefrontTopBarProps) {
@@ -65,7 +63,7 @@ export function StorefrontTopBar({
     </button>
   ) : (
     <Link
-      href={cartHref}
+      href="/cart"
       className={cn(railCell, "relative gap-2 bg-muted/20 px-3")}
       aria-label={t("nav.cart")}
     >
@@ -79,7 +77,7 @@ export function StorefrontTopBar({
       businesses={businesses}
       activeBusinessId={activeBusinessId}
       isAuthenticated={isAuthenticated}
-      onRequireAuth={() => openAuthGate({ intent: "address", tab: "login" })}
+      onRequireAuth={() => openAuthGate()}
       className="w-full lg:max-w-[280px]"
       variant="ledger"
     />
@@ -105,14 +103,16 @@ export function StorefrontTopBar({
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--sidebar-border)] bg-background">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-4 px-3 sm:px-4 lg:px-6">
-        <button
-          type="button"
-          className="inline-flex size-10 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] lg:hidden"
-          onClick={onOpenCategories}
-          aria-label={t("storefront.categories")}
-        >
-          <Menu className="size-5" />
-        </button>
+        {onOpenCategories ? (
+          <button
+            type="button"
+            className="inline-flex size-10 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] lg:hidden"
+            onClick={onOpenCategories}
+            aria-label={t("storefront.categories")}
+          >
+            <Menu className="size-5" />
+          </button>
+        ) : null}
 
         <Link href="/" className="flex shrink-0 items-center gap-2 pr-2">
           <Image
@@ -146,14 +146,14 @@ export function StorefrontTopBar({
               <button
                 type="button"
                 className="text-sm font-medium text-[var(--brand-navy)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
-                onClick={() => openAuthGate({ tab: "login" })}
+                onClick={() => openAuthGate("login")}
               >
                 {t("auth.signIn")}
               </button>
               <Button
                 size="sm"
                 className="h-9 rounded-[2px] btn-brand px-4 text-white"
-                onClick={() => openAuthGate({ tab: "register" })}
+                onClick={() => openAuthGate("register")}
               >
                 {t("auth.signUp")}
               </Button>
@@ -180,7 +180,7 @@ export function StorefrontTopBar({
               onClick={(event) => {
                 if (!isAuthenticated) {
                   event.preventDefault()
-                  openAuthGate({ intent: "favourite", tab: "login" })
+                  openAuthGate()
                 }
               }}
               className={cn(railCell, "w-10")}
