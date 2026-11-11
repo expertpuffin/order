@@ -37,7 +37,7 @@ export function CartPanel({
 
   return (
     <aside className={cn("flex h-full min-h-0 flex-col bg-background text-[var(--brand-navy)]", className)}>
-      <header className="shrink-0 border-b border-[var(--sidebar-border)] px-4 py-3.5">
+      <header className="shrink-0 border-b border-[var(--border-subtle)] px-4 py-3.5">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">{t("storefront.yourCart")}</h2>
           {lines.length > 0 ? (
@@ -58,11 +58,11 @@ export function CartPanel({
             className="h-full min-h-[12rem] justify-center"
           />
         ) : (
-          <ul className="divide-y divide-[var(--sidebar-border)]">
+          <ul className="divide-y divide-[var(--border-subtle)]">
             {lines.map((line) => (
               <li key={line.id} className="px-4 py-3.5">
                 <div className="flex gap-3">
-                  <div className="size-11 shrink-0 overflow-hidden border border-[var(--sidebar-border)] bg-muted/30">
+                  <div className="size-11 shrink-0 overflow-hidden border border-[var(--border-subtle)] bg-muted/30">
                     <ProductImage src={line.imageUrl} name={line.name} initials={2} className="text-[10px]" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -97,7 +97,7 @@ export function CartPanel({
         )}
       </div>
 
-      <footer className="shrink-0 border-t border-[var(--sidebar-border)] bg-background px-4 py-4">
+      <footer className="shrink-0 border-t border-[var(--border-subtle)] bg-background px-4 py-4">
         <CartSummary summary={summary} variant="compact" />
 
         <Button

@@ -18,8 +18,8 @@ export default async function HelpPage() {
         description={t("storefront.helpDescription")}
       />
 
-      <section className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5">
-        <div className="mb-4 flex items-start gap-4 border-b border-[var(--sidebar-border)] pb-4">
+      <section className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5">
+        <div className="mb-4 flex items-start gap-4 border-b border-[var(--border-subtle)] pb-4">
           <PuffinIcon
             name={PUFFIN_ICONS.help}
             className="size-16 shrink-0 text-[var(--brand-navy)]"
@@ -58,7 +58,7 @@ export default async function HelpPage() {
           </a>
         </p>
         <Button
-          className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+          className="h-10 rounded-[2px] btn-navy"
           nativeButton={false}
           render={<Link href="/" />}
         >
@@ -66,7 +66,7 @@ export default async function HelpPage() {
         </Button>
       </section>
 
-      <section className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5">
+      <section className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5">
         <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
           {t("feedback.helpTitle")}
         </h2>

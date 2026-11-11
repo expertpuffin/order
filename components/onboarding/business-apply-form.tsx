@@ -23,15 +23,15 @@ type AddressHit = {
 }
 
 const field =
-  "h-10 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
 const label =
   "text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
 const selectCls =
-  "flex h-10 w-full rounded-[2px] border border-[var(--sidebar-border)] bg-background px-3 text-sm text-[var(--brand-navy)] outline-none focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "flex h-10 w-full rounded-[2px] border border-[var(--border-subtle)] bg-background px-3 text-sm text-[var(--brand-navy)] outline-none focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
 const primaryBtn =
-  "rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+  "rounded-[2px] btn-navy"
 const outlineBtn =
-  "rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
+  "rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
 
 export function BusinessApplyForm() {
   const t = useT()
@@ -61,11 +61,9 @@ export function BusinessApplyForm() {
 
   useEffect(() => {
     let cancelled = false
-    void listTeamRoleNamesAction()
-      .then((res) => {
-        if (!cancelled && res.names.length) setRoleNames(res.names)
-      })
-      .catch(() => undefined)
+    void listTeamRoleNamesAction().then((res) => {
+      if (!cancelled && res.names.length) setRoleNames(res.names)
+    })
     return () => {
       cancelled = true
     }
@@ -76,12 +74,13 @@ export function BusinessApplyForm() {
     startLookup(async () => {
       const result = await lookupPostcodeAction(postcode)
       if ("error" in result && result.error) {
+        const code = "code" in result ? result.code : null
         setLookupError(
-          result.error.includes("402") ||
-            result.error.toLowerCase().includes("unavailable") ||
-            result.error.toLowerCase().includes("balance")
+          code === "lookup_unavailable"
             ? t("onboarding.business.lookupUnavailable")
-            : result.error
+            : code === "no_addresses"
+              ? t("onboarding.business.noAddresses")
+              : result.error
         )
         setAddresses([...(result.addresses ?? [])])
         return
@@ -107,7 +106,7 @@ export function BusinessApplyForm() {
   return (
     <form
       action={formAction}
-      className="space-y-5 rounded-[2px] border border-[var(--sidebar-border)] bg-white p-5"
+      className="space-y-5 rounded-[2px] border border-[var(--border-subtle)] bg-white p-5"
     >
       <div className="flex gap-1">
         {[0, 1, 2, 3].map((i) => (
@@ -210,7 +209,7 @@ export function BusinessApplyForm() {
           <p className="text-xs text-destructive">{lookupError}</p>
         ) : null}
         {addresses.length > 0 ? (
-          <div className="max-h-40 space-y-1 overflow-y-auto rounded-[2px] border border-[var(--sidebar-border)] p-1">
+          <div className="max-h-40 space-y-1 overflow-y-auto rounded-[2px] border border-[var(--border-subtle)] p-1">
             <p className={cn(label, "px-2 pt-1")}>
               {t("onboarding.business.pickAddress")}
             </p>
@@ -367,7 +366,7 @@ export function BusinessApplyForm() {
         </label>
 
         {!isOwner ? (
-          <div className="space-y-3 border-t border-[var(--sidebar-border)] pt-3">
+          <div className="space-y-3 border-t border-[var(--border-subtle)] pt-3">
             <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
               {t("onboarding.business.ownerDetails")}
             </p>
@@ -435,7 +434,7 @@ export function BusinessApplyForm() {
                         "rounded-[2px] border px-2.5 py-1.5 text-xs font-medium transition-colors",
                         selected
                           ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
-                          : "border-[var(--sidebar-border)] bg-background text-[var(--brand-navy)] hover:bg-muted/60"
+                          : "border-[var(--border-subtle)] bg-background text-[var(--brand-navy)] hover:bg-muted/60"
                       )}
                     >
                       {role}

@@ -29,7 +29,7 @@ export function CouponField({ businessId, initialCode }: { businessId: string; i
   }
 
   return (
-    <div className="space-y-2 border-t border-[var(--sidebar-border)] pt-3">
+    <div className="space-y-2 border-t border-[var(--border-subtle)] pt-3">
       <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{t("promotions.coupon")}</p>
       <div className="flex gap-2">
         <Input

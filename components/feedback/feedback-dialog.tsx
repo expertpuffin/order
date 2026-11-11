@@ -14,8 +14,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
+import { ACCEPTED_IMAGE_TYPES, FEEDBACK_ERRORS, MAX_SHOTS } from "@/lib/feedback-contract"
 import {
-  MAX_SHOTS,
   buildFeedbackMeta,
   capturePage,
   exportShots,
@@ -33,7 +33,6 @@ const RATINGS = [
   { value: 5, emoji: "🤩" },
 ] as const
 
-const SUPPORT_EMAIL = "support@ordoria.com"
 const PRIVACY_URL = "https://business.ordoria.com/privacy"
 
 type FeedbackContextValue = { openFeedback: () => void }
@@ -150,13 +149,13 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
       )
       const res = await fetch("/api/feedback", { method: "POST", body: form, credentials: "same-origin" })
       if (!res.ok) {
-        const body = (await res.json().catch(() => null)) as { message?: string } | null
-        throw new Error(body?.message || t("feedback.sendFailed"))
+        const body = (await res.json().catch(() => null)) as { code?: string } | null
+        throw new Error(body?.code ?? "")
       }
       setSent(true)
     } catch (e) {
       const msg = (e as Error).message
-      setError(msg === "too_large" ? t("feedback.tooLarge") : msg || t("feedback.sendFailed"))
+      setError(msg === FEEDBACK_ERRORS.tooLarge ? t("feedback.tooLarge") : t("feedback.sendFailed"))
     } finally {
       setSending(false)
     }
@@ -344,7 +343,7 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
                       <input
                         ref={fileInput}
                         type="file"
-                        accept="image/png,image/jpeg,image/webp,image/gif"
+                        accept={ACCEPTED_IMAGE_TYPES.join(",")}
                         multiple
                         hidden
                         onChange={(e) => {
@@ -381,8 +380,8 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
               <div className="-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs text-muted-foreground">
                   {t("feedback.urgent")}{" "}
-                  <a href={`mailto:${SUPPORT_EMAIL}`} className="font-medium text-foreground underline underline-offset-2">
-                    {SUPPORT_EMAIL}
+                  <a href={`mailto:${t("storefront.supportEmail")}`} className="font-medium text-foreground underline underline-offset-2">
+                    {t("storefront.supportEmail")}
                   </a>
                 </p>
                 <Button type="button" disabled={rating == null || sending} onClick={() => void send()}>

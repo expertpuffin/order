@@ -77,17 +77,17 @@ export function FavoriteLineCard({
   return (
     <article
       className={cn(
-        "rounded-[2px] border border-[var(--sidebar-border)] bg-white p-3",
+        "rounded-[2px] border border-[var(--border-subtle)] bg-white p-3",
         pending && "opacity-70"
       )}
     >
       <div className="flex gap-3">
         {productHref ? (
-          <Link href={productHref} className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#f3f4f6]">
+          <Link href={productHref} className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[#f3f4f6]">
             <ProductImage src={item.imageUrl} name={item.name} className="text-sm" />
           </Link>
         ) : (
-          <div className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#f3f4f6]">
+          <div className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[#f3f4f6]">
             <ProductImage src={item.imageUrl} name={item.name} className="text-sm" />
           </div>
         )}
@@ -153,7 +153,7 @@ export function FavoriteLineCard({
                 "rounded-[2px] border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wide transition-colors",
                 selected
                   ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
-                  : "border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
+                  : "border-[var(--border-subtle)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
               )}
             >
               {opt}

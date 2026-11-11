@@ -1,5 +1,7 @@
 "use client"
 
+import { ACCEPTED_IMAGE_TYPES, FEEDBACK_ERRORS, MAX_SHOTS_BYTES } from "@/lib/feedback-contract"
+
 /** One screenshot in the feedback dialog, with the boxes drawn on it. */
 export type FeedbackMark = {
   kind: "highlight" | "redact"
@@ -19,16 +21,11 @@ export type FeedbackShot = {
   marks: FeedbackMark[]
 }
 
-export const MAX_SHOTS = 3
 /** Longest side sent; panel text stays readable, uploads stay small. */
 const MAX_SIDE = 2000
-/** Server-side request limit is 4.5 MB for all files together. */
-const MAX_TOTAL_BYTES = 3.6 * 1024 * 1024
-
-const ACCEPTED = ["image/png", "image/jpeg", "image/webp", "image/gif"]
 
 export const isImageFile = (file: File) =>
-  ACCEPTED.includes(file.type) || /\.(png|jpe?g|webp|gif)$/i.test(file.name)
+  ACCEPTED_IMAGE_TYPES.includes(file.type) || /\.(png|jpe?g|webp|gif)$/i.test(file.name)
 
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -145,9 +142,9 @@ export async function exportShots(shots: FeedbackShot[]): Promise<Blob[]> {
   for (const quality of [0.85, 0.7, 0.5]) {
     const blobs = await Promise.all(shots.map((s) => exportShot(s, quality)))
     const total = blobs.reduce((sum, b) => sum + b.size, 0)
-    if (total <= MAX_TOTAL_BYTES) return blobs
+    if (total <= MAX_SHOTS_BYTES) return blobs
   }
-  throw new Error("too_large")
+  throw new Error(FEEDBACK_ERRORS.tooLarge)
 }
 
 function browserLabel(ua: string) {

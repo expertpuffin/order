@@ -28,7 +28,7 @@ export default async function FavouritesPage() {
         actions={
           <Button
             variant="outline"
-            className="h-9 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
+            className="h-9 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
             nativeButton={false}
             render={<Link href="/" />}
           >

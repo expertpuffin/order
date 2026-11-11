@@ -1,25 +1,13 @@
-import { redirect } from "next/navigation"
 import Link from "next/link"
 
 import { OnboardingShell } from "@/components/onboarding/onboarding-shell"
-import {
-  getMyBusinessesSafe,
-  requireOnboardingUser,
-} from "@/lib/onboarding-routing"
+import { requireOnboardingStep } from "@/lib/onboarding-routing"
 import { getTranslator } from "@/lib/i18n"
 
 export default async function PendingOnboardingPage() {
-  await requireOnboardingUser("/onboarding/pending")
-
-  const businesses = await getMyBusinessesSafe()
-  const pending = businesses.find((b) => b.status === "pending")
-  const approved = businesses.find((b) => b.status === "approved")
-  if (approved) redirect("/")
-  if (!pending && businesses.length === 0) redirect("/onboarding/business")
-
+  const { businessName } = await requireOnboardingStep("/onboarding/pending", "pending")
   const { t } = await getTranslator()
-  const name =
-    pending?.tradingName || pending?.businessName || t("common.ordoria")
+  const name = businessName || t("common.ordoria")
 
   return (
     <OnboardingShell
@@ -28,7 +16,7 @@ export default async function PendingOnboardingPage() {
       stepLabel={t("status.pending")}
       footer={null}
     >
-      <div className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-6 text-center">
+      <div className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-6 text-center">
         <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
           {t("status.pending")}
         </p>
@@ -37,7 +25,7 @@ export default async function PendingOnboardingPage() {
         </p>
         <Link
           href="/"
-          className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-[2px] bg-[var(--brand-navy)] text-sm font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+          className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-[2px] btn-navy text-sm"
         >
           {t("storefront.keepBrowsing")}
         </Link>

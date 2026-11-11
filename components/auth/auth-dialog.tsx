@@ -35,8 +35,8 @@ export function AuthDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md gap-0 overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] p-0 ring-0 sm:max-w-md">
-        <DialogHeader className="space-y-1 border-b border-[var(--sidebar-border)] px-5 py-4 text-left">
+      <DialogContent className="max-w-md gap-0 overflow-hidden rounded-[2px] border border-[var(--border-subtle)] p-0 ring-0 sm:max-w-md">
+        <DialogHeader className="space-y-1 border-b border-[var(--border-subtle)] px-5 py-4 text-left">
           <div className="mb-2 flex items-start justify-between gap-3">
             <div className="flex items-center gap-2">
               <Image src="/icon.png" alt="" width={24} height={24} className="size-6 object-contain" />
@@ -65,7 +65,7 @@ export function AuthDialog({
             </Button>
             <Button
               variant="outline"
-              className="h-10 w-full rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
+              className="h-10 w-full rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
               onClick={() => onOpenChange(false)}
             >
               {t("storefront.keepBrowsing")}
@@ -73,7 +73,7 @@ export function AuthDialog({
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 border-b border-[var(--sidebar-border)] bg-muted/20">
+            <div className="grid grid-cols-2 border-b border-[var(--border-subtle)] bg-muted/20">
               {(["login", "register"] as const).map((value) => (
                 <button
                   key={value}

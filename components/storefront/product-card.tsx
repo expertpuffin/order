@@ -29,7 +29,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
       className={cn(
         "group flex flex-col bg-white",
         variant === "grid"
-          ? "overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]"
+          ? "overflow-hidden rounded-[2px] border border-[var(--border-subtle)]"
           : null
       )}
     >
@@ -38,7 +38,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
           "relative bg-[#f3f4f6]",
           variant === "grid"
             ? "aspect-square"
-            : "aspect-square overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]"
+            : "aspect-square overflow-hidden rounded-[2px] border border-[var(--border-subtle)]"
         )}
       >
         <Link

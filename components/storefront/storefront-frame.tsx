@@ -61,11 +61,11 @@ export function StorefrontFrame({
 
         {catalogue ? (
           <div className="mx-auto flex w-full max-w-[1440px] flex-1">
-            <div className="hidden w-[260px] shrink-0 border-r border-[var(--sidebar-border)] bg-background lg:block">
+            <div className="hidden w-[260px] shrink-0 border-r border-[var(--border-subtle)] bg-background lg:block">
               <div className="sticky top-16 h-[calc(100svh-4rem)]">{categoryNav}</div>
             </div>
             <main className="min-w-0 flex-1 px-3 py-4 sm:px-5 lg:px-6">{children}</main>
-            <div className="hidden w-[300px] shrink-0 border-l border-[var(--sidebar-border)] bg-background xl:block">
+            <div className="hidden w-[300px] shrink-0 border-l border-[var(--border-subtle)] bg-background xl:block">
               <div className="sticky top-16 h-[calc(100svh-4rem)]">{cart()}</div>
             </div>
           </div>
@@ -83,7 +83,7 @@ export function StorefrontFrame({
             <Sheet open={cartOpen} onOpenChange={setCartOpen}>
               <SheetContent
                 side="right"
-                className="w-full max-w-[min(100vw,360px)] border-l border-[var(--sidebar-border)] p-0 sm:max-w-[360px]"
+                className="w-full max-w-[min(100vw,360px)] border-l border-[var(--border-subtle)] p-0 sm:max-w-[360px]"
               >
                 <SheetHeader className="sr-only">
                   <SheetTitle>{t("storefront.yourCart")}</SheetTitle>

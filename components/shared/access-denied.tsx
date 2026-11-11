@@ -17,7 +17,7 @@ export function AccessDenied({
       body={description}
       actions={
         <Button
-          className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+          className="h-10 rounded-[2px] btn-navy"
           nativeButton={false}
           render={<Link href="/" />}
         >

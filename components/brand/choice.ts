@@ -2,5 +2,5 @@
 export function choiceClass(selected: boolean) {
   return selected
     ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
-    : "border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
+    : "border-[var(--border-subtle)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
 }

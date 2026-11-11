@@ -19,7 +19,7 @@ function SpecRow({
 }) {
   if (!value?.trim()) return null
   return (
-    <div className="flex justify-between gap-4 border-b border-[var(--sidebar-border)] py-2.5 text-sm last:border-0">
+    <div className="flex justify-between gap-4 border-b border-[var(--border-subtle)] py-2.5 text-sm last:border-0">
       <dt className="text-muted-foreground">{label}</dt>
       <dd className="max-w-[60%] text-right font-medium text-[var(--brand-navy)]">
         {value}
@@ -54,7 +54,7 @@ export function ProductDetailShell({
 
             <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
               <div className="min-w-0 space-y-4">
-                <div className="border border-[var(--sidebar-border)] bg-background">
+                <div className="border border-[var(--border-subtle)] bg-background">
                   <ProductDetailGallery product={product} />
 
                   <div className="px-4 py-4 sm:px-5 sm:py-5">
@@ -76,7 +76,7 @@ export function ProductDetailShell({
                   </div>
                 </div>
 
-                <section className="border border-[var(--sidebar-border)] bg-background px-4 py-4 sm:px-5">
+                <section className="border border-[var(--border-subtle)] bg-background px-4 py-4 sm:px-5">
                   <h2 className="mb-3 text-sm font-semibold text-[var(--brand-navy)]">
                     {t("storefront.productSpec")}
                   </h2>

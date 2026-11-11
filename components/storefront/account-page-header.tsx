@@ -16,7 +16,7 @@ export function AccountPageHeader({
 }: AccountPageHeaderProps) {
   return (
     <div
-      className="flex flex-col gap-3 border-b border-[var(--sidebar-border)] pb-4 sm:flex-row sm:items-end sm:justify-between"
+      className="flex flex-col gap-3 border-b border-[var(--border-subtle)] pb-4 sm:flex-row sm:items-end sm:justify-between"
     >
       <div className="space-y-1">
         {eyebrow ? (

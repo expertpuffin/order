@@ -84,7 +84,7 @@ export function StorefrontTopBar({
   )
 
   const searchField = () => (
-    <div className="relative flex h-10 w-full items-center rounded-[2px] border border-[var(--sidebar-border)] bg-background">
+    <div className="relative flex h-10 w-full items-center rounded-[2px] border border-[var(--border-subtle)] bg-background">
       <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         name="q"
@@ -101,12 +101,12 @@ export function StorefrontTopBar({
   )
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--sidebar-border)] bg-background">
+    <header className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-background">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-4 px-3 sm:px-4 lg:px-6">
         {onOpenCategories ? (
           <button
             type="button"
-            className="inline-flex size-10 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] lg:hidden"
+            className="inline-flex size-10 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] lg:hidden"
             onClick={onOpenCategories}
             aria-label={t("storefront.categories")}
           >
@@ -138,11 +138,11 @@ export function StorefrontTopBar({
 
         <div className="ml-auto flex items-center gap-4">
           {isAuthenticated && userName ? (
-            <div className="hidden border-r border-[var(--sidebar-border)] pr-4 sm:block">
+            <div className="hidden border-r border-[var(--border-subtle)] pr-4 sm:block">
               <StorefrontUserMenu userName={userName} />
             </div>
           ) : (
-            <div className="hidden items-center gap-4 border-r border-[var(--sidebar-border)] pr-4 sm:flex">
+            <div className="hidden items-center gap-4 border-r border-[var(--border-subtle)] pr-4 sm:flex">
               <button
                 type="button"
                 className="text-sm font-medium text-[var(--brand-navy)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
@@ -160,7 +160,7 @@ export function StorefrontTopBar({
             </div>
           )}
 
-          <div className="flex items-center divide-x divide-[var(--sidebar-border)] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+          <div className="flex items-center divide-x divide-[var(--border-subtle)] overflow-hidden rounded-[2px] border border-[var(--border-subtle)]">
             {isAuthenticated ? (
               <button
                 type="button"
@@ -173,7 +173,7 @@ export function StorefrontTopBar({
               </button>
             ) : null}
 
-            <StorefrontLocaleMenu variant="rail" />
+            <StorefrontLocaleMenu />
 
             <Link
               href={isAuthenticated ? "/favourites" : "#"}
@@ -194,7 +194,7 @@ export function StorefrontTopBar({
         </div>
       </div>
 
-      <div className="space-y-2 border-t border-[var(--sidebar-border)] px-3 py-2 md:hidden">
+      <div className="space-y-2 border-t border-[var(--border-subtle)] px-3 py-2 md:hidden">
         {deliveryPicker}
         <form action="/">{searchField()}</form>
       </div>

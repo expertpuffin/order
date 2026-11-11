@@ -105,7 +105,7 @@ export function FavouritesPanel({
         body={t("favourites.emptyBody")}
         actions={
           <Button
-            className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+            className="h-10 rounded-[2px] btn-navy"
             nativeButton={false}
             render={<Link href="/" />}
           >
@@ -123,7 +123,7 @@ export function FavouritesPanel({
           type="button"
           variant="outline"
           disabled={allExpanded}
-          className="h-9 flex-1 rounded-[2px] border-[var(--sidebar-border)] font-mono text-xs font-semibold uppercase tracking-wide"
+          className="h-9 flex-1 rounded-[2px] border-[var(--border-subtle)] font-mono text-xs font-semibold uppercase tracking-wide"
           onClick={() => setOpenSlugs(new Set(allSlugs))}
         >
           {t("favourites.expandAll")}
@@ -132,7 +132,7 @@ export function FavouritesPanel({
           type="button"
           variant="outline"
           disabled={noneExpanded}
-          className="h-9 flex-1 rounded-[2px] border-[var(--sidebar-border)] font-mono text-xs font-semibold uppercase tracking-wide"
+          className="h-9 flex-1 rounded-[2px] border-[var(--border-subtle)] font-mono text-xs font-semibold uppercase tracking-wide"
           onClick={() => setOpenSlugs(new Set())}
         >
           {t("favourites.collapseAll")}
@@ -147,7 +147,7 @@ export function FavouritesPanel({
               <button
                 type="button"
                 onClick={() => toggleSection(group.slug)}
-                className="flex w-full items-center justify-between rounded-[2px] border border-[var(--sidebar-border)] bg-white px-4 py-3.5 text-left transition-colors hover:bg-muted/30"
+                className="flex w-full items-center justify-between rounded-[2px] border border-[var(--border-subtle)] bg-white px-4 py-3.5 text-left transition-colors hover:bg-muted/30"
                 aria-expanded={open}
               >
                 <div className="min-w-0 pr-3">
@@ -186,7 +186,7 @@ export function FavouritesPanel({
 
       <div
         className={cn(
-          "sticky bottom-3 z-10 flex gap-2 rounded-[2px] border border-[var(--sidebar-border)] bg-white p-3 shadow-sm",
+          "sticky bottom-3 z-10 flex gap-2 rounded-[2px] border border-[var(--border-subtle)] bg-white p-3 shadow-sm",
           pending && "opacity-70"
         )}
       >

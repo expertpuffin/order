@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
-
-export { resolveMediaUrl } from "@/lib/api/media-url"
+import type { Locale } from "@/lib/i18n/config"
 
 export type LocalizedString = {
   en?: string
@@ -21,11 +20,11 @@ export type MarketBanner = {
 
 function pickLocalized(
   value: LocalizedString | string | null | undefined,
-  locale: string
+  locale: Locale
 ): string {
   if (!value) return ""
   if (typeof value === "string") return value
-  const preferred = locale.startsWith("tr") ? value.tr : value.en
+  const preferred = value[locale]
   return preferred || value.en || value.tr || ""
 }
 
@@ -49,7 +48,7 @@ function resolveCtaHref(cta?: {
   return null
 }
 
-export async function listHomeBanners(locale: string): Promise<MarketBanner[]> {
+export async function listHomeBanners(locale: Locale): Promise<MarketBanner[]> {
   try {
     const data = await apiFetch<{
       contents?: Record<string, unknown>[]
@@ -57,7 +56,7 @@ export async function listHomeBanners(locale: string): Promise<MarketBanner[]> {
       auth: false,
       searchParams: {
         placement: "home_carousel",
-        locale: locale.startsWith("tr") ? "tr" : "en",
+        locale,
       },
     })
 
@@ -67,12 +66,12 @@ export async function listHomeBanners(locale: string): Promise<MarketBanner[]> {
         ? data.contents
         : []
 
-    return rows.map((raw) => {
+    return rows.map((raw, index) => {
       const row = raw as Record<string, unknown>
       const theme = (row.theme ?? {}) as Record<string, unknown>
       const cta = (row.cta ?? null) as { kind?: string; value?: string } | null
       return {
-        id: String(row._id ?? row.id ?? Math.random()),
+        id: String(row._id ?? row.id ?? `banner-${index}`),
         title: pickLocalized(row.title as LocalizedString, locale),
         body: pickLocalized(row.body as LocalizedString, locale),
         imageUrl: resolveMediaUrl(

@@ -32,7 +32,7 @@ export function CartSummary({ summary, variant }: { summary: Summary; variant: "
           {t("storefront.freeDeliveryNudge", { amount: money(summary.freeDeliveryGap) })}
         </p>
       ) : null}
-      <div className="flex justify-between gap-4 border-t border-[var(--sidebar-border)] pt-2 text-base font-semibold text-[var(--brand-navy)]">
+      <div className="flex justify-between gap-4 border-t border-[var(--border-subtle)] pt-2 text-base font-semibold text-[var(--brand-navy)]">
         <dt>{t("storefront.total")}</dt>
         <dd className="tabular-nums">{money(summary.total)}</dd>
       </div>

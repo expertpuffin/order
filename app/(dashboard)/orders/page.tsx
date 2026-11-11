@@ -88,7 +88,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
         submitLabel={t("common.search")}
         clearLabel={t("common.clear")}
         clearHref={orderListHref({ status: query.status, placed: query.placed })}
-        className="rounded-[2px] border border-[var(--sidebar-border)] bg-white shadow-none"
+        className="rounded-[2px] border border-[var(--border-subtle)] bg-white shadow-none"
         fields={[
           {
             type: "text",
@@ -132,9 +132,9 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
 
       <div
         data-export-root
-        className="overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-white"
+        className="overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-white"
       >
-        <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[var(--sidebar-border)] px-4 py-4 sm:px-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-5">
           <div>
             <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
               {t("orders.sectionLabel")}
@@ -171,7 +171,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             actions={
               !hasActiveFilters && !status ? (
                 <Button
-                  className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+                  className="h-10 rounded-[2px] btn-navy"
                   nativeButton={false}
                   render={<Link href="/" />}
                 >
@@ -184,7 +184,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-[var(--sidebar-border)] hover:bg-transparent">
+                <TableRow className="border-[var(--border-subtle)] hover:bg-transparent">
                   <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
                     {t("orders.colOrder")}
                   </TableHead>
@@ -212,7 +212,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                   return (
                     <TableRow
                       key={order.id}
-                      className="border-[var(--sidebar-border)]"
+                      className="border-[var(--border-subtle)]"
                     >
                       <TableCell>
                         <Link
@@ -258,7 +258,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                         <Button
                           variant="outline"
                           size="icon-sm"
-                          className="size-8 rounded-[2px] border-[var(--sidebar-border)]"
+                          className="size-8 rounded-[2px] border-[var(--border-subtle)]"
                           nativeButton={false}
                           render={
                             <Link href={`/orders/${order.orderNumber}`} />
@@ -277,7 +277,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
         )}
 
         {orders.length > 0 ? (
-          <div className="border-t border-[var(--sidebar-border)] px-4 py-3">
+          <div className="border-t border-[var(--border-subtle)] px-4 py-3">
             <ListPagination
               basePath="/orders"
               pagination={pagination}

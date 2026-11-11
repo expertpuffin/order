@@ -174,7 +174,7 @@ export function CheckoutPayment({
                       "flex w-full items-start gap-3 rounded-[2px] border px-3 py-2.5 text-left transition-colors",
                       active && !single
                         ? "border-[var(--brand-navy)] bg-[var(--brand-navy)]/5"
-                        : "border-[var(--sidebar-border)] bg-white",
+                        : "border-[var(--border-subtle)] bg-white",
                       single ? "cursor-default" : "hover:bg-muted/40"
                     )}
                   >
@@ -228,7 +228,7 @@ export function CheckoutPayment({
                       "flex w-full items-center gap-3 rounded-[2px] border px-3 py-2 text-left text-sm transition-colors",
                       active
                         ? "border-[var(--brand-navy)] bg-[var(--brand-navy)]/5"
-                        : "border-[var(--sidebar-border)] bg-white hover:bg-muted/40",
+                        : "border-[var(--border-subtle)] bg-white hover:bg-muted/40",
                       card.expired && "opacity-50"
                     )}
                   >
@@ -260,7 +260,7 @@ export function CheckoutPayment({
             <button
               type="button"
               onClick={() => setAdding(true)}
-              className="flex w-full items-center gap-2 rounded-[2px] border border-dashed border-[var(--sidebar-border)] px-3 py-2 text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/30"
+              className="flex w-full items-center gap-2 rounded-[2px] border border-dashed border-[var(--border-subtle)] px-3 py-2 text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/30"
             >
               <Plus className="size-4" />
               {t("payment.addCard")}
@@ -341,7 +341,7 @@ function AddCardInline({
   }
 
   return (
-    <div className="space-y-2 rounded-[2px] border border-[var(--sidebar-border)] bg-white p-3">
+    <div className="space-y-2 rounded-[2px] border border-[var(--border-subtle)] bg-white p-3">
       <div ref={mountRef} className="min-h-[22px] py-1" />
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
       <div className="flex justify-end gap-2">

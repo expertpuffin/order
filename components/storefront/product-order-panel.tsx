@@ -32,13 +32,13 @@ export function ProductOrderPanel({
   return (
     <section
       className={cn(
-        "border border-[var(--sidebar-border)] bg-background",
+        "border border-[var(--border-subtle)] bg-background",
         sticky && "lg:sticky lg:top-20 lg:self-start",
         className
       )}
       aria-label={t("storefront.orderPanel")}
     >
-      <div className="border-b border-[var(--sidebar-border)] px-4 py-3.5">
+      <div className="border-b border-[var(--border-subtle)] px-4 py-3.5">
         {unitPrice != null ? (
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <p className="text-2xl font-semibold tabular-nums text-[var(--brand-navy)]">
@@ -67,7 +67,7 @@ export function ProductOrderPanel({
         <PurchaseFields purchase={purchase} />
       </div>
 
-      <footer className="border-t border-[var(--sidebar-border)] px-4 py-4">
+      <footer className="border-t border-[var(--border-subtle)] px-4 py-4">
         {lineTotal != null ? (
           <div className="mb-3 flex justify-between gap-4 text-sm">
             <span className="text-muted-foreground">{t("storefront.total")}</span>

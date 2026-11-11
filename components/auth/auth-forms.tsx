@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { loginAction, registerAction } from "@/lib/actions/auth"
 
 const gateField =
-  "h-10 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
 const gateLabel =
   "text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
 const gateSubmit =
@@ -142,7 +142,7 @@ export function RegisterForm() {
           type="checkbox"
           name="receiveAnnouncements"
           value="off"
-          className="mt-0.5 size-3.5 rounded-[2px] border-[var(--sidebar-border)] accent-[var(--brand-navy)]"
+          className="mt-0.5 size-3.5 rounded-[2px] border-[var(--border-subtle)] accent-[var(--brand-navy)]"
         />
         {t("auth.optOutAnnouncements")}
       </label>

@@ -138,20 +138,10 @@ export async function lookupPostcodeAction(postcode: string) {
     const data = await lookupPostcode(trimmed)
     return { addresses: data.addresses ?? [] }
   } catch (error) {
+    // The lookup provider is out of credit (402) or knows no address (404): the form says so and offers manual entry
     const status = error instanceof ApiError ? error.status : 0
-    if (status === 402) {
-      return {
-        error:
-          "Postcode lookup is temporarily unavailable. Enter the address manually below.",
-        addresses: [] as const,
-      }
-    }
-    if (status === 404) {
-      return {
-        error: "No addresses found for this postcode. Enter it manually.",
-        addresses: [] as const,
-      }
-    }
+    if (status === 402) return { error: "Postcode lookup unavailable", code: "lookup_unavailable", addresses: [] as const }
+    if (status === 404) return { error: "No addresses found", code: "no_addresses", addresses: [] as const }
     return { ...actionError(error), addresses: [] as const }
   }
 }

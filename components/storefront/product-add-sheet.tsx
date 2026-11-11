@@ -41,9 +41,9 @@ export function ProductAddSheet({
       <SheetContent
         side="right"
         showCloseButton
-        className="flex w-full max-w-[min(100vw,400px)] flex-col gap-0 border-l border-[var(--sidebar-border)] bg-[var(--sidebar)] p-0 sm:max-w-[400px]"
+        className="flex w-full max-w-[min(100vw,400px)] flex-col gap-0 border-l border-[var(--border-subtle)] bg-[var(--sheet)] p-0 sm:max-w-[400px]"
       >
-        <SheetHeader className="shrink-0 border-b border-[var(--sidebar-border)] px-4 py-3.5 text-left">
+        <SheetHeader className="shrink-0 border-b border-[var(--border-subtle)] px-4 py-3.5 text-left">
           <SheetTitle className="pr-8 text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
             {product.name}
           </SheetTitle>
@@ -55,7 +55,7 @@ export function ProductAddSheet({
         </SheetHeader>
 
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          <div className="aspect-[4/3] w-full border-b border-[var(--sidebar-border)] bg-muted/20">
+          <div className="aspect-[4/3] w-full border-b border-[var(--border-subtle)] bg-muted/20">
             <ProductImage src={product.imageUrl} name={product.name} alt={product.name} initials={2} className="text-2xl text-muted-foreground/50" />
           </div>
 
@@ -73,7 +73,7 @@ export function ProductAddSheet({
           </div>
         </div>
 
-        <footer className="shrink-0 border-t border-[var(--sidebar-border)] bg-background px-4 py-4">
+        <footer className="shrink-0 border-t border-[var(--border-subtle)] bg-background px-4 py-4">
           {lineTotal != null ? (
             <div className="mb-3 flex items-baseline justify-between gap-4">
               <span className="text-sm text-muted-foreground">

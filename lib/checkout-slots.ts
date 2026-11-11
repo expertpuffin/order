@@ -1,6 +1,7 @@
 /** Mobil checkoutSlots ile uyumlu — teslimat günü / method-aware fallback */
 
 import type { FulfillmentMethod } from "@/lib/domain"
+import { intlLocale, type Locale } from "@/lib/i18n/config"
 import { COLLECTION_SLOT_MINUTES, DELIVERY_SLOT_MINUTES } from "@/lib/slot-format"
 
 export type TimeSlot = {
@@ -149,12 +150,12 @@ export function slotsFromBusinessHours(
   }).map((s) => s.value)
 }
 
-export function formatDayCard(iso: string, locale: string) {
+export function formatDayCard(iso: string, locale: Locale) {
   const d = new Date(`${iso}T12:00:00`)
   if (Number.isNaN(d.getTime())) {
     return { weekday: iso, weekdayShort: iso, dayMonth: iso, compact: iso }
   }
-  const loc = locale.startsWith("tr") ? "tr-TR" : "en-GB"
+  const loc = intlLocale(locale)
   return {
     weekday: d.toLocaleDateString(loc, { weekday: "long" }),
     weekdayShort: d.toLocaleDateString(loc, { weekday: "short" }),

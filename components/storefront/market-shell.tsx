@@ -51,7 +51,7 @@ export function MarketShell({
             fallbackSubtitle={t("storefront.heroSubtitle")}
           />
           {iconRail}
-          <div className="space-y-8 rounded-[2px] border border-[var(--sidebar-border)] bg-white p-3 sm:p-4">
+          <div className="space-y-8 rounded-[2px] border border-[var(--border-subtle)] bg-white p-3 sm:p-4">
             {content.rails.map((rail) => (
               <ProductRail
                 key={rail.id}
@@ -68,7 +68,7 @@ export function MarketShell({
           {iconRail}
           {content.offers ? <h1 className="text-xl font-bold text-[var(--brand-navy)]">{t("storefront.railOffers")}</h1> : null}
           {content.products.length === 0 ? (
-            <div className="rounded-[2px] border border-[var(--sidebar-border)] bg-white py-16 text-center text-sm text-muted-foreground">
+            <div className="rounded-[2px] border border-[var(--border-subtle)] bg-white py-16 text-center text-sm text-muted-foreground">
               {t("storefront.noProducts")}
             </div>
           ) : (

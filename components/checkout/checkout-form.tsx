@@ -71,7 +71,7 @@ export function CheckoutForm({
       <input type="hidden" name="requestedDeliveryDate" value={schedule.deliveryDate} />
       <input type="hidden" name="deliveryTime" value={schedule.deliveryTime} />
 
-      <div className="rounded-[2px] border border-[var(--sidebar-border)] bg-[#f7f7f8] px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+      <div className="rounded-[2px] border border-[var(--border-subtle)] bg-[#f7f7f8] px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
         {t("cart.checkoutSummaryItems", { count: String(lineCount) })}
       </div>
 
@@ -160,7 +160,7 @@ export function CheckoutForm({
       <div className="space-y-2">
         <button
           type="button"
-          className="w-full rounded-[2px] border border-[var(--sidebar-border)] px-3 py-2.5 text-left text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/30"
+          className="w-full rounded-[2px] border border-[var(--border-subtle)] px-3 py-2.5 text-left text-sm font-medium text-[var(--brand-navy)] hover:bg-muted/30"
           onClick={() => setShowNote((open) => !open)}
         >
           {t("cart.checkoutNoteToggle")}
@@ -171,7 +171,7 @@ export function CheckoutForm({
             name="specialNote"
             rows={3}
             placeholder={t("cart.checkoutNotePlaceholder")}
-            className="rounded-[2px] border-[var(--sidebar-border)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+            className="rounded-[2px] border-[var(--border-subtle)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
           />
         ) : null}
       </div>

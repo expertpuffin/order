@@ -56,7 +56,7 @@ export function DeliveryBusinessPicker({
   const shellClass = cn(
     "flex min-w-0 items-center text-left",
     ledger
-      ? "justify-between gap-2 rounded-[2px] border border-[var(--sidebar-border)] px-3 py-1.5 hover:bg-muted/40"
+      ? "justify-between gap-2 rounded-[2px] border border-[var(--border-subtle)] px-3 py-1.5 hover:bg-muted/40"
       : "gap-2 rounded-xl border px-3 py-2",
     className
   )

@@ -71,7 +71,7 @@ export function PurchaseFields({ purchase }: { purchase: ReturnType<typeof usePr
                 disabled={purchase.pending}
                 onClick={() => purchase.setUnit(option)}
                 className={cn(
-                  "min-w-18 flex-1 border border-[var(--sidebar-border)] px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]",
+                  "min-w-18 flex-1 border border-[var(--border-subtle)] px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]",
                   index > 0 && "-ml-px",
                   selected ? "relative z-1 bg-[var(--brand-navy)] text-white" : "bg-background text-[var(--brand-navy)] hover:bg-muted/40"
                 )}

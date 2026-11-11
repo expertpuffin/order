@@ -19,7 +19,7 @@ function DetailSection({
   return (
     <section
       className={cn(
-        "border border-[var(--sidebar-border)] bg-background px-4 py-4 sm:px-5",
+        "border border-[var(--border-subtle)] bg-background px-4 py-4 sm:px-5",
         className
       )}
     >
@@ -37,7 +37,7 @@ function AllergenTags({ labels }: { labels: string[] }) {
       {labels.map((label) => (
         <span
           key={label}
-          className="border border-[var(--sidebar-border)] bg-muted/30 px-2.5 py-1 text-xs font-medium text-[var(--brand-navy)]"
+          className="border border-[var(--border-subtle)] bg-muted/30 px-2.5 py-1 text-xs font-medium text-[var(--brand-navy)]"
         >
           {label}
         </span>
@@ -147,13 +147,13 @@ function NutritionTable({
       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {t(basisKey)}
       </p>
-      <dl className="border border-[var(--sidebar-border)]">
+      <dl className="border border-[var(--border-subtle)]">
         {rows.map((row, index) => (
           <div
             key={row.label}
             className={cn(
               "flex justify-between gap-4 px-3 py-2 text-sm",
-              index > 0 && "border-t border-[var(--sidebar-border)]"
+              index > 0 && "border-t border-[var(--border-subtle)]"
             )}
           >
             <dt className="text-muted-foreground">{row.label}</dt>
@@ -253,7 +253,7 @@ export function ProductDetailGallery({
   if (images.length <= 1) {
     const image = images[0]
     return (
-      <div className="flex aspect-4/3 w-full items-center justify-center border-b border-[var(--sidebar-border)] bg-muted/20 p-4 sm:aspect-[16/10] sm:p-6">
+      <div className="flex aspect-4/3 w-full items-center justify-center border-b border-[var(--border-subtle)] bg-muted/20 p-4 sm:aspect-[16/10] sm:p-6">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -271,7 +271,7 @@ export function ProductDetailGallery({
   }
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_88px] gap-px border-b border-[var(--sidebar-border)] bg-[var(--sidebar-border)] sm:grid-cols-[minmax(0,1fr)_96px]">
+    <div className="grid grid-cols-[minmax(0,1fr)_88px] gap-px border-b border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-[minmax(0,1fr)_96px]">
       <div className="flex aspect-4/3 items-center justify-center bg-muted/20 p-4 sm:aspect-[16/10] sm:p-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -280,7 +280,7 @@ export function ProductDetailGallery({
           className="max-h-full max-w-full object-contain"
         />
       </div>
-      <div className="grid max-h-full auto-rows-fr gap-px bg-[var(--sidebar-border)]">
+      <div className="grid max-h-full auto-rows-fr gap-px bg-[var(--border-subtle)]">
         {images.slice(1, 4).map((image) => (
           <div
             key={image.url}

@@ -50,7 +50,7 @@ export function QuantityStepper({
 
   return (
     <div
-      className="inline-flex overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]"
+      className="inline-flex overflow-hidden rounded-[2px] border border-[var(--border-subtle)]"
       role="group"
       aria-label={label ?? t("storefront.quantity")}
     >
@@ -58,7 +58,7 @@ export function QuantityStepper({
         type="button"
         size="icon-sm"
         variant="ghost"
-        className={cn(cell, "rounded-none border-r border-[var(--sidebar-border)] hover:bg-muted/60")}
+        className={cn(cell, "rounded-none border-r border-[var(--border-subtle)] hover:bg-muted/60")}
         disabled={disabled || (value <= min && !onRemove)}
         aria-label={t("cart.decreaseQty")}
         onClick={() => (value <= min ? onRemove?.() : onChange(value - 1))}
@@ -96,7 +96,7 @@ export function QuantityStepper({
         type="button"
         size="icon-sm"
         variant="ghost"
-        className={cn(cell, "rounded-none border-l border-[var(--sidebar-border)] hover:bg-muted/60")}
+        className={cn(cell, "rounded-none border-l border-[var(--border-subtle)] hover:bg-muted/60")}
         disabled={disabled || value >= MAX_QTY}
         aria-label={t("cart.increaseQty")}
         onClick={() => onChange(clamp(value + 1))}

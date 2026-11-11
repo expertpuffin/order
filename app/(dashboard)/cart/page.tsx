@@ -38,7 +38,7 @@ export default async function CartPage() {
         actions={
           <Button
             variant="outline"
-            className="h-9 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
+            className="h-9 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
             nativeButton={false}
             render={<Link href="/" />}
           >
@@ -56,7 +56,7 @@ export default async function CartPage() {
           actions={
             <>
               <Button
-                className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+                className="h-10 rounded-[2px] btn-navy"
                 nativeButton={false}
                 render={<Link href="/" />}
               >
@@ -64,7 +64,7 @@ export default async function CartPage() {
               </Button>
               <Button
                 variant="outline"
-                className="h-10 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
+                className="h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
                 nativeButton={false}
                 render={<Link href="/favourites" />}
               >
@@ -81,9 +81,9 @@ export default async function CartPage() {
             </p>
           ) : null}
           <div
-            className="h-auto self-start overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5"
+            className="h-auto self-start overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5"
           >
-            <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[var(--sidebar-border)] pb-2">
+            <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[var(--border-subtle)] pb-2">
               <div>
                 <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
                   {t("cart.sectionLabel")}
@@ -100,9 +100,9 @@ export default async function CartPage() {
           </div>
 
           <div
-            className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5 xl:sticky xl:top-20 xl:self-start"
+            className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5 xl:sticky xl:top-20 xl:self-start"
           >
-            <div className="mb-4 border-b border-[var(--sidebar-border)] pb-2">
+            <div className="mb-4 border-b border-[var(--border-subtle)] pb-2">
               <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
                 {t("cart.checkoutLabel")}
               </p>
