@@ -1,4 +1,13 @@
-import { asDate, asId, asNumber, type FulfillmentMethod, type PaymentMode } from "@/lib/domain"
+import {
+  asDate,
+  asId,
+  asNumber,
+  DEFAULT_CURRENCY,
+  unitCode,
+  type ApprovalRuleCode,
+  type FulfillmentMethod,
+  type PaymentMode,
+} from "@/lib/domain"
 
 /** Order model, as the order pages and checkout read it. Pure: safe in client components. */
 
@@ -37,7 +46,7 @@ export type ManagerApprovalState = "pending" | "approving" | "approved" | "rejec
 export type OrderManagerApproval = {
   state: ManagerApprovalState
   version: number
-  ruleCode: "role" | "member" | "amount" | null
+  ruleCode: ApprovalRuleCode | null
   ruleLimit: number | null
   requestedByName: string | null
   decidedByName: string | null
@@ -136,13 +145,13 @@ function mapOrderItem(raw: Record<string, unknown>): OrderItem {
     supplierSku: String(raw.supplierSku ?? ""),
     ordoriaCode: text(raw.ordoriaCode),
     quantity: Number(raw.quantity ?? 0),
-    unit: String(raw.unit ?? "EACH"),
+    unit: unitCode(raw.unit),
     brand: text(raw.brand),
     description: String(raw.description ?? ""),
     packSize: text(raw.packSize),
     comment: text(raw.comment),
     unitCost: typeof raw.unitCost === "number" ? raw.unitCost : null,
-    currency: String(raw.currency ?? "GBP"),
+    currency: String(raw.currency ?? DEFAULT_CURRENCY),
   }
 }
 
@@ -198,7 +207,7 @@ export function mapOrder(raw: Record<string, unknown>): Order {
       refundedAmount: Number(payment.refundedAmount ?? 0),
     },
     payableTotal: asNumber(pricing.payableTotal),
-    currency: String(pricing.currency ?? "GBP"),
+    currency: String(pricing.currency ?? DEFAULT_CURRENCY),
     customerNo: text(raw.customerNo),
     snapshot: {
       businessName: text(snapshot.businessName),

@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import { PuffinIcon, PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { SendFeedbackButton } from "@/components/feedback/send-feedback-button"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { AccountPageHeader } from "@/components/account/account-page-header"
 import { Button } from "@/components/ui/button"
 import { getTranslator } from "@/lib/i18n"
 import { STATUS_PAGE_URL } from "@/lib/status-page"

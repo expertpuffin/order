@@ -1,12 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { Check, ChevronDown, MapPin } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
-import { switchBusinessAction } from "@/lib/actions/cart"
+import { switchBusinessAction } from "@/lib/actions/business"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,7 +46,6 @@ export function DeliveryBusinessPicker({
   variant = "default",
 }: DeliveryBusinessPickerProps) {
   const t = useT()
-  const router = useRouter()
   const [pending, startTransition] = useTransition()
   const ledger = variant === "ledger"
 
@@ -149,7 +147,6 @@ export function DeliveryBusinessPicker({
                 if (selected) return
                 startTransition(async () => {
                   await switchBusinessAction(business.id)
-                  router.refresh()
                 })
               }}
             >

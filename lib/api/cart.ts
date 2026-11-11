@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
-import { asId, preferredOffer, unitCode, type FulfillmentMethod, type PaymentMode } from "@/lib/domain"
+import { asId, DEFAULT_CURRENCY, packagingUnits, preferredOffer, unitCode, type FulfillmentMethod, type PaymentMode } from "@/lib/domain"
 
 export type CheckoutGroup = {
   supplierId: string
@@ -99,12 +99,10 @@ function mapCartLine(raw: Record<string, unknown>): CartLine {
     quantity: Number(raw.quantity ?? 1),
     unit,
     comment: (raw.comment as string | null) ?? null,
-    packagingOptions: packagings.length
-      ? packagings.map((p) => unitCode(p.type))
-      : [unit],
+    packagingOptions: packagingUnits(packagings, unit),
     unitPrice: Number.isFinite(effectiveCost) ? effectiveCost : null,
     listPrice: Number.isFinite(listCost) ? listCost : null,
-    currency: String(preferred?.currency ?? "GBP"),
+    currency: String(preferred?.currency ?? DEFAULT_CURRENCY),
   }
 }
 

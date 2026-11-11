@@ -1,12 +1,13 @@
 import Link from "next/link"
 
 import { AccessDenied } from "@/components/shared/access-denied"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { AccountPageHeader } from "@/components/account/account-page-header"
 import { FavouritesPanel } from "@/components/favourites/favourites-panel"
 import { Button } from "@/components/ui/button"
 import { getFavorites } from "@/lib/api/favorites"
 import { canOrderFor, getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
+import { businessDisplayName } from "@/lib/api/businesses"
 
 export default async function FavouritesPage() {
   const { t } = await getTranslator()
@@ -15,7 +16,7 @@ export default async function FavouritesPage() {
 
   const { listId, items } = await getFavorites(ctx.active.id)
   const businessName =
-    ctx.active.tradingName || ctx.active.businessName || t("nav.favourites")
+    businessDisplayName(ctx.active) || t("nav.favourites")
 
   return (
     <div className="space-y-5">

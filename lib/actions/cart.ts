@@ -1,15 +1,7 @@
 "use server"
 
-import { cookies } from "next/headers"
-
 import { addCartItem, applyCartCoupon, clearCart, removeCartItem, updateCartItem } from "@/lib/api/cart"
 import { actionError, refreshAllPages } from "@/lib/actions/result"
-import { setActiveBusiness } from "@/lib/business-context"
-
-export async function switchBusinessAction(businessId: string) {
-  setActiveBusiness(await cookies(), businessId)
-  refreshAllPages()
-}
 
 export async function addCartItemAction(
   businessId: string,

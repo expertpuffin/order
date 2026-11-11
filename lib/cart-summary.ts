@@ -1,4 +1,5 @@
 import type { CartDelivery, CartLine, CartPricing } from "@/lib/api/cart"
+import { DEFAULT_CURRENCY } from "@/lib/domain"
 
 export type CartSummary = {
   currency: string
@@ -27,7 +28,7 @@ export function summarizeCart(pricing: CartPricing | null | undefined, lines: Ca
   const deliveryAmount = fee && !fee.waived ? fee.amount : 0
 
   return {
-    currency: pricing?.currency ?? lines[0]?.currency ?? "GBP",
+    currency: pricing?.currency ?? lines[0]?.currency ?? DEFAULT_CURRENCY,
     subtotal,
     discounts: pricing
       ? [

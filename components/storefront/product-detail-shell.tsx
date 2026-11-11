@@ -9,6 +9,7 @@ import { ProductDetailGallery, ProductDetailSections } from "@/components/storef
 import { ProductOrderPanel } from "@/components/storefront/product-order-panel"
 import { StorefrontFrame } from "@/components/storefront/storefront-frame"
 import type { CatalogCategory, CatalogProductDetail } from "@/lib/api/catalog"
+import { productMeta } from "@/lib/product"
 import type { StorefrontSession } from "@/lib/storefront-session"
 
 export function ProductDetailShell({
@@ -22,7 +23,8 @@ export function ProductDetailShell({
 }) {
   const t = useT()
   const businessId = session.businessId
-  const meta = [product.brand, product.packSize || product.sizeLabel].filter(Boolean).join(" · ") || null
+  // The item code has its own line here, so no fallback to it
+  const meta = productMeta(product)
   const units = product.packagingOptions.join(" · ")
 
   return (

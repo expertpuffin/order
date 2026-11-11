@@ -1,7 +1,7 @@
 import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
 import { ApiError } from "@/lib/backend/errors"
-import { asId, asNumber, preferredOffer, unitCode } from "@/lib/domain"
+import { asId, asNumber, DEFAULT_CURRENCY, DEFAULT_UNIT, preferredOffer, unitCode } from "@/lib/domain"
 import type { Pagination } from "@/lib/pagination"
 import { PRODUCT_PAGE_SIZE } from "@/lib/storefront-paths"
 
@@ -125,7 +125,7 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
 
   const packagingOptions = Array.isArray(raw.packagingOptions)
     ? raw.packagingOptions.map(unitCode)
-    : ["EACH"]
+    : [DEFAULT_UNIT]
 
   const listCost = Number(
     preferred?.listCost ?? preferred?.cost ?? preferredBase?.listCost ?? preferredBase?.cost ?? NaN
@@ -204,7 +204,7 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
     compareAtPrice,
     onOffer,
     discountPercent,
-    currency: String(preferred?.currency ?? preferredBase?.currency ?? "GBP"),
+    currency: String(preferred?.currency ?? preferredBase?.currency ?? DEFAULT_CURRENCY),
     offerIdsByUnit,
   }
 }
@@ -290,7 +290,6 @@ function mapCatalogProductDetail(
 
   return {
     ...base,
-    imageUrl: resolveMediaUrl(base.imageUrl),
     longDescription: (raw.longDescription as string | null) ?? null,
     ingredients: (raw.ingredients as string | null) ?? null,
     ingredientsNotApplicable: Boolean(raw.ingredientsNotApplicable),

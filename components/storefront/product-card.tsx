@@ -22,7 +22,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
   const t = useT()
   const { requestAddToCart } = useAuthGate()
   const unitHint = product.packagingOptions.slice(0, 3).join(" · ")
-  const meta = productMeta(product)
+  const meta = productMeta(product) || product.itemCode
 
   return (
     <article

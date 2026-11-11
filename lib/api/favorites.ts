@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
-import { asId, unitCode } from "@/lib/domain"
+import { asId, packagingUnits, unitCode } from "@/lib/domain"
 
 export type FavoriteItem = {
   itemId: string
@@ -73,9 +73,7 @@ function mapItems(list: Record<string, unknown>): FavoriteItem[] {
         null,
       quantity: Number(raw.quantity ?? 1),
       unit: unitCode(raw.unit),
-      packagingOptions: packagings.length
-        ? packagings.map((p) => unitCode(p.type))
-        : ["EACH"],
+      packagingOptions: packagingUnits(packagings, unitCode(raw.unit)),
       categorySlug: category.slug,
       categoryName: category.name,
     }

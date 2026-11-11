@@ -1,11 +1,12 @@
 
 import { AccessDenied } from "@/components/shared/access-denied"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
-import { BusinessSwitcher } from "@/components/storefront/business-switcher"
+import { AccountPageHeader } from "@/components/account/account-page-header"
+import { BusinessSwitcher } from "@/components/account/business-switcher"
 import { StatusBadge } from "@/components/shared/status-badge"
 import { getBusinessContext } from "@/lib/business-context"
 import { DetailRow } from "@/components/shared/detail-row"
 import { getTranslator } from "@/lib/i18n"
+import { businessDisplayName } from "@/lib/api/businesses"
 
 export default async function AccountPage() {
   const { t } = await getTranslator()
@@ -67,18 +68,14 @@ export default async function AccountPage() {
           </div>
 
           <BusinessSwitcher
-            businesses={businesses.map((item) => ({
-              id: item.id,
-              tradingName: item.tradingName || item.businessName,
-              status: item.status,
-            }))}
+            businesses={businesses.map((item) => ({ id: item.id, name: businessDisplayName(item) }))}
             activeBusinessId={business.id}
           />
 
           <div className="mt-4">
             <DetailRow
               label={t("account.tradingName")}
-              value={business.tradingName || business.businessName}
+              value={businessDisplayName(business)}
             />
             <DetailRow
               label={t("account.legalName")}

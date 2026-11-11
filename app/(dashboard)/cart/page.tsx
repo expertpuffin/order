@@ -3,7 +3,7 @@ import Link from "next/link"
 import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { AccountPageHeader } from "@/components/account/account-page-header"
 import { CartSummary } from "@/components/cart/cart-summary"
 import { CouponField } from "@/components/cart/coupon-field"
 import { CartEditor } from "@/components/cart/cart-editor"
@@ -24,10 +24,9 @@ export default async function CartPage() {
   const { lines, checkoutGroups, checkoutError, pricing, couponCode } =
     await getCart(ctx.active.id)
   const checkoutSupplierId = checkoutGroups[0]?.supplierId ?? null
+  const summary = summarizeCart(pricing, lines)
   // Will this order wait for a manager? (the backend decides again at checkout)
-  const approval = lines.length
-    ? await checkOrderApproval(ctx.active.id, pricing?.grandTotal ?? 0)
-    : null
+  const approval = lines.length ? await checkOrderApproval(ctx.active.id, summary.goodsTotal) : null
 
   return (
     <div className="space-y-5">
@@ -110,7 +109,7 @@ export default async function CartPage() {
                 {t("cart.checkoutTitle")}
               </h2>
             </div>
-            <CartSummary summary={summarizeCart(pricing, lines)} variant="full" />
+            <CartSummary summary={summary} variant="full" />
             <CouponField businessId={ctx.active.id} initialCode={couponCode} />
             <CheckoutForm
               businessId={ctx.active.id}
@@ -121,11 +120,7 @@ export default async function CartPage() {
               lineCount={lines.length}
               businessName={businessDisplayName(ctx.active)}
               businessPostcode={ctx.active.postcode}
-              approval={
-                approval?.required && approval.rule
-                  ? { code: approval.rule.code, limit: approval.rule.limit }
-                  : null
-              }
+              approval={approval?.required ? approval.rule : null}
             />
           </div>
         </div>

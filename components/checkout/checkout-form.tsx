@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useActionToast } from "@/lib/action-toast"
 import { formatDayCard } from "@/lib/checkout-slots"
-import type { FulfillmentMethod } from "@/lib/domain"
+import type { ApprovalRuleCode, FulfillmentMethod } from "@/lib/domain"
 import { formatMoney } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
@@ -38,7 +38,7 @@ export function CheckoutForm({
   businessName?: string | null
   businessPostcode?: string | null
   /** Set when this order will wait for a manager's OK first */
-  approval?: { code: "role" | "member" | "amount"; limit: number | null } | null
+  approval?: { code: ApprovalRuleCode; limit: number | null } | null
 }) {
   const t = useT()
   const { locale } = useI18n()

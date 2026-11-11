@@ -42,7 +42,7 @@ export function CartEditor({ businessId, lines }: { businessId: string; lines: C
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-[2px]">
-                      {(line.packagingOptions.length ? line.packagingOptions : [line.unit]).map((option) => (
+                      {line.packagingOptions.map((option) => (
                         <SelectItem key={option} value={option}>
                           {option}
                         </SelectItem>

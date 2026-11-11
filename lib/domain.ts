@@ -7,6 +7,13 @@ export type PaymentMode = "account" | "ordoria"
 
 export type BusinessStatus = "pending" | "approved" | "rejected" | "suspended"
 
+/** What a manager-approval rule is based on (the restaurant's own sign-off before an order goes out). */
+export type ApprovalRuleCode = "role" | "member" | "amount"
+
+/** The backend's defaults when a line or price leaves them out. */
+export const DEFAULT_UNIT = "EACH"
+export const DEFAULT_CURRENCY = "GBP"
+
 export const BUSINESS_TYPES = [
   "Canteen",
   "Cafe",
@@ -56,7 +63,14 @@ export function asNumber(value: unknown): number | null {
 
 /** Packaging / sales unit code as the backend compares it ("EACH", "BOX", …). */
 export function unitCode(value: unknown): string {
-  return String(value ?? "EACH").toUpperCase()
+  return String(value ?? DEFAULT_UNIT).toUpperCase()
+}
+
+/** Units a line can be switched to: the product's packagings, always including the unit it has now. */
+export function packagingUnits(packagings: Array<Record<string, unknown>>, current?: string): string[] {
+  const units = packagings.map((p) => unitCode(p.type))
+  if (current && !units.includes(current)) units.unshift(current)
+  return units.length ? units : [DEFAULT_UNIT]
 }
 
 /** The offer a supplier would fill first: active, lowest priority number. */

@@ -1,12 +1,13 @@
 import { intlLocale, type Locale } from "@/lib/i18n/config"
+import { DEFAULT_CURRENCY } from "@/lib/domain"
 
 /**
  * Prices are UK prices, so they read the same in every UI language ("£1,234.50").
  * Dates follow the UI language.
  */
-export function formatMoney(amount: number, currency = "GBP") {
+export function formatMoney(amount: number, currency: string = DEFAULT_CURRENCY) {
   // Intl throws on a malformed code (e.g. ""), which would take the whole page down
-  const code = /^[A-Z]{3}$/.test(currency) ? currency : "GBP"
+  const code = /^[A-Z]{3}$/.test(currency) ? currency : DEFAULT_CURRENCY
   return new Intl.NumberFormat("en-GB", { style: "currency", currency: code }).format(amount)
 }
 

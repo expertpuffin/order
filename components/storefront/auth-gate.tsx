@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { AuthDialog } from "@/components/auth/auth-dialog"
 import { ProductAddSheet } from "@/components/storefront/product-add-sheet"
 import type { CatalogProduct } from "@/lib/api/catalog"
+import type { BusinessStatus } from "@/lib/domain"
 import { DEFAULT_NEXT, readAuthQuery, withoutAuthQuery, type AuthTab } from "@/lib/auth-gate-url"
 import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
@@ -38,7 +39,7 @@ export function AuthGateProvider({
   isAuthenticated: boolean
   canOrder: boolean
   businessId: string | null
-  businessStatus: string | null
+  businessStatus: BusinessStatus | null
 }) {
   const router = useRouter()
   const [dialog, setDialog] = useState<{ open: boolean; tab: AuthTab; next: string }>({

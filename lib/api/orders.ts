@@ -2,6 +2,7 @@ import { apiFetch } from "@/lib/api/client"
 import { mapOrder, type Order } from "@/lib/order"
 import { orderFilters, type OrderListQuery } from "@/lib/order-list-query"
 import type { Pagination } from "@/lib/pagination"
+import type { ApprovalRuleCode } from "@/lib/domain"
 
 const ORDERS_PAGE_SIZE = 20
 
@@ -29,7 +30,7 @@ export async function cancelOrder(orderNumber: string, note?: string) {
 export type ApprovalCheck = {
   enabled: boolean
   required: boolean
-  rule: { code: "role" | "member" | "amount"; limit: number | null; amount: number } | null
+  rule: { code: ApprovalRuleCode; limit: number | null; amount: number } | null
   canApprove: boolean
 }
 

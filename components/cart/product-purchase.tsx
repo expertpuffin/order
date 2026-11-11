@@ -9,9 +9,6 @@ import { addCartItemAction } from "@/lib/actions/cart"
 import type { CatalogProduct } from "@/lib/api/catalog"
 import { cn } from "@/lib/utils"
 
-function unitsOf(product: CatalogProduct) {
-  return product.packagingOptions.length > 0 ? product.packagingOptions : ["EACH"]
-}
 
 /**
  * Choosing a unit and quantity of one product and adding it to the cart — the
@@ -20,7 +17,7 @@ function unitsOf(product: CatalogProduct) {
  */
 export function useProductPurchase(product: CatalogProduct, businessId: string | null, resetKey: string = product.id) {
   const t = useT()
-  const fresh = () => ({ key: resetKey, unit: unitsOf(product)[0], quantity: 0 })
+  const fresh = () => ({ key: resetKey, unit: product.packagingOptions[0], quantity: 0 })
   const [choice, setChoice] = useState(fresh)
   const [pending, startTransition] = useTransition()
   const current = choice.key === resetKey ? choice : fresh()
@@ -41,7 +38,7 @@ export function useProductPurchase(product: CatalogProduct, businessId: string |
   }
 
   return {
-    units: unitsOf(product),
+    units: product.packagingOptions,
     unit: current.unit,
     setUnit: (unit: string) => setChoice({ ...current, unit }),
     quantity: current.quantity,

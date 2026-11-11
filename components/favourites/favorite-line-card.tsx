@@ -30,8 +30,7 @@ export function FavoriteLineCard({
   const [pending, startTransition] = useTransition()
   const [qty, setQty] = useState(item.quantity)
   const [unit, setUnit] = useState(item.unit)
-  const options =
-    item.packagingOptions.length > 0 ? item.packagingOptions : [item.unit]
+  const options = item.packagingOptions
 
   const productHref = item.itemCode ? productPagePath(item.itemCode) : null
 

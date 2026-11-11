@@ -2,10 +2,14 @@
 
 import { useT } from "@/components/i18n/i18n-provider"
 import { Badge } from "@/components/ui/badge"
+import type { BusinessStatus, FulfillmentMethod } from "@/lib/domain"
+import type { OrderStatus } from "@/lib/order"
 import { cn } from "@/lib/utils"
 
 /** Order statuses, fulfilment methods and business statuses — what this panel shows. Labels: messages `status.*`. */
-const statusStyles: Record<string, string> = {
+type BadgeStatus = OrderStatus | FulfillmentMethod | BusinessStatus
+
+const statusStyles: Record<BadgeStatus, string> = {
   pending: "bg-amber-500/10 text-amber-700",
   approved: "bg-emerald-500/10 text-emerald-700",
   rejected: "bg-red-500/10 text-red-700",
@@ -23,7 +27,7 @@ const statusStyles: Record<string, string> = {
   collection: "bg-indigo-500/10 text-indigo-700",
 }
 
-export function StatusBadge({ status }: { status: string }) {
+export function StatusBadge({ status }: { status: BadgeStatus }) {
   const t = useT()
   return (
     <Badge variant="outline" className={cn("border-transparent capitalize", statusStyles[status])}>

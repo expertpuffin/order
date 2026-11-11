@@ -2,7 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 
 import { AccessDenied } from "@/components/shared/access-denied"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { AccountPageHeader } from "@/components/account/account-page-header"
 import { StatusBadge } from "@/components/shared/status-badge"
 import { ApprovalBadge } from "@/components/orders/approval-badge"
 import { OrderStatusBadge } from "@/components/orders/order-status-badge"

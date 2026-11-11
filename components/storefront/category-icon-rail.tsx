@@ -6,7 +6,7 @@ import { ChevronRight, Percent } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
 import type { CatalogCategory } from "@/lib/api/catalog"
-import { resolveCategoryVisual } from "@/lib/category-visuals"
+import { categoryImage } from "@/lib/category-visuals"
 import { cn } from "@/lib/utils"
 import { categoryHref, storefrontHref } from "@/lib/storefront-paths"
 
@@ -56,7 +56,7 @@ export function CategoryIconRail({
 
         {roots.map((cat, index) => {
           const active = activeSlug === cat.slug
-          const visual = resolveCategoryVisual({ ...cat, index })
+          const image = categoryImage({ slug: cat.slug, imageUrl: cat.imageUrl, index })
           return (
             <Link
               key={cat.id}
@@ -72,7 +72,7 @@ export function CategoryIconRail({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={visual.imageUri}
+                  src={image}
                   alt={cat.name}
                   className="size-full object-cover"
                 />
