@@ -7,6 +7,7 @@ import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FormError } from "@/components/brand/form-error"
 
 export function OnboardingVerifyForm({ email }: { email: string }) {
   const t = useT()
@@ -22,14 +23,14 @@ export function OnboardingVerifyForm({ email }: { email: string }) {
       <form action={formAction} className="space-y-3.5">
         <input type="hidden" name="email" value={email} />
         {state && "error" in state && state.error ? (
-          <p className="rounded-[2px] border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+          <FormError compact>
             {state.error}
-          </p>
+          </FormError>
         ) : null}
         <div className="space-y-1.5">
           <Label
             htmlFor="code"
-            className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+            className="field-label"
           >
             {t("onboarding.verificationCode")}
           </Label>
@@ -40,7 +41,7 @@ export function OnboardingVerifyForm({ email }: { email: string }) {
             autoComplete="one-time-code"
             maxLength={6}
             required
-            className="h-12 rounded-[2px] border-[var(--border-subtle)] text-center text-lg tracking-[0.4em] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+            className="h-12 rounded-[2px] border-[var(--border-subtle)] text-center text-lg tracking-[0.4em] text-[var(--brand-navy)] field-focus"
           />
         </div>
         <Button

@@ -48,7 +48,7 @@ export function EmptyState({
       />
       <div className="space-y-1">
         {eyebrow ? (
-          <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             {eyebrow}
           </p>
         ) : null}

@@ -9,8 +9,10 @@ import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { choiceClass } from "@/components/brand/choice"
 import { cn } from "@/lib/utils"
 import { DEFAULT_DELIVERY_WINDOW, DEFAULT_HOURS, USUAL_DELIVERY_WINDOWS } from "@/lib/fulfilment-slots"
+import { FormError } from "@/components/brand/form-error"
 
 type AddressHit = {
   line_1?: string
@@ -24,11 +26,11 @@ type AddressHit = {
 }
 
 const field =
-  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] field-focus"
 const label =
-  "text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+  "field-label"
 const selectCls =
-  "flex h-10 w-full rounded-[2px] border border-[var(--border-subtle)] bg-background px-3 text-sm text-[var(--brand-navy)] outline-none focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "flex h-10 w-full rounded-[2px] border border-[var(--border-subtle)] bg-background px-3 text-sm text-[var(--brand-navy)] outline-none field-focus"
 const primaryBtn =
   "rounded-[2px] btn-navy"
 const outlineBtn =
@@ -122,9 +124,9 @@ export function BusinessApplyForm() {
       </div>
 
       {state && "error" in state && state.error ? (
-        <p className="rounded-[2px] border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+        <FormError compact>
           {state.error}
-        </p>
+        </FormError>
       ) : null}
 
       <input type="hidden" name="latitude" value={latitude} />
@@ -368,7 +370,7 @@ export function BusinessApplyForm() {
 
         {!isOwner ? (
           <div className="space-y-3 border-t border-[var(--border-subtle)] pt-3">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("onboarding.business.ownerDetails")}
             </p>
             <div className="grid grid-cols-2 gap-2">
@@ -433,9 +435,7 @@ export function BusinessApplyForm() {
                       }}
                       className={cn(
                         "rounded-[2px] border px-2.5 py-1.5 text-xs font-medium transition-colors",
-                        selected
-                          ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
-                          : "border-[var(--border-subtle)] bg-background text-[var(--brand-navy)] hover:bg-muted/60"
+                        choiceClass(selected)
                       )}
                     >
                       {role}

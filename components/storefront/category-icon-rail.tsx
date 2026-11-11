@@ -27,7 +27,7 @@ export function CategoryIconRail({
 
   return (
     <div className="relative">
-      <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+      <p className="mb-2 eyebrow">
         {t("storefront.categories")}
       </p>
       <div

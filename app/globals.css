@@ -68,6 +68,8 @@
   --chart-4: oklch(0.48 0.04 30);
   --chart-5: oklch(0.4 0.02 145);
   --radius: 0.75rem;
+  --tile: #f3f4f6;
+  --canvas: #f7f7f8;
   --sheet: oklch(0.985 0 0);
   --border-subtle: oklch(0.922 0 0);
 }
@@ -159,3 +161,13 @@
   }
 }
 
+/* Repeated brand class strings, named once */
+@utility eyebrow {
+  @apply font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground;
+}
+@utility field-label {
+  @apply text-[11px] font-medium uppercase tracking-wide text-muted-foreground;
+}
+@utility field-focus {
+  @apply focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)];
+}

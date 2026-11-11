@@ -120,7 +120,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
       >
         <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-5">
           <div>
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("orders.sectionLabel")}
             </p>
             <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
@@ -169,22 +169,22 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
             <Table>
               <TableHeader>
                 <TableRow className="border-[var(--border-subtle)] hover:bg-transparent">
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colOrder")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colSupplier")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colMethod")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colDelivery")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colStatus")}
                   </TableHead>
-                  <TableHead className="h-10 text-right font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 text-right eyebrow">
                     {t("orders.colAmount")}
                   </TableHead>
                   <TableHead className="w-12 text-right" />

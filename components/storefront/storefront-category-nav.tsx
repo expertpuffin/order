@@ -194,7 +194,7 @@ export function StorefrontCategoryNav({
       )}
     >
       <div className="border-b border-[var(--border-subtle)] px-4 py-3.5">
-        <p className="mb-1 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+        <p className="mb-1 eyebrow">
           {t("storefront.storeLabel")}
         </p>
         <p className="truncate text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">

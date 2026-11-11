@@ -26,7 +26,7 @@ export default async function HelpPage() {
             label={t("storefront.helpTitle")}
           />
           <div className="min-w-0">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("storefront.helpSectionLabel")}
             </p>
             <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">

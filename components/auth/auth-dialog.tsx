@@ -45,7 +45,7 @@ export function AuthDialog({
             </div>
             <PuffinIcon name={PUFFIN_ICONS.welcome} className="size-12 shrink-0 text-[var(--brand-navy)]" />
           </div>
-          <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             {t("auth.accountLabel")}
           </p>
           <DialogTitle className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">

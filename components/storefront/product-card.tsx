@@ -35,7 +35,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
     >
       <div
         className={cn(
-          "relative bg-[#f3f4f6]",
+          "relative bg-[var(--tile)]",
           variant === "grid"
             ? "aspect-square"
             : "aspect-square overflow-hidden rounded-[2px] border border-[var(--border-subtle)]"

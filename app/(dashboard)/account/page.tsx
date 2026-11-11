@@ -36,7 +36,7 @@ export default async function AccountPage() {
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5">
           <div className="mb-3 border-b border-[var(--border-subtle)] pb-2">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("account.sectionLabel")}
             </p>
             <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
@@ -54,7 +54,7 @@ export default async function AccountPage() {
         <section className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5">
           <div className="mb-3 flex flex-col gap-3 border-b border-[var(--border-subtle)] pb-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 {t("account.businessSectionLabel")}
               </p>
               <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">

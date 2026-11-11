@@ -48,7 +48,7 @@ export function StorefrontFrame({
       businessId={session.businessId}
       businessStatus={session.businessStatus}
     >
-      <div className="flex min-h-svh flex-col bg-[#f7f7f8]">
+      <div className="flex min-h-svh flex-col bg-[var(--canvas)]">
         <StorefrontTopBar
           businesses={session.businesses}
           activeBusinessId={session.businessId}

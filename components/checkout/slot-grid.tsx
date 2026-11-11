@@ -28,7 +28,7 @@ export function SlotGrid({
     <>
       {groups.map((group) => (
         <div key={group.labelKey} className="space-y-2">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             {t(group.labelKey)}
           </p>
           <div className={cn("grid gap-2", method === "collection" ? "grid-cols-3 sm:grid-cols-4" : "grid-cols-2 sm:grid-cols-3")}>

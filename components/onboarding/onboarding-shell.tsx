@@ -31,7 +31,7 @@ export async function OnboardingShell({
           className="size-7 object-contain"
         />
         <div>
-          <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             {stepLabel || t("onboarding.setupLabel")}
           </p>
           <p className="text-sm font-semibold tracking-tight text-[var(--brand-navy)]">

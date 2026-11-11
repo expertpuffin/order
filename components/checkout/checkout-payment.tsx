@@ -12,6 +12,7 @@ import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { formatMoney } from "@/lib/format"
+import { FormError } from "@/components/brand/form-error"
 
 export type CheckoutPaymentState = ReturnType<typeof useCheckoutPayment>
 
@@ -149,13 +150,13 @@ export function CheckoutPayment({
     <div className="space-y-2.5">
       {showModes ? (
         <>
-          <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+          <p className="field-label">
             {t("payment.title")}
           </p>
           {payment.blocked ? (
-            <p className="rounded-[2px] border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <FormError>
               {t("payment.blocked")}
-            </p>
+            </FormError>
           ) : (
             <div className="space-y-2" role={open.length > 1 ? "radiogroup" : undefined}>
               {open.map((row) => {
@@ -206,7 +207,7 @@ export function CheckoutPayment({
 
       {cardNeeded ? (
         <div className="space-y-2">
-          <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+          <p className="field-label">
             {payByCard
               ? t("payment.payOrderWith", { amount: formatMoney(options.card.total) })
               : t("payment.payFeeWith", { amount: formatMoney(options.card.serviceFee) })}
@@ -299,7 +300,13 @@ function AddCardInline({
       if (cancelled || !stripe || !mountRef.current) return
       element = stripe.elements().create("card", {
         hidePostalCode: true,
-        style: { base: { fontSize: "14px", color: "#0f1a3c" } },
+        // The card field is an iframe and can't read CSS variables: hand it the brand colour
+        style: {
+          base: {
+            fontSize: "14px",
+            color: getComputedStyle(document.documentElement).getPropertyValue("--brand-navy").trim() || undefined,
+          },
+        },
       })
       element.mount(mountRef.current)
       cardRef.current = element

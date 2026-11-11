@@ -15,6 +15,7 @@ import { businessDisplayName } from "@/lib/api/businesses"
 import { checkOrderApproval } from "@/lib/api/orders"
 import { canOrderFor, getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
+import { FormError } from "@/components/brand/form-error"
 
 export default async function CartPage() {
   const { t } = await getTranslator()
@@ -75,16 +76,16 @@ export default async function CartPage() {
       ) : (
         <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
           {checkoutError ? (
-            <p className="rounded-[2px] border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive xl:col-span-2">
+            <FormError className="px-4 py-3 xl:col-span-2">
               {checkoutError}
-            </p>
+            </FormError>
           ) : null}
           <div
             className="h-auto self-start overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5"
           >
             <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[var(--border-subtle)] pb-2">
               <div>
-                <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                <p className="eyebrow">
                   {t("cart.sectionLabel")}
                 </p>
                 <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
@@ -102,7 +103,7 @@ export default async function CartPage() {
             className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5 xl:sticky xl:top-20 xl:self-start"
           >
             <div className="mb-4 border-b border-[var(--border-subtle)] pb-2">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 {t("cart.checkoutLabel")}
               </p>
               <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
