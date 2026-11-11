@@ -1,5 +1,4 @@
 import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
 import { getApiBaseUrl } from "@/lib/api/config"
 import { localRedirect } from "@/lib/local-redirect"
 import {
@@ -20,11 +19,6 @@ export const runtime = "nodejs"
  */
 const HANDOFF_STATE_COOKIE = "rl_handoff_state"
 const HANDOFF_STATE_PATH = "/api/auth/handoff"
-/** Relative path on this panel only — never an open redirect or header injection. */
-const safeNext = (v: string | null) =>
-  v && v.startsWith("/") && !v.startsWith("//") && !v.startsWith("/\\") && !/[\u0000-\u001f\u007f]/.test(v)
-    ? v
-    : "/"
 
 /**
  * GET /api/auth/handoff?code=…&next=/products&business=<id>
@@ -39,8 +33,6 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code") ?? ""
   const business = url.searchParams.get("business") ?? ""
   const state = (await cookies()).get(HANDOFF_STATE_COOKIE)?.value ?? ""
-  const target = new URL(next, url.origin)
-  const done = NextResponse.redirect(target)
   // Relative Location: request.url here is the pod's bind address (0.0.0.0:3000)
   const done = localRedirect(next)
   done.headers.set("Cache-Control", "no-store")
