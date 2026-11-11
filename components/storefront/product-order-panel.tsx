@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition, type ReactNode } from "react"
 
-import { addCartItemAction } from "@/lib/actions"
+import { addCartItemAction } from "@/lib/actions/cart"
 import { notifyActionResult } from "@/lib/action-toast"
 import { useT } from "@/components/i18n/i18n-provider"
 import { useAuthGate } from "@/components/storefront/auth-gate"

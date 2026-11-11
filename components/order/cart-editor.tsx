@@ -3,11 +3,7 @@
 import { useState, useTransition } from "react"
 import { Minus, Plus } from "lucide-react"
 
-import {
-  clearCartAction,
-  removeCartItemAction,
-  updateCartItemAction,
-} from "@/lib/actions"
+import { clearCartAction, removeCartItemAction, updateCartItemAction } from "@/lib/actions/cart"
 import { notifyActionResult } from "@/lib/action-toast"
 import { useT } from "@/components/i18n/i18n-provider"
 import type { CartLine } from "@/lib/api/cart"

@@ -4,10 +4,7 @@ import Link from "next/link"
 import { useTransition } from "react"
 import { Minus, Plus } from "lucide-react"
 
-import {
-  removeCartItemAction,
-  updateCartItemAction,
-} from "@/lib/actions"
+import { removeCartItemAction, updateCartItemAction } from "@/lib/actions/cart"
 import { notifyActionResult } from "@/lib/action-toast"
 import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"

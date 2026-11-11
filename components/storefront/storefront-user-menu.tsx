@@ -6,7 +6,7 @@ import { Activity, ChevronDown, CircleHelp, LogOut, MessageSquareHeart, UserRoun
 import { useT } from "@/components/i18n/i18n-provider"
 import { useFeedback } from "@/components/feedback/feedback-dialog"
 import { useAuthGate } from "@/components/storefront/auth-gate"
-import { logoutAction } from "@/lib/actions"
+import { logoutAction } from "@/lib/actions/auth"
 import { mainNav } from "@/lib/navigation"
 import { STATUS_PAGE_URL } from "@/lib/status-page"
 import {

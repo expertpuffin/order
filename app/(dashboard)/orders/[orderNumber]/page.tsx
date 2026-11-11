@@ -18,11 +18,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { getOrder } from "@/lib/api/orders"
-import type { Order } from "@/lib/types"
+import { orderTotal, type Order } from "@/lib/order"
 import { getBusinessContext } from "@/lib/business-context"
 import { ApiError } from "@/lib/backend/errors"
 import { getTranslator } from "@/lib/i18n"
-import { getOrderTotal } from "@/lib/mappers"
 
 type OrderDetailPageProps = {
   params: Promise<{ orderNumber: string }>
@@ -96,7 +95,7 @@ export default async function OrderDetailPage({
 
   if (order.businessId !== ctx.active.id) return <AccessDenied />
 
-  const total = getOrderTotal(order)
+  const total = orderTotal(order)
   const approvalDraft = order.status === "draft" && order.managerApproval != null
   const canApprove = ctx.active.permissions.includes("orders_approve")
   const businessPanelUrl = process.env.NEXT_PUBLIC_BUSINESS_PANEL_URL?.replace(/\/$/, "") || null

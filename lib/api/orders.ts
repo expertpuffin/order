@@ -1,6 +1,12 @@
 import { apiFetch } from "@/lib/api/client"
-import { mapOrder } from "@/lib/mappers"
-import type { Order, Pagination } from "@/lib/types"
+import { mapOrder, type Order } from "@/lib/order"
+
+export type Pagination = {
+  page: number
+  limit: number
+  total: number
+  pages: number
+}
 
 export async function listBusinessOrders(
   businessId: string,
@@ -16,31 +22,20 @@ export async function listBusinessOrders(
     orderDateTo?: string
   }
 ): Promise<{ orders: Order[]; pagination: Pagination }> {
-  const data = await apiFetch<{
-    orders: Record<string, unknown>[]
-    pagination: Pagination
-  }>(`/api/businesses/${businessId}/orders`, {
-    searchParams: { limit: 20, ...params },
-  })
-  return {
-    orders: (data.orders ?? []).map(mapOrder),
-    pagination: data.pagination,
-  }
+  const data = await apiFetch<{ orders: Record<string, unknown>[]; pagination: Pagination }>(
+    `/api/businesses/${businessId}/orders`,
+    { searchParams: { limit: 20, ...params } }
+  )
+  return { orders: (data.orders ?? []).map(mapOrder), pagination: data.pagination }
 }
 
 export async function getOrder(orderNumber: string): Promise<Order> {
-  const data = await apiFetch<{ order: Record<string, unknown> }>(
-    `/api/orders/${encodeURIComponent(orderNumber)}`
-  )
+  const data = await apiFetch<{ order: Record<string, unknown> }>(`/api/orders/${encodeURIComponent(orderNumber)}`)
   return mapOrder(data.order)
 }
 
 export async function cancelOrder(orderNumber: string, note?: string) {
-  const data = await apiFetch<{ order: Record<string, unknown> }>(
-    `/api/orders/${encodeURIComponent(orderNumber)}/cancel`,
-    { method: "POST", body: { note } }
-  )
-  return mapOrder(data.order)
+  await apiFetch(`/api/orders/${encodeURIComponent(orderNumber)}/cancel`, { method: "POST", body: { note } })
 }
 
 export type ApprovalCheck = {
@@ -50,11 +45,11 @@ export type ApprovalCheck = {
   canApprove: boolean
 }
 
-/** Will this person's order (of this goods total) need a manager's OK first? */
-export async function checkOrderApproval(
-  businessId: string,
-  amount: number
-): Promise<ApprovalCheck | null> {
+/**
+ * Will this person's order (of this goods total) need a manager's OK first?
+ * Advisory only — the backend decides again at checkout, so a failed check shows no notice.
+ */
+export async function checkOrderApproval(businessId: string, amount: number): Promise<ApprovalCheck | null> {
   try {
     return await apiFetch<ApprovalCheck>(`/api/businesses/${businessId}/order-approval/check`, {
       searchParams: { amount },
@@ -65,11 +60,10 @@ export async function checkOrderApproval(
 }
 
 export async function withdrawApproval(orderNumber: string, version: number) {
-  const data = await apiFetch<{ order: Record<string, unknown> }>(
-    `/api/orders/${encodeURIComponent(orderNumber)}/approval/withdraw`,
-    { method: "POST", body: { version } }
-  )
-  return data
+  await apiFetch(`/api/orders/${encodeURIComponent(orderNumber)}/approval/withdraw`, {
+    method: "POST",
+    body: { version },
+  })
 }
 
 export async function approvalToCart(orderNumber: string) {

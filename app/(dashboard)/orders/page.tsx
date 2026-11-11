@@ -23,7 +23,7 @@ import {
 import { listBusinessOrders } from "@/lib/api/orders"
 import { getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
-import { getOrderTotal } from "@/lib/mappers"
+import { orderTotal } from "@/lib/order"
 
 type OrdersPageProps = {
   searchParams: Promise<{
@@ -257,7 +257,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
               </TableHeader>
               <TableBody>
                 {orders.map((order) => {
-                  const total = getOrderTotal(order)
+                  const total = orderTotal(order)
                   return (
                     <TableRow
                       key={order.id}

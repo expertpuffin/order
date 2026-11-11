@@ -3,11 +3,9 @@
 import { useEffect } from "react"
 import { toast } from "sonner"
 
-export type ActionResult =
-  | { error: string }
-  | { success: boolean; message?: string }
-  | null
-  | undefined
+import type { ActionResult as ServerActionResult } from "@/lib/actions/result"
+
+type ActionResult = ServerActionResult<{ message?: string }> | null | undefined
 
 /**
  * useActionState sonuçlarını toast’a çevirir.

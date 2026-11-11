@@ -4,7 +4,7 @@ import { ShieldCheck } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
 import { Badge } from "@/components/ui/badge"
-import type { ManagerApprovalState } from "@/lib/types"
+import type { ManagerApprovalState } from "@/lib/order"
 import { cn } from "@/lib/utils"
 
 const styles: Record<ManagerApprovalState, string> = {

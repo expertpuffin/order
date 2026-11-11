@@ -5,18 +5,12 @@ import { useRouter } from "next/navigation"
 import { RotateCcw, ShoppingCart, Undo2, XCircle } from "lucide-react"
 import { toast } from "sonner"
 
-import {
-  approvalToCartAction,
-  cancelOrderAction,
-  reorderOrderAction,
-  withdrawApprovalAction,
-} from "@/lib/actions"
+import { approvalToCartAction, cancelOrderAction, reorderOrderAction, withdrawApprovalAction } from "@/lib/actions/orders"
 import { notifyActionResult } from "@/lib/action-toast"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
-import type { OrderManagerApproval } from "@/lib/types"
-
-const CANCELLABLE = ["draft", "submitted", "sent", "confirmed"] as const
+import { ERROR_CODES } from "@/lib/domain"
+import { isApprovalDraft, isCancellable, type OrderManagerApproval, type OrderStatus } from "@/lib/order"
 
 export function OrderActions({
   businessId,
@@ -28,7 +22,7 @@ export function OrderActions({
 }: {
   businessId: string
   orderNumber: string
-  status: string
+  status: OrderStatus
   hasReorderableItems: boolean
   managerApproval?: OrderManagerApproval | null
   isRequester?: boolean
@@ -36,12 +30,13 @@ export function OrderActions({
   const t = useT()
   const router = useRouter()
   const [pending, startTransition] = useTransition()
-  // A draft that went to a manager moves only through the approval actions.
-  const approvalDraft = status === "draft" && managerApproval != null
+  const order = { status, managerApproval }
+  // A draft that went to a manager moves only through the approval actions
+  const approval = isApprovalDraft(order) ? managerApproval : null
 
   return (
     <div className="flex flex-wrap gap-2">
-      {hasReorderableItems && !approvalDraft ? (
+      {hasReorderableItems && !approval ? (
         <Button
           variant="outline"
           disabled={pending}
@@ -58,16 +53,16 @@ export function OrderActions({
           Reorder
         </Button>
       ) : null}
-      {approvalDraft && managerApproval.state === "pending" && isRequester ? (
+      {approval?.state === "pending" && isRequester ? (
         <Button
           variant="outline"
           disabled={pending}
           onClick={() => {
             if (!window.confirm(t("approval.withdrawConfirm"))) return
             startTransition(async () => {
-              const result = await withdrawApprovalAction(orderNumber, managerApproval.version)
+              const result = await withdrawApprovalAction(orderNumber, approval.version)
               if ("error" in result) {
-                toast.error(result.error === "APPROVAL_CHANGED" ? t("approval.conflict") : result.error)
+                toast.error(result.code === ERROR_CODES.approvalChanged ? t("approval.conflict") : result.error)
                 router.refresh()
                 return
               }
@@ -79,7 +74,7 @@ export function OrderActions({
           {t("approval.withdraw")}
         </Button>
       ) : null}
-      {approvalDraft && ["rejected", "withdrawn"].includes(managerApproval.state) && isRequester ? (
+      {approval && ["rejected", "withdrawn"].includes(approval.state) && isRequester ? (
         <Button
           variant="outline"
           disabled={pending}
@@ -93,7 +88,7 @@ export function OrderActions({
           {t("approval.toCart")}
         </Button>
       ) : null}
-      {!approvalDraft && (CANCELLABLE as readonly string[]).includes(status) ? (
+      {isCancellable(order) ? (
         <Button
           variant="outline"
           disabled={pending}

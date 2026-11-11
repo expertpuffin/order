@@ -4,10 +4,7 @@ import Link from "next/link"
 import { Minus, Plus, Trash2 } from "lucide-react"
 import { useState, useTransition } from "react"
 
-import {
-  removeFavoriteItemAction,
-  updateFavoriteItemAction,
-} from "@/lib/actions"
+import { removeFavoriteItemAction, updateFavoriteItemAction } from "@/lib/actions/favourites"
 import { notifyActionResult } from "@/lib/action-toast"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
@@ -48,9 +45,6 @@ export function FavoriteLineCard({
         setQty(item.quantity)
         setUnit(item.unit)
         return
-      }
-      if (result && "removed" in result && result.removed) {
-        notifyActionResult({ success: true }, t("favourites.removed"))
       }
     })
   }
@@ -192,9 +186,9 @@ export function FavoriteLineCard({
             disabled={pending}
             aria-label={t("favourites.decreaseQty")}
             onClick={() => {
-              const next = qty - 1
-              setQty(Math.max(0, next))
-              patch({ quantity: next })
+              if (qty <= 1) return remove()
+              setQty(qty - 1)
+              patch({ quantity: qty - 1 })
             }}
           >
             <Minus className="size-3.5" />

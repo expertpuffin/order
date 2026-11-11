@@ -3,7 +3,7 @@
 import { useTransition } from "react"
 import { Check } from "lucide-react"
 
-import { switchBusinessAction } from "@/lib/actions"
+import { switchBusinessAction } from "@/lib/actions/cart"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 

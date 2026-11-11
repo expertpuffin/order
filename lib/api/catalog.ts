@@ -1,5 +1,7 @@
 import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
+import { ApiError } from "@/lib/backend/errors"
+import { asId, asNumber, preferredOffer, unitCode } from "@/lib/domain"
 
 export type CatalogPagination = {
   page: number
@@ -100,15 +102,6 @@ export type CatalogCategory = {
   color: string | null
 }
 
-function asId(value: unknown): string {
-  if (value == null) return ""
-  if (typeof value === "string") return value
-  if (typeof value === "object" && value !== null && "_id" in value) {
-    return String((value as { _id: unknown })._id)
-  }
-  return String(value)
-}
-
 function pickOfferSupplier(
   preferred: Record<string, unknown> | null,
   packagings: Record<string, unknown>[]
@@ -135,7 +128,7 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
   const preferred = pickOfferSupplier(preferredBase, packagings)
 
   const packagingOptions = Array.isArray(raw.packagingOptions)
-    ? raw.packagingOptions.map((t) => String(t).toUpperCase())
+    ? raw.packagingOptions.map(unitCode)
     : ["EACH"]
 
   const listCost = Number(
@@ -189,17 +182,12 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
   const offerIdsByUnit: Record<string, string> = {}
   for (const [type, offer] of Object.entries(preferredByType)) {
     const id = asId(offer?._id)
-    if (id) offerIdsByUnit[String(type).toUpperCase()] = id
+    if (id) offerIdsByUnit[unitCode(type)] = id
   }
   if (!Object.keys(offerIdsByUnit).length) {
     for (const pack of packagings) {
-      const type = String(pack.type ?? "").toUpperCase()
-      const packSuppliers = Array.isArray(pack.suppliers)
-        ? (pack.suppliers as Record<string, unknown>[])
-        : []
-      const hit = [...packSuppliers].sort(
-        (a, b) => Number(a.priority ?? 999) - Number(b.priority ?? 999)
-      )[0]
+      const type = unitCode(pack.type)
+      const hit = preferredOffer(Array.isArray(pack.suppliers) ? (pack.suppliers as Record<string, unknown>[]) : [])
       const id = asId(hit?._id ?? hit?.offerId)
       if (type && id) offerIdsByUnit[type] = id
     }
@@ -211,7 +199,7 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
     name: String(raw.name ?? ""),
     brand: (raw.brand as string | null) ?? null,
     description: (raw.description as string | null) ?? null,
-    imageUrl: (raw.imageUrl as string | null) ?? null,
+    imageUrl: resolveMediaUrl((raw.imageUrl as string | null) ?? null),
     packSize: (raw.packSize as string | null) ?? null,
     sizeLabel: (raw.sizeLabel as string | null) ?? null,
     ageRestricted: Boolean(raw.ageRestriction),
@@ -225,11 +213,6 @@ function mapCatalogProduct(raw: Record<string, unknown>): CatalogProduct {
   }
 }
 
-function numOrNull(value: unknown): number | null {
-  const n = Number(value)
-  return Number.isFinite(n) ? n : null
-}
-
 function mapNutrition(raw: unknown): CatalogNutrition | null {
   if (!raw || typeof raw !== "object") return null
   const n = raw as Record<string, unknown>
@@ -239,14 +222,14 @@ function mapNutrition(raw: unknown): CatalogNutrition | null {
     basis: n.basis === "perServing" ? "perServing" : "per100g",
     basisUnit: n.basisUnit === "ml" ? "ml" : "g",
     notOnPack: Boolean(n.notOnPack),
-    energyKcal: numOrNull(n.energyKcal),
-    fat: numOrNull(n.fat),
-    protein: numOrNull(n.protein),
-    carbohydrate: numOrNull(n.carbohydrate),
-    sugars: numOrNull(n.sugars),
-    fibre: numOrNull(n.fibre),
-    salt: numOrNull(n.salt),
-    saturates: numOrNull(n.saturates),
+    energyKcal: asNumber(n.energyKcal),
+    fat: asNumber(n.fat),
+    protein: asNumber(n.protein),
+    carbohydrate: asNumber(n.carbohydrate),
+    sugars: asNumber(n.sugars),
+    fibre: asNumber(n.fibre),
+    salt: asNumber(n.salt),
+    saturates: asNumber(n.saturates),
     units: {
       fat: String(unitsRaw.fat ?? "g"),
       protein: String(unitsRaw.protein ?? "g"),
@@ -262,7 +245,7 @@ function mapNutrition(raw: unknown): CatalogNutrition | null {
         const r = row as Record<string, unknown>
         return {
           label: String(r.label ?? ""),
-          value: numOrNull(r.value),
+          value: asNumber(r.value),
           unit: String(r.unit ?? "g"),
         }
       })
@@ -276,7 +259,7 @@ function mapCatalogProductDetail(
   const base = mapCatalogProduct(raw)
   const packagings = Array.isArray(raw.packagings)
     ? (raw.packagings as Record<string, unknown>[]).map((pack) => ({
-        type: String(pack.type ?? "EACH").toUpperCase(),
+        type: unitCode(pack.type),
         barcode: (pack.barcode as string | null) ?? null,
       }))
     : []
@@ -367,17 +350,18 @@ export async function listProducts(params?: {
 export async function getProductByItemCode(
   itemCode: string
 ): Promise<CatalogProductDetail | null> {
+  const code = decodeURIComponent(itemCode).trim().toUpperCase()
+  if (!code) return null
   try {
-    const code = decodeURIComponent(itemCode).trim().toUpperCase()
-    if (!code) return null
     const data = await apiFetch<{ product: Record<string, unknown> }>(
       `/api/products/by-code/${encodeURIComponent(code)}`,
       { auth: false }
     )
-    if (!data.product) return null
-    return mapCatalogProductDetail(data.product)
-  } catch {
-    return null
+    return data.product ? mapCatalogProductDetail(data.product) : null
+  } catch (error) {
+    // Unknown code → the product page 404s; an API outage shows the error page instead
+    if (error instanceof ApiError && (error.status === 404 || error.status === 400)) return null
+    throw error
   }
 }
 

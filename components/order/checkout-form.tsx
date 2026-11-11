@@ -3,15 +3,10 @@
 import { startTransition, useActionState, useEffect, useMemo, useRef, useState, type FormEvent } from "react"
 import { Loader2, ShieldCheck, Store, Truck } from "lucide-react"
 
-import { checkoutAction } from "@/lib/actions"
-import { holdServiceFeeAction } from "@/lib/actions/payments"
+import { checkoutAction, holdServiceFeeAction, loadSupplierAvailability, loadSupplierSlots } from "@/lib/actions/checkout"
 import { confirmCardHold } from "@/lib/stripe-client"
 import { CheckoutPayment, useCheckoutPayment } from "@/components/order/checkout-payment"
 import { useActionToast } from "@/lib/action-toast"
-import {
-  loadSupplierAvailability,
-  loadSupplierSlots,
-} from "@/lib/actions/supplier-slots"
 import { useT, useI18n } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -27,6 +22,7 @@ import {
   slotOrderValue,
   slotStartFromValue,
 } from "@/lib/slot-format"
+import { ERROR_CODES } from "@/lib/domain"
 import { cn } from "@/lib/utils"
 
 type FulfillmentMethod = "delivery" | "collection"
@@ -75,12 +71,12 @@ export function CheckoutForm({
       const res = await checkoutAction(prev, fd)
       if (!res || !("code" in res)) return res
       const details = ("details" in res ? res.details : null) as Record<string, unknown> | null
-      if (res.code === "CREDIT_HOLD" && details?.cardAvailable) {
+      if (res.code === ERROR_CODES.creditHold && details?.cardAvailable) {
         paymentRef.current.setChoice("ordoria")
         return res
       }
       const key = paymentRef.current.publishableKey
-      if (res.code !== "PAYMENT_ACTION_REQUIRED" || !key) return res
+      if (res.code !== ERROR_CODES.paymentActionRequired || !key) return res
       const step = await confirmCardHold(key, String(details?.clientSecret ?? ""))
       if (step.status === "canceled") return null
       if (step.status === "failed") return { error: step.message }

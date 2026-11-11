@@ -2,10 +2,7 @@
 
 import { useActionState, useTransition } from "react"
 
-import {
-  resendVerificationAction,
-  verifyEmailAction,
-} from "@/lib/actions"
+import { resendVerificationAction, verifyEmailAction } from "@/lib/actions/onboarding"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

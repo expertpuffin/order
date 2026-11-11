@@ -2,7 +2,7 @@
 
 import { useActionState } from "react"
 
-import { saveAcquisitionAction } from "@/lib/actions"
+import { saveAcquisitionAction } from "@/lib/actions/onboarding"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

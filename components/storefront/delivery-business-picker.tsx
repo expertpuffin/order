@@ -6,7 +6,7 @@ import { useTransition } from "react"
 import { Check, ChevronDown, MapPin } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
-import { switchBusinessAction } from "@/lib/actions"
+import { switchBusinessAction } from "@/lib/actions/cart"
 import {
   DropdownMenu,
   DropdownMenuContent,

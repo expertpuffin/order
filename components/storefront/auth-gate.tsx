@@ -14,10 +14,7 @@ import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useActionState } from "react"
 
-import {
-  loginAction,
-  registerAction,
-} from "@/lib/actions"
+import { loginAction, registerAction } from "@/lib/actions/auth"
 import { PuffinIcon, PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"

@@ -1,9 +1,10 @@
 import { cache } from "react"
 
+import { businessDisplayName } from "@/lib/api/businesses"
 import { getCart, type CartLine, type CartPricing } from "@/lib/api/cart"
 import { canOrderFor, getBusinessContext, isSessionExpired } from "@/lib/business-context"
 import { getSessionUser } from "@/lib/session/cookies"
-import type { User } from "@/lib/types"
+import type { User } from "@/lib/session/user"
 
 export type StorefrontSession = {
   user: User | null
@@ -57,7 +58,7 @@ export const getStorefrontSession = cache(async (): Promise<StorefrontSession> =
   return {
     user,
     businessId: ctx.active.id,
-    businessName: ctx.active.tradingName || ctx.active.businessName,
+    businessName: businessDisplayName(ctx.active),
     businessPostcode: ctx.active.postcode || null,
     businessStatus: ctx.active.status,
     canOrder,
@@ -65,7 +66,7 @@ export const getStorefrontSession = cache(async (): Promise<StorefrontSession> =
     cartPricing,
     businesses: ctx.businesses.map((business) => ({
       id: business.id,
-      name: business.tradingName || business.businessName,
+      name: businessDisplayName(business),
       postcode: business.postcode,
     })),
   }

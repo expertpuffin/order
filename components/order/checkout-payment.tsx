@@ -4,12 +4,9 @@ import { useEffect, useRef, useState } from "react"
 import { CreditCard, FileText, Loader2, Plus } from "lucide-react"
 import type { StripeCardElement } from "@stripe/stripe-js"
 
-import {
-  finishAddCardAction,
-  loadCheckoutPayment,
-  startAddCardAction,
-} from "@/lib/actions/payments"
-import type { PaymentMode, PaymentOptions, SavedCard } from "@/lib/api/payments"
+import { finishAddCardAction, loadCheckoutPayment, startAddCardAction } from "@/lib/actions/checkout"
+import type { PaymentOptions, SavedCard } from "@/lib/api/payments"
+import type { FulfillmentMethod, PaymentMode } from "@/lib/domain"
 import { getStripe } from "@/lib/stripe-client"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
@@ -28,12 +25,13 @@ export type CheckoutPaymentState = ReturnType<typeof useCheckoutPayment>
 export function useCheckoutPayment(
   businessId: string,
   supplierId: string | null,
-  fulfillment: "delivery" | "collection",
+  fulfillment: FulfillmentMethod,
   { managerApproval }: { managerApproval: boolean }
 ) {
   const [options, setOptions] = useState<PaymentOptions | null>(null)
   const [cards, setCards] = useState<SavedCard[]>([])
   const [publishableKey, setPublishableKey] = useState<string | null>(null)
+  const [loadFailed, setLoadFailed] = useState(false)
   // Which cart + method the options belong to — loading until they match.
   const requestKey = `${businessId}|${supplierId ?? ""}|${fulfillment}`
   const [loadedKey, setLoadedKey] = useState<string | null>(null)
@@ -46,6 +44,11 @@ export function useCheckoutPayment(
     void loadCheckoutPayment(businessId, supplierId, fulfillment)
       .then((res) => {
         if (cancelled) return
+        setLoadFailed("error" in res)
+        if ("error" in res) {
+          setOptions(null)
+          return
+        }
         setOptions(res.options)
         setCards(res.cards)
         setPublishableKey(res.publishableKey)
@@ -58,15 +61,15 @@ export function useCheckoutPayment(
         )
       })
       .catch(() => {
-        if (!cancelled) setOptions(null)
+        if (!cancelled) setLoadFailed(true)
       })
       .finally(() => {
-        if (!cancelled) setLoadedKey(`${businessId}|${supplierId ?? ""}|${fulfillment}`)
+        if (!cancelled) setLoadedKey(requestKey)
       })
     return () => {
       cancelled = true
     }
-  }, [businessId, supplierId, fulfillment])
+  }, [businessId, supplierId, fulfillment, requestKey])
 
   const open = options?.modes.filter((m) => m.available).map((m) => m.mode) ?? []
   const mode: PaymentMode = !options?.moduleOn
@@ -77,7 +80,8 @@ export function useCheckoutPayment(
   // A request for a manager holds nothing now; the approver's card pays later.
   const payByCard = mode === "ordoria" && !managerApproval
   const feeDue = !managerApproval && !payByCard && (options?.card.serviceFee ?? 0) > 0
-  const blocked = Boolean(options?.moduleOn && open.length === 0)
+  // Without the payment terms the order would go through with no fee hold or mode.
+  const blocked = loadFailed || Boolean(options?.moduleOn && open.length === 0)
 
   return {
     options,
@@ -92,6 +96,7 @@ export function useCheckoutPayment(
     feeDue,
     cardNeeded: payByCard || feeDue,
     blocked,
+    loadFailed,
     managerApproval,
     onCardAdded: (next: SavedCard[], defaultId: string | null) => {
       setCards(next)
@@ -118,6 +123,9 @@ export function CheckoutPayment({
         {t("payment.loading")}
       </div>
     )
+  }
+  if (payment.loadFailed) {
+    return <p className="text-sm text-destructive">{t("payment.loadFailed")}</p>
   }
   if (!options) return null
 

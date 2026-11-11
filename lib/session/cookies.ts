@@ -1,7 +1,6 @@
 import { cookies } from "next/headers"
 
-import { mapUser } from "@/lib/mappers"
-import type { User } from "@/lib/types"
+import { mapUser, type User } from "@/lib/session/user"
 
 const ACCESS_COOKIE = "rl_access_token"
 const REFRESH_COOKIE = "rl_refresh_token"

@@ -1,10 +1,9 @@
 import { cookies } from "next/headers"
 
 import { apiFetch } from "@/lib/api/client"
-import { mapUser } from "@/lib/mappers"
 import { writeSessionUser } from "@/lib/session/cookies"
 import { FALLBACK_TEAM_ROLE_NAMES } from "@/lib/team-roles"
-import type { User } from "@/lib/types"
+import { mapUser, type User } from "@/lib/session/user"
 
 export async function verifyEmailCode(input: {
   code: string

@@ -1,4 +1,6 @@
 import { apiFetch } from "@/lib/api/client"
+import { resolveMediaUrl } from "@/lib/api/media-url"
+import { asId, preferredOffer, unitCode, type FulfillmentMethod, type PaymentMode } from "@/lib/domain"
 
 export type CheckoutGroup = {
   supplierId: string
@@ -69,34 +71,17 @@ export type CartLine = {
   currency: string
 }
 
-function asId(value: unknown): string {
-  if (value == null) return ""
-  if (typeof value === "string") return value
-  if (typeof value === "object" && value !== null && "_id" in value) {
-    return String((value as { _id: unknown })._id)
-  }
-  return String(value)
-}
-
-export function mapCartLine(raw: Record<string, unknown>): CartLine {
+function mapCartLine(raw: Record<string, unknown>): CartLine {
   const product = (raw.product ?? {}) as Record<string, unknown>
-  const unit = String(raw.unit ?? "EACH").toUpperCase()
+  const unit = unitCode(raw.unit)
   const packagings = Array.isArray(product.packagings)
     ? (product.packagings as Record<string, unknown>[])
     : []
 
-  const packaging = packagings.find(
-    (p) => String(p.type ?? "").toUpperCase() === unit
+  const packaging = packagings.find((p) => unitCode(p.type) === unit)
+  const preferred = preferredOffer(
+    Array.isArray(packaging?.suppliers) ? (packaging.suppliers as Record<string, unknown>[]) : []
   )
-  const suppliers = Array.isArray(packaging?.suppliers)
-    ? (packaging?.suppliers as Record<string, unknown>[]).filter(
-        (s) => (s.status ?? "active") === "active"
-      )
-    : []
-  const preferred =
-    [...suppliers].sort(
-      (a, b) => Number(a.priority ?? 999) - Number(b.priority ?? 999)
-    )[0] ?? null
 
   const effectiveCost = Number(
     preferred?.effectiveCost ?? preferred?.cost ?? NaN
@@ -109,13 +94,13 @@ export function mapCartLine(raw: Record<string, unknown>): CartLine {
     listingId: raw.listing ? asId(raw.listing) : null,
     name: String(product.name ?? ""),
     brand: (product.brand as string | null) ?? null,
-    imageUrl: (product.imageUrl as string | null) ?? null,
+    imageUrl: resolveMediaUrl((product.imageUrl as string | null) ?? null),
     packSize: (product.packSize as string | null) ?? null,
     quantity: Number(raw.quantity ?? 1),
     unit,
     comment: (raw.comment as string | null) ?? null,
     packagingOptions: packagings.length
-      ? packagings.map((p) => String(p.type ?? "EACH").toUpperCase())
+      ? packagings.map((p) => unitCode(p.type))
       : [unit],
     unitPrice: Number.isFinite(effectiveCost) ? effectiveCost : null,
     listPrice: Number.isFinite(listCost) ? listCost : null,
@@ -200,6 +185,27 @@ export async function addCartItem(
   })
 }
 
+/**
+ * Copy lines (a past order, the favourites list) into the cart. A product that is
+ * no longer sold fails on its own and is skipped; returns how many lines went in.
+ */
+export async function addLinesToCart(
+  businessId: string,
+  lines: Array<{ productId: string | null; quantity: number; unit: string }>
+) {
+  let added = 0
+  for (const line of lines) {
+    if (!line.productId || line.quantity < 1) continue
+    try {
+      await addCartItem(businessId, { productId: line.productId, quantity: line.quantity, unit: line.unit })
+      added += 1
+    } catch {
+      // Withdrawn or unavailable product
+    }
+  }
+  return added
+}
+
 export async function updateCartItem(
   businessId: string,
   itemId: string,
@@ -223,13 +229,13 @@ export async function clearCart(businessId: string) {
 
 export type CheckoutInput = {
   requestedDeliveryDate: string
-  fulfillmentMethod?: "delivery" | "collection"
+  fulfillmentMethod?: FulfillmentMethod
   deliveryTime?: string | null
   specialNote?: string | null
   /** Account mode: the service fee hold taken before checkout */
   serviceFeePaymentIntentId?: string
   /** "ordoria" = the server holds the whole order on `paymentMethodId` (or this hold) */
-  paymentMode?: "account" | "ordoria"
+  paymentMode?: PaymentMode
   paymentMethodId?: string
   orderPaymentIntentId?: string
 }

@@ -441,7 +441,8 @@
     "helpBody": "Found a problem or have an idea? Send feedback, with a screenshot if it helps. It goes straight to the Ordoria team."
   },
   "payment": {
-    "loading": "Loading payment options…",
+    "loading": "Loading payment optionsâ¦",
+    "loadFailed": "Payment options couldn't be loaded, so the order can't be placed yet. Refresh the page to try again.",
     "title": "Payment",
     "account": "On my supplier account",
     "accountSub": "The supplier invoices you · {days} days to pay",

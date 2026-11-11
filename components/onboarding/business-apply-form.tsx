@@ -2,13 +2,9 @@
 
 import { useActionState, useEffect, useMemo, useState, useTransition } from "react"
 
-import {
-  createBusinessAction,
-  listTeamRoleNamesAction,
-  lookupPostcodeAction,
-} from "@/lib/actions"
+import { createBusinessAction, listTeamRoleNamesAction, lookupPostcodeAction } from "@/lib/actions/onboarding"
 import { FALLBACK_TEAM_ROLE_NAMES } from "@/lib/team-roles"
-import { BUSINESS_TYPES } from "@/lib/types"
+import { BUSINESS_TYPES } from "@/lib/domain"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

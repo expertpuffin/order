@@ -1,4 +1,4 @@
-export type FulfillmentMethod = "collection" | "delivery"
+import type { FulfillmentMethod } from "@/lib/domain"
 
 export const DELIVERY_SLOT_MINUTES = 120
 export const COLLECTION_SLOT_MINUTES = 30

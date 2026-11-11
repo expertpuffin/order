@@ -1,10 +1,7 @@
 /** Mobil checkoutSlots ile uyumlu — teslimat günü / method-aware fallback */
 
-import {
-  COLLECTION_SLOT_MINUTES,
-  DELIVERY_SLOT_MINUTES,
-  type FulfillmentMethod,
-} from "@/lib/slot-format"
+import type { FulfillmentMethod } from "@/lib/domain"
+import { COLLECTION_SLOT_MINUTES, DELIVERY_SLOT_MINUTES } from "@/lib/slot-format"
 
 export type TimeSlot = {
   value: string

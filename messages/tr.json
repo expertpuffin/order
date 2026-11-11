@@ -441,7 +441,8 @@
     "helpBody": "Bir sorun mu buldunuz ya da bir fikriniz mi var? Gerekirse ekran görüntüsüyle geri bildirim gönderin; doğrudan Ordoria ekibine ulaşır."
   },
   "payment": {
-    "loading": "Ödeme seçenekleri yükleniyor…",
+    "loading": "Ãdeme seÃ§enekleri yÃ¼kleniyorâ¦",
+    "loadFailed": "Ãdeme seÃ§enekleri yÃ¼klenemedi, bu yÃ¼zden sipariÅ henÃ¼z verilemiyor. Tekrar denemek iÃ§in sayfayÄ± yenileyin.",
     "title": "Ödeme",
     "account": "Tedarikçi hesabıma",
     "accountSub": "Tedarikçi faturalar · {days} gün vade",

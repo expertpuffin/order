@@ -1,7 +1,5 @@
 import { apiFetch } from "@/lib/api/client"
-
-/** How the goods are paid: on the supplier's account, or by card through Ordoria. */
-export type PaymentMode = "account" | "ordoria"
+import type { FulfillmentMethod, PaymentMode } from "@/lib/domain"
 
 export type PaymentModeReason =
   | "NO_ACCOUNT"
@@ -51,7 +49,7 @@ export async function previewPayment(
   input: {
     items: { listingId: string; quantity: number }[]
     supplierId?: string | null
-    fulfillmentMethod: "delivery" | "collection"
+    fulfillmentMethod: FulfillmentMethod
     couponCode?: string | null
   }
 ): Promise<PaymentOptions | null> {

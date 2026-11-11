@@ -9,7 +9,7 @@ import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { FavoriteLineCard } from "@/components/order/favorite-line-card"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
-import { addAllFavoritesToCartAction } from "@/lib/actions"
+import { addAllFavoritesToCartAction } from "@/lib/actions/favourites"
 import { notifyActionResult } from "@/lib/action-toast"
 import type { FavoriteItem } from "@/lib/api/favorites"
 import {
