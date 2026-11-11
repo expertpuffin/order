@@ -115,17 +115,6 @@ export async function getFavorites(
   }
 }
 
-export async function addFavoriteItem(
-  businessId: string,
-  listId: string,
-  productId: string
-) {
-  return apiFetch(`/api/businesses/${businessId}/favorite-lists/${listId}/items`, {
-    method: "POST",
-    body: { productId },
-  })
-}
-
 export async function updateFavoriteItem(
   businessId: string,
   listId: string,

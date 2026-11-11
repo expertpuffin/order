@@ -9,9 +9,7 @@ import {
   cookieOptions,
   extractRefreshTokenFromSetCookie,
   parseSetCookieHeaders,
-  persistSessionCookies,
 } from "@/lib/auth/session"
-import { callRefreshApi } from "@/lib/auth/refresh"
 import { getApiBaseUrl } from "@/lib/api/config"
 import { ApiError } from "@/lib/api/errors"
 import { mapUser } from "@/lib/mappers"
@@ -67,27 +65,6 @@ export async function loginWithPassword(email: string, password: string) {
   )
 
   return mapUser(json.data.user)
-}
-
-/**
- * Refresh access (and rotate refresh) into httpOnly cookies.
- * Returns new access token, or null if refresh failed.
- */
-export async function refreshSession(): Promise<string | null> {
-  const jar = await cookies()
-  const refreshToken = jar.get(REFRESH_COOKIE)?.value
-  if (!refreshToken) return null
-
-  const session = await callRefreshApi(refreshToken)
-  if (!session) return null
-
-  try {
-    await persistSessionCookies(session)
-  } catch {
-    // cookies().set is illegal during RSC render — caller still gets the token
-  }
-
-  return session.accessToken
 }
 
 export async function logoutSession() {

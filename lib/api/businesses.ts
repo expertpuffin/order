@@ -161,16 +161,3 @@ export async function getMyBusinesses(): Promise<
       : [],
   }))
 }
-
-export async function getMerchantBusiness(
-  id: string
-): Promise<MerchantBusiness & { permissions: TeamPermission[] }> {
-  const data = await apiFetch<{
-    business: Record<string, unknown>
-    permissions: string[]
-  }>(`/api/businesses/${id}`)
-  return {
-    ...mapMerchantBusiness(data.business),
-    permissions: (data.permissions ?? []).map(String) as TeamPermission[],
-  }
-}

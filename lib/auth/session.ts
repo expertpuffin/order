@@ -34,11 +34,6 @@ export async function getRefreshToken() {
   return jar.get(REFRESH_COOKIE)?.value ?? null
 }
 
-export async function getSessionUserJson() {
-  const jar = await cookies()
-  return jar.get(USER_COOKIE)?.value ?? null
-}
-
 export type SessionCookiePayload = {
   accessToken: string
   refreshToken: string | null

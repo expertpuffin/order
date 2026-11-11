@@ -24,7 +24,6 @@ export default async function FavouritesPage() {
   return (
     <div className="space-y-5">
       <AccountPageHeader
-        data-tour="page-favourites-header"
         eyebrow={t("favourites.sectionLabel")}
         title={t("nav.favourites")}
         description={t("favourites.description", {

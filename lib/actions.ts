@@ -18,7 +18,6 @@ import {
   withdrawApproval,
 } from "@/lib/api/orders"
 import {
-  addFavoriteItem,
   getFavorites,
   removeFavoriteItem,
   updateFavoriteItem,
@@ -385,32 +384,6 @@ export async function checkoutAction(_prev: unknown, formData: FormData) {
     )
   }
   redirect(`/orders?placed=${orders.length}`)
-}
-
-export async function toggleFavoriteAction(
-  businessId: string,
-  productId: string,
-  favorited: boolean,
-  favoriteItemId?: string
-) {
-  try {
-    if (favorited && favoriteItemId) {
-      const current = await getFavorites(businessId)
-      if (current.listId) {
-        await removeFavoriteItem(businessId, current.listId, favoriteItemId)
-      }
-      revalidatePath("/favourites")
-      return { success: true as const, favorited: false }
-    }
-
-    const { listId } = await getFavorites(businessId)
-    if (!listId) return { error: "Could not open favourites list" }
-    await addFavoriteItem(businessId, listId, productId)
-    revalidatePath("/favourites")
-    return { success: true as const, favorited: true }
-  } catch (error) {
-    return actionError(error)
-  }
 }
 
 export async function updateFavoriteItemAction(

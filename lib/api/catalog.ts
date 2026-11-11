@@ -381,20 +381,6 @@ export async function getProductByItemCode(
   }
 }
 
-/** @deprecated Prefer getProductByItemCode for storefront URLs */
-export async function getProduct(id: string): Promise<CatalogProductDetail | null> {
-  try {
-    const data = await apiFetch<{ product: Record<string, unknown> }>(
-      `/api/products/${encodeURIComponent(id)}`,
-      { auth: false }
-    )
-    if (!data.product) return null
-    return mapCatalogProductDetail(data.product)
-  } catch {
-    return null
-  }
-}
-
 /** onOffer ürünleri — public listede filtre yok, sayfalardan tarar */
 export async function listOfferProducts(limit = 12): Promise<CatalogProduct[]> {
   const collected: CatalogProduct[] = []

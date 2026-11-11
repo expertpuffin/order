@@ -33,7 +33,6 @@ export default async function CartPage() {
   return (
     <div className="space-y-5">
       <AccountPageHeader
-        data-tour="page-cart-header"
         eyebrow={t("cart.sectionLabel")}
         title={t("nav.cart")}
         description={t("cart.description")}
@@ -83,7 +82,6 @@ export default async function CartPage() {
             </p>
           ) : null}
           <div
-            data-tour="page-cart-lines"
             className="h-auto self-start overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5"
           >
             <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[var(--sidebar-border)] pb-2">
@@ -103,7 +101,6 @@ export default async function CartPage() {
           </div>
 
           <div
-            data-tour="page-cart-checkout"
             className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5 xl:sticky xl:top-20 xl:self-start"
           >
             <div className="mb-4 border-b border-[var(--sidebar-border)] pb-2">
