@@ -82,7 +82,7 @@ async function MarketPage({ searchParams }: PageProps) {
     {
       id: "bestsellers",
       titleKey: "storefront.railBestsellers" as const,
-      seeAllHref: "/?view=all&page=2",
+      seeAllHref: "/?view=all",
       products: bestsellers.length ? bestsellers : picked,
     },
     {

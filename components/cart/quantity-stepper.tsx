@@ -25,7 +25,7 @@ type QuantityStepperProps = {
   size?: "sm" | "md"
 }
 
-/** Controlled: shows `value`, reports changes; a typed draft lives only while the field has focus. */
+/** Controlled: shows `value`, reports changes as they happen; the typed text is kept only while the field has focus. */
 export function QuantityStepper({
   value,
   onChange,
@@ -73,7 +73,12 @@ export function QuantityStepper({
           autoComplete="off"
           disabled={disabled}
           value={draft ?? String(value)}
-          onChange={(event) => setDraft(event.target.value.replace(/\D/g, ""))}
+          onChange={(event) => {
+            // Report as you type so the total and the add button follow; an emptied field waits for blur
+            const digits = event.target.value.replace(/\D/g, "")
+            setDraft(digits)
+            if (digits) onChange(clamp(parseInt(digits, 10)))
+          }}
           onBlur={commit}
           onKeyDown={(event) => {
             if (event.key === "Enter") commit()

@@ -163,13 +163,13 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             framed={false}
             icon={PUFFIN_ICONS.emptyOrders}
             title={
-              hasActiveFilters || status
+              hasActiveFilters || query.status
                 ? t("orders.emptyFiltered")
                 : t("orders.empty")
             }
             body={t("orders.emptyHint")}
             actions={
-              !hasActiveFilters && !status ? (
+              !hasActiveFilters && !query.status ? (
                 <Button
                   className="h-10 rounded-[2px] btn-navy"
                   nativeButton={false}

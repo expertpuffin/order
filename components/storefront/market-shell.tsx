@@ -79,7 +79,7 @@ export function MarketShell({
             </div>
           )}
           {content.pagination ? (
-            <ListPagination basePath="/" pagination={content.pagination} searchParams={{ q, category }} />
+            <ListPagination basePath="/" pagination={content.pagination} searchParams={{ q, category, view: activeView }} />
           ) : null}
         </div>
       )}
