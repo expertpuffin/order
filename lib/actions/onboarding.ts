@@ -12,6 +12,7 @@ import {
 } from "@/lib/api/onboarding"
 import { actionError, formString } from "@/lib/actions/result"
 import { ApiError } from "@/lib/backend/errors"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 export async function verifyEmailAction(_prev: unknown, formData: FormData) {
   const code = formString(formData, "code")
@@ -24,7 +25,7 @@ export async function verifyEmailAction(_prev: unknown, formData: FormData) {
   } catch (error) {
     return actionError(error)
   }
-  redirect("/onboarding")
+  redirect(ONBOARDING_PATHS.start)
 }
 
 export async function resendVerificationAction() {
@@ -48,7 +49,7 @@ export async function saveAcquisitionAction(_prev: unknown, formData: FormData) 
   } catch (error) {
     return actionError(error)
   }
-  redirect("/onboarding/business")
+  redirect(ONBOARDING_PATHS.business)
 }
 
 export async function createBusinessAction(_prev: unknown, formData: FormData) {
@@ -127,7 +128,7 @@ export async function createBusinessAction(_prev: unknown, formData: FormData) {
   } catch (error) {
     return actionError(error)
   }
-  redirect("/onboarding/pending")
+  redirect(ONBOARDING_PATHS.pending)
 }
 
 export async function lookupPostcodeAction(postcode: string) {

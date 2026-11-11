@@ -484,5 +484,10 @@
     "title": "Access denied",
     "body": "Your role in this business does not include this section.",
     "backHome": "Back to home"
+  },
+  "pagination": {
+    "summary": "Page {page} / {pages} · {total} total",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

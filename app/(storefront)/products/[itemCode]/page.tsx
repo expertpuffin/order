@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation"
 
 import { ProductDetailShell } from "@/components/storefront/product-detail-shell"
 import { getProductByItemCode, listCategories } from "@/lib/api/catalog"
-import { productPagePath } from "@/lib/storefront-paths"
+import { itemCodeForUrl, productPagePath } from "@/lib/storefront-paths"
 import { getStorefrontSession } from "@/lib/storefront-session"
 
 type ProductPageProps = {
@@ -11,12 +11,10 @@ type ProductPageProps = {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { itemCode: rawCode } = await params
-  const decoded = decodeURIComponent(rawCode).trim()
-  const itemCode = decoded.toLowerCase()
-
-  if (decoded !== itemCode) {
-    redirect(productPagePath(itemCode))
-  }
+  // Next hands the segment still percent-encoded; decode once, here
+  const decoded = decodeURIComponent(rawCode)
+  const itemCode = itemCodeForUrl(decoded)
+  if (decoded !== itemCode) redirect(productPagePath(itemCode))
 
   const session = await getStorefrontSession()
 

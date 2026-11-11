@@ -1,30 +1,18 @@
 import { apiFetch } from "@/lib/api/client"
 import { mapOrder, type Order } from "@/lib/order"
+import { orderFilters, type OrderListQuery } from "@/lib/order-list-query"
+import type { Pagination } from "@/lib/pagination"
 
-export type Pagination = {
-  page: number
-  limit: number
-  total: number
-  pages: number
-}
+const ORDERS_PAGE_SIZE = 20
 
+/** One page of the business's orders for the list's query (empty filters are left out by apiFetch). */
 export async function listBusinessOrders(
   businessId: string,
-  params?: {
-    status?: string
-    page?: number
-    limit?: number
-    q?: string
-    method?: string
-    deliveryFrom?: string
-    deliveryTo?: string
-    orderDateFrom?: string
-    orderDateTo?: string
-  }
+  query: OrderListQuery
 ): Promise<{ orders: Order[]; pagination: Pagination }> {
   const data = await apiFetch<{ orders: Record<string, unknown>[]; pagination: Pagination }>(
     `/api/businesses/${businessId}/orders`,
-    { searchParams: { limit: 20, ...params } }
+    { searchParams: { ...orderFilters(query), status: query.status, page: query.page, limit: ORDERS_PAGE_SIZE } }
   )
   return { orders: (data.orders ?? []).map(mapOrder), pagination: data.pagination }
 }

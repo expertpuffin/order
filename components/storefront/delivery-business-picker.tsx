@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 export type DeliveryBusinessOption = {
   id: string
@@ -111,7 +112,7 @@ export function DeliveryBusinessPicker({
 
   if (!businesses.length) {
     return (
-      <Link href="/onboarding/business" className={shellClass}>
+      <Link href={ONBOARDING_PATHS.business} className={shellClass}>
         {content}
         {chevron}
       </Link>

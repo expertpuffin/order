@@ -1,6 +1,7 @@
 import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
 import type { Locale } from "@/lib/i18n/config"
+import { categoryHref } from "@/lib/storefront-paths"
 
 export type LocalizedString = {
   en?: string
@@ -39,7 +40,7 @@ function resolveCtaHref(cta?: {
   if (kind === "route" || kind === "deep_link") {
     if (cta.value.startsWith("/")) return cta.value
     if (cta.value.startsWith("category:")) {
-      return `/?category=${encodeURIComponent(cta.value.slice("category:".length))}`
+      return categoryHref(cta.value.slice("category:".length))
     }
     return cta.value.startsWith("http")
       ? cta.value

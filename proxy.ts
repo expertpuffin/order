@@ -5,15 +5,15 @@ import { edgeWaf, withSecurityHeaders } from "@/lib/edge-waf"
 import { refreshSession } from "@/lib/session/backend"
 import { clearSession, readTokens, writeSession } from "@/lib/session/cookies"
 import { isAccessTokenExpired } from "@/lib/session/tokens"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 /** Browsable without a session; everything else needs one. */
 function isPublic(pathname: string) {
   return (
     pathname === "/" ||
-    pathname === "/catalog" ||
     pathname.startsWith("/products/") ||
-    pathname === "/onboarding" ||
-    pathname.startsWith("/onboarding/")
+    pathname === ONBOARDING_PATHS.start ||
+    pathname.startsWith(`${ONBOARDING_PATHS.start}/`)
   )
 }
 
@@ -31,13 +31,6 @@ async function route(request: NextRequest): Promise<NextResponse> {
   // Assets and API routes (which handle their own auth). Paths with a dot are files.
   if (pathname.startsWith("/_next") || pathname.startsWith("/api/") || pathname.includes(".")) {
     return withSecurityHeaders(NextResponse.next())
-  }
-
-  // Old standalone auth pages → home modal
-  if (pathname === "/login" || pathname === "/register") {
-    const tab = pathname === "/register" ? "register" : "login"
-    const next = request.nextUrl.searchParams.get("next") || undefined
-    return withSecurityHeaders(NextResponse.redirect(new URL(authGateHref({ tab, next }), request.url)))
   }
 
   const { accessToken, refreshToken } = readTokens(request.cookies)

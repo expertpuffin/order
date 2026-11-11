@@ -2,13 +2,9 @@ import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
 import { ApiError } from "@/lib/backend/errors"
 import { asId, asNumber, preferredOffer, unitCode } from "@/lib/domain"
+import type { Pagination } from "@/lib/pagination"
+import { PRODUCT_PAGE_SIZE } from "@/lib/storefront-paths"
 
-export type CatalogPagination = {
-  page: number
-  limit: number
-  total: number
-  pages: number
-}
 
 export type CatalogProduct = {
   id: string
@@ -332,14 +328,14 @@ export async function listProducts(params?: {
   limit?: number
 }): Promise<{
   products: CatalogProduct[]
-  pagination: CatalogPagination
+  pagination: Pagination
 }> {
   const data = await apiFetch<{
     products: Record<string, unknown>[]
-    pagination: CatalogPagination
+    pagination: Pagination
   }>("/api/products", {
     auth: false,
-    searchParams: { limit: 24, ...params },
+    searchParams: { limit: PRODUCT_PAGE_SIZE, ...params },
   })
   return {
     products: (data.products ?? []).map(mapCatalogProduct),
@@ -348,9 +344,10 @@ export async function listProducts(params?: {
 }
 
 export async function getProductByItemCode(
+  /** As it appears in the product URL, already decoded */
   itemCode: string
 ): Promise<CatalogProductDetail | null> {
-  const code = decodeURIComponent(itemCode).trim().toUpperCase()
+  const code = itemCode.trim().toUpperCase()
   if (!code) return null
   try {
     const data = await apiFetch<{ product: Record<string, unknown> }>(

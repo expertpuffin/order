@@ -1,11 +1,12 @@
 import { safeNextPath } from "@/lib/safe-redirect"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 /** Signing in happens in a modal on the storefront (no /login or /register pages), opened by `?auth=`. */
 
 export type AuthTab = "login" | "register"
 
 /** After sign-in from a plain `?auth=login`, new users continue their onboarding. */
-const DEFAULT_NEXT = "/onboarding"
+export const DEFAULT_NEXT = ONBOARDING_PATHS.start
 
 export function authGateHref(opts?: { tab?: AuthTab; next?: string }) {
   const params = new URLSearchParams()

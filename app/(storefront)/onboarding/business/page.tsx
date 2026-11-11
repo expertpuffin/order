@@ -4,7 +4,7 @@ import { getTranslator } from "@/lib/i18n"
 import { requireOnboardingStep } from "@/lib/onboarding-routing"
 
 export default async function BusinessOnboardingPage() {
-  await requireOnboardingStep("/onboarding/business", "business")
+  await requireOnboardingStep("business")
   const { t } = await getTranslator()
 
   return (

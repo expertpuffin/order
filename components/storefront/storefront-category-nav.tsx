@@ -7,16 +7,13 @@ import { ChevronDown } from "lucide-react"
 import { useT } from "@/components/i18n/i18n-provider"
 import type { CatalogCategory } from "@/lib/api/catalog"
 import { cn } from "@/lib/utils"
+import { categoryHref } from "@/lib/storefront-paths"
 
 type StorefrontCategoryNavProps = {
   categories: CatalogCategory[]
   activeSlug?: string
   businessName: string | null
   className?: string
-}
-
-function categoryHref(slug: string) {
-  return `/?category=${encodeURIComponent(slug)}`
 }
 
 export function StorefrontCategoryNav({

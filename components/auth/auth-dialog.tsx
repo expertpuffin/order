@@ -9,6 +9,7 @@ import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { AuthTab } from "@/lib/auth-gate-url"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 /**
  * Sign in / sign up. A signed-in user whose business is still under review sees
@@ -59,7 +60,7 @@ export function AuthDialog({
           <div className="space-y-2 p-5">
             <Button
               className="h-11 w-full rounded-[2px] btn-brand font-semibold text-white"
-              onClick={() => router.push("/onboarding/pending")}
+              onClick={() => router.push(ONBOARDING_PATHS.pending)}
             >
               {t("storefront.viewApplication")}
             </Button>

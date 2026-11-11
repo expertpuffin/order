@@ -484,5 +484,10 @@
     "title": "Erişim yok",
     "body": "Bu işletmedeki rolünüz bu bölümü kapsamıyor.",
     "backHome": "Ana sayfaya dön"
+  },
+  "pagination": {
+    "summary": "Sayfa {page} / {pages} · toplam {total}",
+    "previous": "Önceki",
+    "next": "Sonraki"
   }
 }

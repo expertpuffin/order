@@ -5,7 +5,7 @@ import { requireOnboardingStep } from "@/lib/onboarding-routing"
 import { getTranslator } from "@/lib/i18n"
 
 export default async function PendingOnboardingPage() {
-  const { businessName } = await requireOnboardingStep("/onboarding/pending", "pending")
+  const { businessName } = await requireOnboardingStep("pending")
   const { t } = await getTranslator()
   const name = businessName || t("common.ordoria")
 

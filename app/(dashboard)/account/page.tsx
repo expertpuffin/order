@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation"
 
 import { AccessDenied } from "@/components/shared/access-denied"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
@@ -14,10 +13,6 @@ export default async function AccountPage() {
   if (!ctx) return <AccessDenied />
 
   const { user, businesses, active: business } = ctx
-
-  if (!businesses.length) {
-    redirect("/onboarding/business")
-  }
 
   const address = [
     business.addressLine1,

@@ -8,6 +8,7 @@ import { useT } from "@/components/i18n/i18n-provider"
 import type { CatalogCategory } from "@/lib/api/catalog"
 import { resolveCategoryVisual } from "@/lib/category-visuals"
 import { cn } from "@/lib/utils"
+import { categoryHref, storefrontHref } from "@/lib/storefront-paths"
 
 type CategoryIconRailProps = {
   categories: CatalogCategory[]
@@ -34,7 +35,7 @@ export function CategoryIconRail({
         className="flex gap-2.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <Link
-          href="/?view=offers"
+          href={storefrontHref({ view: "offers" })}
           className="flex w-[84px] shrink-0 flex-col items-center gap-1.5"
         >
           <div
@@ -59,7 +60,7 @@ export function CategoryIconRail({
           return (
             <Link
               key={cat.id}
-              href={`/?category=${encodeURIComponent(cat.slug!)}`}
+              href={categoryHref(cat.slug!)}
               className="flex w-[84px] shrink-0 flex-col items-center gap-1.5"
             >
               <div
