@@ -10,13 +10,6 @@ import { localRedirect } from "@/lib/local-redirect"
 export async function GET(request: Request) {
   const url = new URL(request.url)
   const safeNext = safeNextPath(url.searchParams.get("next"), "/")
-  const nextPath = url.searchParams.get("next") || "/"
-  const safeNext =
-    nextPath.startsWith("/") &&
-    !nextPath.startsWith("//") &&
-    !/[\u0000-\u001f\u007f]/.test(nextPath)
-      ? nextPath
-      : "/"
 
   const access = await refreshSession()
   if (!access) {
