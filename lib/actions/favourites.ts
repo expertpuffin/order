@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 
 import { addLinesToCart } from "@/lib/api/cart"
 import { addFavoriteItem, getFavorites, removeFavoriteItem, updateFavoriteItem } from "@/lib/api/favorites"
-import { actionError, refreshAllPages } from "@/lib/actions/result"
+import { actionError, failure, refreshAllPages } from "@/lib/actions/result"
 
 /** Quantity changes on a favourite line. Steppers never send less than 1; removing has its own action. */
 export async function updateFavoriteItemAction(
@@ -57,7 +57,7 @@ export async function addAllFavoritesToCartAction(businessId: string, options?: 
   } catch (error) {
     return actionError(error)
   }
-  if (added === 0) return { error: "No items could be added — products may be unavailable" }
+  if (added === 0) return failure("errors.nothingAdded")
   if (options?.redirectToCart) redirect("/cart")
   return { success: true as const, added }
 }

@@ -5,12 +5,11 @@ import Link from "next/link"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import type { MarketBanner } from "@/lib/api/app-content"
+import { useT } from "@/components/i18n/i18n-provider"
 import { cn } from "@/lib/utils"
 
 type BannerCarouselProps = {
   banners: MarketBanner[]
-  fallbackTitle: string
-  fallbackSubtitle: string
 }
 
 const GAP_PX = 0
@@ -92,17 +91,16 @@ function SlideCard({
 
 export function BannerCarousel({
   banners,
-  fallbackTitle,
-  fallbackSubtitle,
 }: BannerCarouselProps) {
+  const t = useT()
   const slides =
     banners.length > 0
       ? banners
       : [
           {
             id: "fallback",
-            title: fallbackTitle,
-            body: fallbackSubtitle,
+            title: t("storefront.heroTitle"),
+            body: t("storefront.heroSubtitle"),
             imageUrl: FALLBACK_IMAGES[0],
             ctaLabel: "",
             href: null,
@@ -185,7 +183,7 @@ export function BannerCarousel({
             onClick={() => go(-1)}
             disabled={index <= 0}
             className="absolute top-1/2 left-2 z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40 sm:flex"
-            aria-label="Previous"
+            aria-label={t("storefront.previousSlide")}
           >
             <ChevronLeft className="size-4" />
           </button>
@@ -194,7 +192,7 @@ export function BannerCarousel({
             onClick={() => go(1)}
             disabled={index >= maxIndex}
             className="absolute top-1/2 right-2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40"
-            aria-label="Next"
+            aria-label={t("storefront.nextSlide")}
           >
             <ChevronRight className="size-4" />
           </button>
@@ -203,7 +201,7 @@ export function BannerCarousel({
               <button
                 key={slide.id}
                 type="button"
-                aria-label={`Slide ${i + 1}`}
+                aria-label={t("storefront.slide", { n: i + 1 })}
                 onClick={() => setIndex(clampIndex(i))}
                 className={cn(
                   "h-1 w-4 rounded-[1px] transition-colors",

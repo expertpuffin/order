@@ -24,7 +24,7 @@ export type FilterField =
       label: string
       options: Array<{ value: string; label: string }>
       allowEmpty?: boolean
-      emptyLabel?: string
+      emptyLabel: string
       className?: string
     }
 
@@ -34,8 +34,8 @@ type ListFilterBarProps = {
   fields: FilterField[]
   /** Preserve these params when submitting (hidden inputs) */
   preserve?: Record<string, string | undefined>
-  submitLabel?: string
-  clearLabel?: string
+  submitLabel: string
+  clearLabel: string
   clearHref?: string
   className?: string
 }
@@ -45,8 +45,8 @@ export function ListFilterBar({
   values,
   fields,
   preserve,
-  submitLabel = "Search",
-  clearLabel = "Clear",
+  submitLabel,
+  clearLabel,
   clearHref,
   className,
 }: ListFilterBarProps) {
@@ -121,7 +121,7 @@ export function ListFilterBar({
                 className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
               >
                 {field.allowEmpty !== false ? (
-                  <option value="">{field.emptyLabel ?? "All"}</option>
+                  <option value="">{field.emptyLabel}</option>
                 ) : null}
                 {field.options.map((opt) => (
                   <option key={opt.value} value={opt.value}>

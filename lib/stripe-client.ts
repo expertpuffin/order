@@ -19,18 +19,19 @@ export function getStripe(publishableKey: string) {
 export async function confirmCardHold(
   publishableKey: string,
   clientSecret: string
-): Promise<{ status: "held" } | { status: "canceled" } | { status: "failed"; message: string }> {
+): Promise<{ status: "held" } | { status: "canceled" } | { status: "failed"; message: string | null; reason: "unavailable" | "declined" }> {
   const stripe = await getStripe(publishableKey)
-  if (!stripe) return { status: "failed", message: "Card payments couldn't load" }
+  if (!stripe) return { status: "failed", message: null, reason: "unavailable" }
   const { paymentIntent, error } = await stripe.handleNextAction({ clientSecret })
   if (error) {
     if (error.code === "payment_intent_authentication_failure" && !error.message) {
       return { status: "canceled" }
     }
-    return { status: "failed", message: error.message || "Your bank didn't approve the payment" }
+    // Stripe.js words its own messages; ours only fill the gaps
+    return { status: "failed", message: error.message || null, reason: "declined" }
   }
   if (paymentIntent?.status === "requires_capture" || paymentIntent?.status === "succeeded") {
     return { status: "held" }
   }
-  return { status: "failed", message: "Your bank didn't approve the payment" }
+  return { status: "failed", message: null, reason: "declined" }
 }

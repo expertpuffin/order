@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation"
 
-import { actionError, formString } from "@/lib/actions/result"
+import { actionError, failure, formString } from "@/lib/actions/result"
 import { safeNextPath } from "@/lib/safe-redirect"
 import { signIn, signOut, signUp } from "@/lib/session/auth"
 import { DEFAULT_NEXT } from "@/lib/auth-gate-url"
@@ -34,7 +34,7 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   const receiveAnnouncements = formData.get("receiveAnnouncements") !== "off"
 
   if (!firstName || !email || !password || !phone) {
-    return { error: "All required fields must be filled" }
+    return failure("errors.requiredFields")
   }
 
   try {

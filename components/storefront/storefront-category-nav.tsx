@@ -142,7 +142,7 @@ export function StorefrontCategoryNav({
               <button
                 type="button"
                 aria-expanded={isOpen}
-                aria-label={isOpen ? "Collapse" : "Expand"}
+                aria-label={isOpen ? t("storefront.collapse") : t("storefront.expand")}
                 onClick={() => toggle(category.id)}
                 className={cn(
                   "mr-1 flex size-7 shrink-0 items-center justify-center",

@@ -47,11 +47,7 @@ export function MarketShell({
     <StorefrontFrame session={session} categories={categories} activeCategory={category} q={q}>
       {content.mode === "home" ? (
         <div className="space-y-6">
-          <BannerCarousel
-            banners={content.banners}
-            fallbackTitle={t("storefront.heroTitle")}
-            fallbackSubtitle={t("storefront.heroSubtitle")}
-          />
+          <BannerCarousel banners={content.banners} />
           {iconRail}
           <div className="space-y-8 rounded-[2px] border border-[var(--border-subtle)] bg-white p-3 sm:p-4">
             {content.rails.map((rail) => (
@@ -59,7 +55,6 @@ export function MarketShell({
                 key={rail.id}
                 title={t(rail.titleKey)}
                 seeAllHref={rail.seeAllHref}
-                seeAllLabel={t("storefront.seeAll")}
                 products={rail.products}
               />
             ))}

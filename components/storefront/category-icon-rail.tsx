@@ -92,7 +92,7 @@ export function CategoryIconRail({
             ref.current?.scrollBy({ left: 280, behavior: "smooth" })
           }
           className="absolute top-[46px] right-0 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white text-[var(--brand-navy)]"
-          aria-label="Scroll categories"
+          aria-label={t("storefront.scrollCategories")}
         >
           <ChevronRight className="size-4" />
         </button>

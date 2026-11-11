@@ -31,7 +31,8 @@ export function usePlaceOrder(businessId: string, payment: CheckoutPaymentState)
     if (!key) return { error: t("payment.cardsUnavailable") }
     const step = await confirmCardHold(key, clientSecret)
     if (step.status === "canceled") return { stop: "canceled" }
-    if (step.status === "failed") return { error: step.message }
+    if (step.status === "failed")
+      return { error: step.message ?? t(step.reason === "unavailable" ? "payment.cardsUnavailable" : "payment.cardDeclined") }
     return null
   }
 

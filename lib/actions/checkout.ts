@@ -14,7 +14,7 @@ import {
   type SavedCard,
 } from "@/lib/api/payments"
 import { fetchSupplierAvailability, fetchSupplierSlots } from "@/lib/api/supplierFulfillment"
-import { actionError, formString, refreshAllPages } from "@/lib/actions/result"
+import { actionError, failure, formString, refreshAllPages } from "@/lib/actions/result"
 import { ApiError } from "@/lib/backend/errors"
 import { ERROR_CODES, type FulfillmentMethod } from "@/lib/domain"
 import { placedOrdersHref } from "@/lib/order"
@@ -23,7 +23,7 @@ import { placedOrdersHref } from "@/lib/order"
  * Checkout errors the form acts on, with just what it needs: the bank's 3D Secure
  * step and whether a closed account can pay by card instead.
  */
-function checkoutError(error: unknown) {
+async function checkoutError(error: unknown) {
   if (!(error instanceof ApiError)) return actionError(error)
   const d = error.details ?? {}
   if (error.code === ERROR_CODES.paymentActionRequired) {
@@ -44,7 +44,7 @@ export async function checkoutAction(_prev: unknown, formData: FormData) {
   const businessId = formString(formData, "businessId")
   const requestedDeliveryDate = formString(formData, "requestedDeliveryDate")
   if (!businessId || !requestedDeliveryDate) {
-    return { error: "Delivery date is required" }
+    return failure("errors.deliveryDateRequired")
   }
 
   const paymentMode = formString(formData, "paymentMode")

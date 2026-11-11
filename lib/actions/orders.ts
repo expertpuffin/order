@@ -2,7 +2,8 @@
 
 import { addLinesToCart } from "@/lib/api/cart"
 import { approvalToCart, cancelOrder, getOrder, withdrawApproval } from "@/lib/api/orders"
-import { actionError, refreshAllPages } from "@/lib/actions/result"
+import { actionError, failure, refreshAllPages } from "@/lib/actions/result"
+import { getTranslator } from "@/lib/i18n"
 
 /** The order's lines back into the cart. */
 export async function reorderOrderAction(businessId: string, orderNumber: string) {
@@ -11,7 +12,7 @@ export async function reorderOrderAction(businessId: string, orderNumber: string
     const added = await addLinesToCart(businessId, order.items)
     refreshAllPages()
     if (added > 0) return { success: true as const, added }
-    return { error: "No items could be added — products may be unavailable" }
+    return failure("errors.nothingAdded")
   } catch (error) {
     return actionError(error)
   }
@@ -19,7 +20,7 @@ export async function reorderOrderAction(businessId: string, orderNumber: string
 
 export async function cancelOrderAction(orderNumber: string, note?: string) {
   try {
-    await cancelOrder(orderNumber, note ?? "Cancelled by business")
+    await cancelOrder(orderNumber, note ?? (await getTranslator()).t("orders.cancelNote"))
     refreshAllPages()
     return { success: true as const }
   } catch (error) {

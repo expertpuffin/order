@@ -1,6 +1,8 @@
 import { revalidatePath } from "next/cache"
 
 import { ApiError } from "@/lib/backend/errors"
+import { getTranslator } from "@/lib/i18n"
+import type { TranslateValues } from "@/lib/i18n"
 
 /** What every server action returns to the client: success with extras, or an error to show. */
 export type ActionResult<T extends object = object> =
@@ -9,9 +11,16 @@ export type ActionResult<T extends object = object> =
 
 export type ActionError = Extract<ActionResult, { error: string }>
 
-export function actionError(error: unknown): ActionError {
+/** An error in the visitor's language (messages key), for checks the panel makes itself. */
+export async function failure(key: string, values?: TranslateValues): Promise<ActionError> {
+  const { t } = await getTranslator()
+  return { error: t(key, values) }
+}
+
+/** An API error passes on the backend's message and code; anything else is a generic, translated error. */
+export async function actionError(error: unknown): Promise<ActionError> {
   if (error instanceof ApiError) return { error: error.message, code: error.code ?? null }
-  return { error: "Something went wrong" }
+  return failure("errors.generic")
 }
 
 export function formString(formData: FormData, key: string) {

@@ -4,22 +4,22 @@ import { useRef } from "react"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 
+import { useT } from "@/components/i18n/i18n-provider"
 import { ProductCard } from "@/components/storefront/product-card"
 import type { CatalogProduct } from "@/lib/api/catalog"
 
 type ProductRailProps = {
   title: string
   seeAllHref: string
-  seeAllLabel: string
   products: CatalogProduct[]
 }
 
 export function ProductRail({
   title,
   seeAllHref,
-  seeAllLabel,
   products,
 }: ProductRailProps) {
+  const t = useT()
   const ref = useRef<HTMLDivElement>(null)
   if (products.length === 0) return null
 
@@ -33,7 +33,7 @@ export function ProductRail({
           href={seeAllHref}
           className="shrink-0 text-xs font-semibold uppercase tracking-wide text-primary underline-offset-4 hover:underline"
         >
-          {seeAllLabel}
+          {t("storefront.seeAll")}
         </Link>
       </div>
 
@@ -56,7 +56,7 @@ export function ProductRail({
               ref.current?.scrollBy({ left: 320, behavior: "smooth" })
             }
             className="absolute top-1/3 right-1 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white text-[var(--brand-navy)]"
-            aria-label="Scroll products"
+            aria-label={t("storefront.scrollProducts")}
           >
             <ChevronRight className="size-4" />
           </button>
