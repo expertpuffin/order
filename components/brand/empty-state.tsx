@@ -36,7 +36,7 @@ export function EmptyState({
         compact
           ? "gap-3 px-5 py-8"
           : framed
-            ? "gap-4 rounded-[2px] border border-[var(--sidebar-border)] bg-white px-6 py-16"
+            ? "gap-4 rounded-[2px] border border-[var(--border-subtle)] bg-white px-6 py-16"
             : "gap-4 px-6 py-16",
         className
       )}

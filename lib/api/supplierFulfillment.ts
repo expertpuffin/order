@@ -1,6 +1,5 @@
 import { apiFetch } from "@/lib/api/client"
-
-export type FulfillmentMethod = "collection" | "delivery"
+import type { FulfillmentMethod } from "@/lib/domain"
 
 export type AvailabilityDay = {
   date: string

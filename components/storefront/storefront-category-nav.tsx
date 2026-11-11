@@ -167,7 +167,7 @@ export function StorefrontCategoryNav({
           </div>
 
           {hasChildren && isOpen ? (
-            <div className="mt-0.5 space-y-0.5 border-l border-[var(--sidebar-border)] ml-3.5 pl-1">
+            <div className="mt-0.5 space-y-0.5 border-l border-[var(--border-subtle)] ml-3.5 pl-1">
               {category.slug ? (
                 <Link
                   href={categoryHref(category.slug)}
@@ -196,7 +196,7 @@ export function StorefrontCategoryNav({
         className
       )}
     >
-      <div className="border-b border-[var(--sidebar-border)] px-4 py-3.5">
+      <div className="border-b border-[var(--border-subtle)] px-4 py-3.5">
         <p className="mb-1 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
           {t("storefront.storeLabel")}
         </p>

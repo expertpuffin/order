@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
+import { asId, unitCode } from "@/lib/domain"
 
 export type FavoriteItem = {
   itemId: string
@@ -14,15 +15,6 @@ export type FavoriteItem = {
   packagingOptions: string[]
   categorySlug: string | null
   categoryName: string | null
-}
-
-function asId(value: unknown): string {
-  if (value == null) return ""
-  if (typeof value === "string") return value
-  if (typeof value === "object" && value !== null && "_id" in value) {
-    return String((value as { _id: unknown })._id)
-  }
-  return String(value)
 }
 
 type RawFavoriteList = {
@@ -80,9 +72,9 @@ function mapItems(list: Record<string, unknown>): FavoriteItem[] {
         (product.sizeLabel as string | null) ??
         null,
       quantity: Number(raw.quantity ?? 1),
-      unit: String(raw.unit ?? "EACH").toUpperCase(),
+      unit: unitCode(raw.unit),
       packagingOptions: packagings.length
-        ? packagings.map((p) => String(p.type ?? "EACH").toUpperCase())
+        ? packagings.map((p) => unitCode(p.type))
         : ["EACH"],
       categorySlug: category.slug,
       categoryName: category.name,
@@ -90,7 +82,7 @@ function mapItems(list: Record<string, unknown>): FavoriteItem[] {
   })
 }
 
-/** Tek listeli model — "My Favourites". Liste yoksa oluşturur. */
+/** One list per business ("My Favourites"), created when missing. */
 export async function getFavorites(
   businessId: string
 ): Promise<{ listId: string | null; items: FavoriteItem[] }> {
@@ -115,15 +107,13 @@ export async function getFavorites(
   }
 }
 
+/** Undo of a removal: the product back on the list with its quantity and unit. */
 export async function addFavoriteItem(
   businessId: string,
   listId: string,
-  productId: string
+  input: { productId: string; quantity: number; unit: string }
 ) {
-  return apiFetch(`/api/businesses/${businessId}/favorite-lists/${listId}/items`, {
-    method: "POST",
-    body: { productId },
-  })
+  await apiFetch(`/api/businesses/${businessId}/favorite-lists/${listId}/items`, { method: "POST", body: input })
 }
 
 export async function updateFavoriteItem(

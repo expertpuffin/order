@@ -43,7 +43,7 @@ function SlideCard({
 
   const card = (
     <div
-      className="relative h-[168px] shrink-0 overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] sm:h-[200px]"
+      className="relative h-[168px] shrink-0 overflow-hidden rounded-[2px] border border-[var(--border-subtle)] sm:h-[200px]"
       style={{ width: width > 0 ? width : "100%" }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -184,7 +184,7 @@ export function BannerCarousel({
             type="button"
             onClick={() => go(-1)}
             disabled={index <= 0}
-            className="absolute top-1/2 left-2 z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40 sm:flex"
+            className="absolute top-1/2 left-2 z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40 sm:flex"
             aria-label="Previous"
           >
             <ChevronLeft className="size-4" />
@@ -193,7 +193,7 @@ export function BannerCarousel({
             type="button"
             onClick={() => go(1)}
             disabled={index >= maxIndex}
-            className="absolute top-1/2 right-2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40"
+            className="absolute top-1/2 right-2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white/95 text-[var(--brand-navy)] disabled:opacity-40"
             aria-label="Next"
           >
             <ChevronRight className="size-4" />

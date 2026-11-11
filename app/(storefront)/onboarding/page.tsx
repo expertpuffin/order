@@ -1,59 +1,32 @@
-import { redirect } from "next/navigation"
-
-import {
-  fetchMeExtended,
-  getMyBusinessesSafe,
-  requireOnboardingUser,
-} from "@/lib/onboarding-routing"
+import { OnboardingAcquisitionForm } from "@/components/onboarding/acquisition-form"
 import { OnboardingShell } from "@/components/onboarding/onboarding-shell"
 import { OnboardingVerifyForm } from "@/components/onboarding/verify-form"
-import { OnboardingAcquisitionForm } from "@/components/onboarding/acquisition-form"
 import { getTranslator } from "@/lib/i18n"
+import { requireOnboardingStep } from "@/lib/onboarding-routing"
 
 export default async function OnboardingPage() {
-  const user = await requireOnboardingUser("/onboarding")
-
+  const current = await requireOnboardingStep("/onboarding", "verify", "acquisition")
   const { t } = await getTranslator()
 
-  if (!user.isEmailVerified) {
+  if (current.step === "verify") {
     return (
       <OnboardingShell
         title={t("onboarding.verifyTitle")}
         subtitle={t("onboarding.verifySubtitle")}
         stepLabel={t("onboarding.stepVerify")}
       >
-        <OnboardingVerifyForm email={user.email} />
+        <OnboardingVerifyForm email={current.email} />
       </OnboardingShell>
     )
   }
 
-  let acquisitionAnsweredAt: string | null = null
-  try {
-    const me = await fetchMeExtended()
-    acquisitionAnsweredAt = me.acquisitionAnsweredAt
-  } catch {
-    /* ignore */
-  }
-
-  if (!acquisitionAnsweredAt) {
-    return (
-      <OnboardingShell
-        title={t("onboarding.acquisitionTitle")}
-        subtitle={t("onboarding.acquisitionSubtitle")}
-        stepLabel={t("onboarding.stepAcquisition")}
-      >
-        <OnboardingAcquisitionForm />
-      </OnboardingShell>
-    )
-  }
-
-  const businesses = await getMyBusinessesSafe()
-  if (!businesses.length) {
-    redirect("/onboarding/business")
-  }
-
-  const pending = businesses.find((b) => b.status === "pending")
-  if (pending) redirect("/onboarding/pending")
-
-  redirect("/")
+  return (
+    <OnboardingShell
+      title={t("onboarding.acquisitionTitle")}
+      subtitle={t("onboarding.acquisitionSubtitle")}
+      stepLabel={t("onboarding.stepAcquisition")}
+    >
+      <OnboardingAcquisitionForm />
+    </OnboardingShell>
+  )
 }

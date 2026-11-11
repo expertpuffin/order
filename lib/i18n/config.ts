@@ -1,14 +1,25 @@
-export const locales = ["en", "tr"] as const
-export type Locale = (typeof locales)[number]
+/** The UI languages: everything that varies per language is read from here. */
+const LOCALES = {
+  en: { label: "EN", intl: "en-GB" },
+  tr: { label: "TR", intl: "tr-TR" },
+} as const
+
+export type Locale = keyof typeof LOCALES
+
+export const locales = Object.keys(LOCALES) as Locale[]
 
 export const defaultLocale: Locale = "en"
 export const localeCookieName = "rl_locale"
 
 export function isLocale(value: unknown): value is Locale {
-  return value === "en" || value === "tr"
+  return typeof value === "string" && value in LOCALES
 }
 
-/** BCP 47 tag for dates / currency */
+/** BCP 47 tag for dates and numbers */
 export function intlLocale(locale: Locale): string {
-  return locale === "tr" ? "tr-TR" : "en-GB"
+  return LOCALES[locale].intl
+}
+
+export function localeLabel(locale: Locale): string {
+  return LOCALES[locale].label
 }

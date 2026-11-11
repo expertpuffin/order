@@ -1,13 +1,10 @@
 import { cookies } from "next/headers"
-import { getApiBaseUrl } from "@/lib/api/config"
+
+import { setActiveBusiness } from "@/lib/business-context"
 import { localRedirect } from "@/lib/local-redirect"
-import {
-  applySessionToResponseCookies,
-  BUSINESS_COOKIE,
-  cookieOptions,
-  REFRESH_MAX_AGE_SEC,
-} from "@/lib/auth/session"
 import { safeNextPath } from "@/lib/safe-redirect"
+import { requestSession } from "@/lib/session/backend"
+import { cookieOptions, writeSession } from "@/lib/session/cookies"
 
 export const runtime = "nodejs"
 
@@ -28,7 +25,6 @@ const HANDOFF_STATE_PATH = "/api/auth/handoff"
  */
 export async function GET(request: Request) {
   const url = new URL(request.url)
-  // Relative path on this panel only — never an open redirect.
   const next = safeNextPath(url.searchParams.get("next"), "/")
   const code = url.searchParams.get("code") ?? ""
   const business = url.searchParams.get("business") ?? ""
@@ -42,25 +38,11 @@ export async function GET(request: Request) {
   if (!/^[a-f0-9]{64}$/.test(code) || !/^[a-f0-9]{64}$/.test(state)) return done
 
   try {
-    const res = await fetch(`${getApiBaseUrl()}/api/auth/handoff/consume`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, state }),
-      cache: "no-store",
-    })
-    const json = (await res.json().catch(() => null)) as {
-      data?: { accessToken?: string; refreshToken?: string; user?: Record<string, unknown> }
-    } | null
-    if (!res.ok || !json?.data?.accessToken || !json.data.user) return done
-    applySessionToResponseCookies(done, {
-      accessToken: json.data.accessToken,
-      refreshToken: json.data.refreshToken?.trim() || null,
-      user: json.data.user,
-    })
+    writeSession(done.cookies, await requestSession("/api/auth/handoff/consume", { code, state }, "Handoff failed"))
     // Same business the user was working in on the business panel
-    if (/^[a-f0-9]{24}$/i.test(business)) done.cookies.set(BUSINESS_COOKIE, business, cookieOptions(REFRESH_MAX_AGE_SEC))
+    if (/^[a-f0-9]{24}$/i.test(business)) setActiveBusiness(done.cookies, business)
   } catch {
-    // Network trouble — fall through to the plain page
+    // Rejected code or network trouble — land on the plain page
   }
   return done
 }

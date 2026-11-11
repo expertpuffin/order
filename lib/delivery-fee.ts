@@ -1,4 +1,5 @@
 import type { CartDelivery } from "@/lib/api/cart"
+import { formatMoney } from "@/lib/format"
 
 /** "Delivery fee (£5.00 + 2%)" — the label when the band takes a percentage. */
 export function deliveryFeeLabel(
@@ -7,7 +8,7 @@ export function deliveryFeeLabel(
 ) {
   if (!fee.percent) return t("storefront.deliveryFee")
   return t("storefront.deliveryFeeBasis", {
-    flat: (fee.flatAmount ?? 0).toFixed(2),
+    flat: formatMoney(fee.flatAmount ?? 0),
     percent: fee.percent,
   })
 }

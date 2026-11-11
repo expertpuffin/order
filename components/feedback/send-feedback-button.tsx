@@ -14,7 +14,7 @@ export function SendFeedbackButton() {
     <Button
       type="button"
       variant="outline"
-      className="h-10 rounded-[2px] border-[var(--sidebar-border)] font-semibold text-[var(--brand-navy)]"
+      className="h-10 rounded-[2px] border-[var(--border-subtle)] font-semibold text-[var(--brand-navy)]"
       onClick={openFeedback}
     >
       <MessageSquareHeart className="size-[18px] stroke-[1.75]" />

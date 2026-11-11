@@ -6,8 +6,7 @@ import { Activity, ChevronDown, CircleHelp, LogOut, MessageSquareHeart, UserRoun
 import { useT } from "@/components/i18n/i18n-provider"
 import { useFeedback } from "@/components/feedback/feedback-dialog"
 import { useAuthGate } from "@/components/storefront/auth-gate"
-import { logoutAction } from "@/lib/actions"
-import { translateNavTitle } from "@/lib/i18n/nav-label"
+import { logoutAction } from "@/lib/actions/auth"
 import { mainNav } from "@/lib/navigation"
 import { STATUS_PAGE_URL } from "@/lib/status-page"
 import {
@@ -33,11 +32,7 @@ export function StorefrontUserMenu({
   const { openFeedback } = useFeedback()
   const firstName = userName.trim().split(/\s+/)[0] || userName
 
-  const navItems = mainNav.filter((item) => {
-    if (item.href === "/dashboard") return false
-    if (item.permission === "orders" && !canOrder) return false
-    return true
-  })
+  const navItems = mainNav.filter((item) => canOrder || !item.ordering)
 
   return (
     <DropdownMenu>
@@ -54,15 +49,14 @@ export function StorefrontUserMenu({
       <DropdownMenuContent align="end" className="min-w-56 rounded-xl p-1">
         {navItems.map((item) => {
           const Icon = item.icon
-          const href = item.href === "/catalog" ? "/" : item.href
           return (
             <DropdownMenuItem
               key={item.href}
-              render={<Link href={href} />}
+              render={<Link href={item.href} />}
               className="gap-3 py-2.5"
             >
               <Icon className="size-[18px] stroke-[1.75]" />
-              {translateNavTitle(t, item.href, item.title)}
+              {t(item.titleKey)}
             </DropdownMenuItem>
           )
         })}

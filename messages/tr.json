@@ -1,20 +1,13 @@
 {
   "common": {
+    "undo": "Geri al",
     "logOut": "Çıkış yap",
     "systemStatus": "Sistem durumu",
     "email": "E-posta",
     "password": "Şifre",
-    "notifications": "Bildirimler",
-    "customize": "Özelleştir",
-    "accountMenu": "Hesap menüsü",
-    "dashboard": "Panel",
-    "settings": "Ayarlar",
     "language": "Dil",
     "ordoria": "Ordoria Business",
     "search": "Ara",
-    "searchPages": "Sayfalarda ara...",
-    "jumpToPage": "Bir sayfaya git",
-    "noResults": "Sonuç yok.",
     "continue": "Devam",
     "back": "Geri",
     "saving": "Kaydediliyor…",
@@ -28,20 +21,12 @@
     "noTableExport": "Dışa aktarılacak tablo bulunamadı"
   },
   "nav": {
-    "dashboard": "Panel",
     "catalog": "Katalog",
     "cart": "Sepet",
     "favourites": "Favoriler",
-    "orders": "Siparişler",
-    "groupOverview": "Genel bakış",
-    "groupOrder": "Sipariş",
-    "groupHistory": "Geçmiş"
-  },
-  "header": {
-    "orderDetail": "Sipariş detayı"
+    "orders": "Siparişler"
   },
   "auth": {
-    "portalSubtitle": "Sipariş Portalı",
     "accountLabel": "Hesap",
     "signIn": "Giriş yap",
     "signUp": "Kayıt ol",
@@ -50,15 +35,7 @@
     "firstName": "Ad",
     "lastName": "Soyad",
     "phone": "Telefon",
-    "optOutAnnouncements": "Ürün duyurularını istemiyorum",
-    "noBusiness": "Aktif işletme üyeliği bulunamadı. Başvuru yapın veya işletme sahibinden davet isteyin.",
-    "forgotPasswordLink": "Şifremi unuttum?",
-    "forgotPasswordTitle": "Şifremi unuttum",
-    "resetPassword": "Şifre sıfırla",
-    "forgotPasswordHint": "Hesap e-postanızı girin. Kayıtlıysa sıfırlama bağlantısı gönderilir.",
-    "sendResetLink": "Sıfırlama bağlantısı gönder",
-    "sending": "Gönderiliyor…",
-    "backToSignIn": "Girişe dön"
+    "optOutAnnouncements": "Ürün duyurularını istemiyorum"
   },
   "storefront": {
     "heroTitle": "Toptan ürünleri dakikalar içinde sipariş edin",
@@ -70,7 +47,6 @@
     "categories": "Kategoriler",
     "allProducts": "Tüm ürünler",
     "allInCategory": "Tümü · {name}",
-    "storeSubtitle": "B2B gıda tedarik pazaryeri",
     "storeLabel": "Mağaza",
     "seeAll": "Tümünü gör",
     "railPicked": "Senin için seçtik!",
@@ -84,7 +60,6 @@
     "total": "Toplam",
     "confirmCart": "Sepeti onayla",
     "fullCheckout": "Tam checkout’a git",
-    "viewCart": "Görüntüle",
     "cartItems": "{count} ürün",
     "noProducts": "Aramanızla eşleşen ürün yok.",
     "addToCart": "Sepete ekle",
@@ -98,6 +73,7 @@
     "viewApplication": "Başvuru durumunu gör",
     "keepBrowsing": "Gezmeye devam et",
     "removed": "Kaldırıldı",
+    "restored": "Geri eklendi",
     "updated": "Güncellendi",
     "menuAccount": "Hesabım",
     "menuHelp": "Yardım Merkezi",
@@ -144,7 +120,7 @@
     "deliveryFee": "Teslimat ücreti",
     "free": "Ücretsiz",
     "freeDeliveryNudge": "Ücretsiz teslimat için {amount} daha ekleyin",
-    "deliveryFeeBasis": "Teslimat ücreti (£{flat} + %{percent})"
+    "deliveryFeeBasis": "Teslimat ücreti ({flat} + %{percent})"
   },
   "onboarding": {
     "setupLabel": "Kurulum",
@@ -197,7 +173,6 @@
       "iAmOwner": "İşletme sahibiyim",
       "ownerDetails": "Sahip bilgileri",
       "yourRole": "Sizin rolünüz",
-      "yourRolePlaceholder": "ör. Müdür, Şef",
       "roleRequired": "İşletmedeki rolünüzü seçin.",
       "hours": "Saatler ve teslimat",
       "openTime": "Açılış",
@@ -208,7 +183,6 @@
   },
   "orders": {
     "sectionLabel": "Geçmiş",
-    "title": "Siparişler",
     "description": "Toplam {count} sipariş",
     "filterAll": "Tümü",
     "empty": "Henüz sipariş yok.",
@@ -216,13 +190,6 @@
     "searchLabel": "Ara",
     "searchPlaceholder": "Sipariş no., tedarikçi, ürün…",
     "listTitle": "Sipariş geçmişi",
-    "statusFilter": "Duruma göre filtrele",
-    "statusSection": "Durum",
-    "filtersSection": "Arama ve filtreler",
-    "controlsSection": "Sipariş filtreleri",
-    "datesOrder": "Sipariş tarihleri",
-    "datesDelivery": "Teslimat tarihleri",
-    "tableRegion": "Sipariş tablosu",
     "emptyHint": "Filtreleri değiştirin veya başka bir durum sekmesine bakın.",
     "showingCount": "{total} siparişten {count} gösteriliyor",
     "filteredCount": "{count} eşleşen sipariş",
@@ -240,9 +207,6 @@
     "colStatus": "Durum",
     "colDelivery": "Teslimat / teslim alma",
     "colAmount": "Toplam",
-    "activeTitle": "Aktif siparişler",
-    "activeDescription": "Tedarikçilerinizdeki devam edenler",
-    "noActive": "Şu an aktif sipariş yok.",
     "backToList": "Siparişlere dön",
     "detailDescription": "{method} · {date}",
     "headerTitle": "Sipariş bilgileri",
@@ -270,7 +234,12 @@
     "sentBy": "Gönderen",
     "methodDelivery": "Teslimat",
     "methodCollection": "Gel-al",
-    "noDate": "Tarih yok"
+    "noDate": "Tarih yok",
+    "reorder": "Tekrar sipariş ver",
+    "reordered": "Ürünler sepete eklendi",
+    "cancel": "Siparişi iptal et",
+    "cancelConfirm": "{number} numaralı sipariş iptal edilsin mi?",
+    "cancelled": "Sipariş iptal edildi"
   },
   "promotions": {
     "coupon": "Kupon",
@@ -295,17 +264,11 @@
     "lineCount": "{count} satır",
     "checkoutTitle": "Siparişi tamamla",
     "checkoutSummaryItems": "{count} ürün",
-    "checkoutEstimateHint": "Tahmini tutar — kesin fiyat checkout sonrası onaylanır.",
     "checkoutFulfillment": "Teslimat yöntemi",
     "checkoutDelivery": "Teslimat",
     "checkoutCollection": "Gel-al",
     "checkoutDeliverTo": "Teslimat adresi:",
     "checkoutDate": "Teslimat tarihi",
-    "checkoutDateTomorrow": "Yarın",
-    "checkoutDateDayAfter": "2 gün sonra",
-    "checkoutWindow": "Teslimat saati",
-    "checkoutOptional": "opsiyonel",
-    "checkoutWindowPlaceholder": "ör. 07:00-09:00",
     "checkoutNoteToggle": "Tedarikçiye not ekle (opsiyonel)",
     "checkoutNotePlaceholder": "Teslimat talimatı, ikame tercihi…",
     "checkoutSubmit": "Siparişi ver",
@@ -315,6 +278,7 @@
     "checkoutMorning": "Sabah",
     "checkoutAfternoon": "Öğleden sonra",
     "checkoutNoSlots": "Bu gün için uygun saat yok.",
+    "checkoutSlotsFailed": "Saatler yüklenemedi. Tekrar denemek için sayfayı yenileyin.",
     "checkoutLoadingSchedule": "Teslimat takvimi yükleniyor…",
     "checkoutNoDates": "Seçilebilir teslimat günü yok.",
     "decreaseQty": "Azalt",
@@ -322,15 +286,11 @@
     "lineNotePlaceholder": "Satır notu (opsiyonel)",
     "clearCart": "Sepeti temizle",
     "clearConfirm": "Sepetteki tüm ürünler kaldırılsın mı?",
-    "cleared": "Sepet temizlendi",
-    "removeTitle": "Ürünü kaldır",
-    "removeBody": "{name} ürününü sepetten kaldırmak istediğinize emin misiniz?",
-    "removeConfirm": "Kaldır"
+    "cleared": "Sepet temizlendi"
   },
   "favourites": {
     "sectionLabel": "Kayıtlı",
     "description": "{count} favori ürün · mobil uygulama ile senkron",
-    "detailSubtitle": "Kategoriye göre gruplandı.",
     "findMore": "Daha fazla ürün bul",
     "emptyTitle": "Henüz favori yok",
     "emptyBody": "Katalogdaki ürünlerde yıldıza dokunarak buraya ekleyin.",
@@ -342,14 +302,9 @@
     "addAll": "Tümünü ekle",
     "placeOrder": "Sipariş ver",
     "removeFromList": "Listeden kaldır",
-    "decreaseQty": "Adedi azalt",
-    "increaseQty": "Adedi artır",
     "removed": "Kaldırıldı",
     "addedToCartMessage": "“{name}” listesinden {n} ürün sepete eklendi.",
-    "other": "Diğer",
-    "colProduct": "Ürün",
-    "colUnits": "Birimler",
-    "colActions": "İşlem"
+    "other": "Diğer"
   },
   "account": {
     "sectionLabel": "Profil",
@@ -490,6 +445,7 @@
   },
   "payment": {
     "loading": "Ödeme seçenekleri yükleniyor…",
+    "loadFailed": "Ödeme seçenekleri yüklenemedi, bu yüzden sipariş henüz verilemiyor. Tekrar denemek için sayfayı yenileyin.",
     "title": "Ödeme",
     "account": "Tedarikçi hesabıma",
     "accountSub": "Tedarikçi faturalar · {days} gün vade",
@@ -522,5 +478,11 @@
     "orderRefunded": "Kartla · {amount} iade edildi",
     "orderReleased": "Kartla · bloke kaldırıldı, ücret çekilmedi",
     "orderExpired": "Kartla · bloke süresi doldu"
+  },
+  "access": {
+    "eyebrow": "Erişim",
+    "title": "Erişim yok",
+    "body": "Bu işletmedeki rolünüz bu bölümü kapsamıyor.",
+    "backHome": "Ana sayfaya dön"
   }
 }

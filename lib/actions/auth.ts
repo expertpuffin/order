@@ -1,0 +1,44 @@
+"use server"
+
+import { redirect } from "next/navigation"
+
+import { actionError, formString } from "@/lib/actions/result"
+import { safeNextPath } from "@/lib/safe-redirect"
+import { signIn, signOut, signUp } from "@/lib/session/auth"
+
+export async function loginAction(_prev: unknown, formData: FormData) {
+  const email = formString(formData, "email")
+  const password = formString(formData, "password")
+  const next = formString(formData, "next") || "/onboarding"
+  try {
+    await signIn(email, password)
+  } catch (error) {
+    return actionError(error)
+  }
+  redirect(safeNextPath(next, "/"))
+}
+
+export async function logoutAction() {
+  await signOut()
+  redirect("/")
+}
+
+export async function registerAction(_prev: unknown, formData: FormData) {
+  const firstName = formString(formData, "firstName")
+  const lastName = formString(formData, "lastName")
+  const email = formString(formData, "email")
+  const password = formString(formData, "password")
+  const phone = formString(formData, "phone")
+  const receiveAnnouncements = formData.get("receiveAnnouncements") !== "off"
+
+  if (!firstName || !email || !password || !phone) {
+    return { error: "All required fields must be filled" }
+  }
+
+  try {
+    await signUp({ firstName, lastName: lastName || undefined, email, password, phone, receiveAnnouncements })
+  } catch (error) {
+    return actionError(error)
+  }
+  redirect("/onboarding")
+}

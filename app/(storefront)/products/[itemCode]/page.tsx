@@ -30,15 +30,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <ProductDetailShell
       product={product}
-      isAuthenticated={Boolean(session.user)}
-      canOrder={session.canOrder}
-      businessId={session.businessId}
-      businessName={session.businessName}
-      businessStatus={session.businessStatus}
-      userName={session.user?.name ?? null}
-      businesses={session.businesses}
-      cartLines={session.cartLines}
-      cartPricing={session.cartPricing}
+      session={session}
       categories={categories}
     />
   )

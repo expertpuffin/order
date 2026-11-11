@@ -1,6 +1,6 @@
 /**
- * Kategori görselleri — API imageUrl, slug eşleşmesi, yoksa benzersiz fallback.
- * Kaynak görseller: restoloop-mobile-app/data/mainCategories.ts
+ * Category pictures: the API's imageUrl, else a slug match, else a distinct fallback.
+ * Fallback images come from restoloop-mobile-app/data/mainCategories.ts — keep in step.
  */
 import { resolveMediaUrl } from "@/lib/api/media-url"
 
@@ -140,7 +140,7 @@ export function resolveCategoryVisual(input: {
   name?: string
   imageUrl: string | null
   color: string | null
-  /** Liste sırası — slug eşleşmezse her kategoriye farklı görsel */
+  /** Position in the list, so categories without a slug match still get different pictures */
   index?: number
 }): { imageUri: string; cardBg: string } {
   const slug = (input.slug || "").toLowerCase().trim()

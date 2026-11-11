@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server"
 
 import { apiFetch } from "@/lib/api/client"
+import { ApiError } from "@/lib/backend/errors"
+import { FEEDBACK_ERRORS, MAX_SHOTS, MAX_SHOTS_BYTES } from "@/lib/feedback-contract"
 import { getStorefrontSession } from "@/lib/storefront-session"
 
 export const runtime = "nodejs"
-
-const MAX_SHOTS = 3
-const MAX_SHOT_BYTES = 4 * 1024 * 1024
 
 /**
  * Feedback from the panel → backend. The browser can't reach the API with
@@ -26,10 +25,10 @@ export async function POST(request: Request) {
 
   const shots = form.getAll("screenshots").filter((v): v is File => v instanceof File)
   if (shots.length > MAX_SHOTS) {
-    return NextResponse.json({ message: "Attach at most 3 screenshots" }, { status: 400 })
+    return NextResponse.json({ code: FEEDBACK_ERRORS.tooMany }, { status: 400 })
   }
-  if (shots.some((f) => f.size > MAX_SHOT_BYTES)) {
-    return NextResponse.json({ message: "A screenshot is too large" }, { status: 413 })
+  if (shots.reduce((sum, f) => sum + f.size, 0) > MAX_SHOTS_BYTES) {
+    return NextResponse.json({ code: FEEDBACK_ERRORS.tooLarge }, { status: 413 })
   }
 
   const out = new FormData()
@@ -47,7 +46,6 @@ export async function POST(request: Request) {
     })
     return NextResponse.json({ success: true, data }, { status: 201 })
   } catch (error) {
-    const status = (error as { status?: number }).status ?? 500
-    return NextResponse.json({ message: (error as Error).message || "Feedback could not be sent" }, { status })
+    return NextResponse.json({}, { status: error instanceof ApiError ? error.status : 500 })
   }
 }

@@ -23,20 +23,6 @@ const FOLD: Record<string, string> = {
   Û: "U",
 }
 
-const SKIP_TYPES = new Set([
-  "password",
-  "email",
-  "file",
-  "checkbox",
-  "radio",
-  "hidden",
-  "number",
-  "range",
-  "date",
-  "time",
-  "color",
-])
-
 /** Catalog is English — fold TR letters, drop other non-ASCII. */
 export function toEnglishChars(value: string): string {
   let out = ""
@@ -44,8 +30,4 @@ export function toEnglishChars(value: string): string {
     out += FOLD[ch] ?? ch
   }
   return out.replace(/[^\x20-\x7E]/g, "")
-}
-
-export function shouldSanitizeInput(type?: string) {
-  return !type || !SKIP_TYPES.has(type)
 }

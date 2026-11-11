@@ -4,23 +4,22 @@ import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { AccountPageHeader } from "@/components/storefront/account-page-header"
-import { CartCouponPanel } from "@/components/order/cart-coupon-panel"
-import { CartEditor } from "@/components/order/cart-editor"
-import { CheckoutForm } from "@/components/order/checkout-form"
+import { CartSummary } from "@/components/cart/cart-summary"
+import { CouponField } from "@/components/cart/coupon-field"
+import { CartEditor } from "@/components/cart/cart-editor"
+import { CheckoutForm } from "@/components/checkout/checkout-form"
 import { Button } from "@/components/ui/button"
 import { getCart } from "@/lib/api/cart"
+import { summarizeCart } from "@/lib/cart-summary"
+import { businessDisplayName } from "@/lib/api/businesses"
 import { checkOrderApproval } from "@/lib/api/orders"
-import { getBusinessContext } from "@/lib/business-context"
+import { canOrderFor, getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
-import { hasTeamPermission } from "@/lib/permissions"
 
 export default async function CartPage() {
   const { t } = await getTranslator()
   const ctx = await getBusinessContext()
-  if (!ctx) return <AccessDenied />
-  if (!hasTeamPermission(ctx.active.permissions, "orders")) {
-    return <AccessDenied />
-  }
+  if (!ctx || !canOrderFor(ctx.active)) return <AccessDenied />
 
   const { lines, checkoutGroups, checkoutError, pricing, couponCode } =
     await getCart(ctx.active.id)
@@ -33,14 +32,13 @@ export default async function CartPage() {
   return (
     <div className="space-y-5">
       <AccountPageHeader
-        data-tour="page-cart-header"
         eyebrow={t("cart.sectionLabel")}
         title={t("nav.cart")}
         description={t("cart.description")}
         actions={
           <Button
             variant="outline"
-            className="h-9 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
+            className="h-9 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
             nativeButton={false}
             render={<Link href="/" />}
           >
@@ -58,7 +56,7 @@ export default async function CartPage() {
           actions={
             <>
               <Button
-                className="h-10 rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+                className="h-10 rounded-[2px] btn-navy"
                 nativeButton={false}
                 render={<Link href="/" />}
               >
@@ -66,7 +64,7 @@ export default async function CartPage() {
               </Button>
               <Button
                 variant="outline"
-                className="h-10 rounded-[2px] border-[var(--sidebar-border)] text-[var(--brand-navy)]"
+                className="h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
                 nativeButton={false}
                 render={<Link href="/favourites" />}
               >
@@ -83,10 +81,9 @@ export default async function CartPage() {
             </p>
           ) : null}
           <div
-            data-tour="page-cart-lines"
-            className="h-auto self-start overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5"
+            className="h-auto self-start overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5"
           >
-            <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[var(--sidebar-border)] pb-2">
+            <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[var(--border-subtle)] pb-2">
               <div>
                 <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
                   {t("cart.sectionLabel")}
@@ -103,10 +100,9 @@ export default async function CartPage() {
           </div>
 
           <div
-            data-tour="page-cart-checkout"
-            className="rounded-[2px] border border-[var(--sidebar-border)] bg-white p-4 sm:p-5 xl:sticky xl:top-20 xl:self-start"
+            className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5 xl:sticky xl:top-20 xl:self-start"
           >
-            <div className="mb-4 border-b border-[var(--sidebar-border)] pb-2">
+            <div className="mb-4 border-b border-[var(--border-subtle)] pb-2">
               <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
                 {t("cart.checkoutLabel")}
               </p>
@@ -114,11 +110,8 @@ export default async function CartPage() {
                 {t("cart.checkoutTitle")}
               </h2>
             </div>
-            <CartCouponPanel
-              businessId={ctx.active.id}
-              initialCode={couponCode}
-              pricing={pricing}
-            />
+            <CartSummary summary={summarizeCart(pricing, lines)} variant="full" />
+            <CouponField businessId={ctx.active.id} initialCode={couponCode} />
             <CheckoutForm
               businessId={ctx.active.id}
               supplierId={checkoutSupplierId}
@@ -126,7 +119,7 @@ export default async function CartPage() {
               openTime={ctx.active.openTime}
               closeTime={ctx.active.closeTime}
               lineCount={lines.length}
-              businessName={ctx.active.tradingName || ctx.active.businessName}
+              businessName={businessDisplayName(ctx.active)}
               businessPostcode={ctx.active.postcode}
               approval={
                 approval?.required && approval.rule

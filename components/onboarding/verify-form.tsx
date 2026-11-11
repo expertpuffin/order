@@ -2,10 +2,7 @@
 
 import { useActionState, useTransition } from "react"
 
-import {
-  resendVerificationAction,
-  verifyEmailAction,
-} from "@/lib/actions"
+import { resendVerificationAction, verifyEmailAction } from "@/lib/actions/onboarding"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,7 +14,7 @@ export function OnboardingVerifyForm({ email }: { email: string }) {
   const [resendPending, startResend] = useTransition()
 
   return (
-    <div className="space-y-4 rounded-[2px] border border-[var(--sidebar-border)] bg-white p-5">
+    <div className="space-y-4 rounded-[2px] border border-[var(--border-subtle)] bg-white p-5">
       <p className="text-sm text-muted-foreground">
         {t("onboarding.codeSentTo")}{" "}
         <strong className="text-[var(--brand-navy)]">{email}</strong>
@@ -43,12 +40,12 @@ export function OnboardingVerifyForm({ email }: { email: string }) {
             autoComplete="one-time-code"
             maxLength={6}
             required
-            className="h-12 rounded-[2px] border-[var(--sidebar-border)] text-center text-lg tracking-[0.4em] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+            className="h-12 rounded-[2px] border-[var(--border-subtle)] text-center text-lg tracking-[0.4em] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
           />
         </div>
         <Button
           type="submit"
-          className="h-11 w-full rounded-[2px] bg-[var(--brand-navy)] font-semibold text-white hover:bg-[var(--brand-navy)]/90"
+          className="h-11 w-full rounded-[2px] btn-navy"
           disabled={pending}
         >
           {pending ? t("onboarding.verifying") : t("onboarding.verify")}

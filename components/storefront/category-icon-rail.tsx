@@ -39,7 +39,7 @@ export function CategoryIconRail({
         >
           <div
             className={cn(
-              "flex size-[72px] items-center justify-center overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-[#FFF4E8]",
+              "flex size-[72px] items-center justify-center overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[#FFF4E8]",
               activeView === "offers" &&
                 "border-[var(--brand-navy)] bg-[var(--brand-navy)] ring-1 ring-[var(--brand-navy)]"
             )}
@@ -64,7 +64,7 @@ export function CategoryIconRail({
             >
               <div
                 className={cn(
-                  "relative size-[72px] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)] bg-white",
+                  "relative size-[72px] overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-white",
                   active &&
                     "border-[var(--brand-navy)] ring-1 ring-[var(--brand-navy)]"
                 )}
@@ -90,7 +90,7 @@ export function CategoryIconRail({
           onClick={() =>
             ref.current?.scrollBy({ left: 280, behavior: "smooth" })
           }
-          className="absolute top-[46px] right-0 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)]"
+          className="absolute top-[46px] right-0 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white text-[var(--brand-navy)]"
           aria-label="Scroll categories"
         >
           <ChevronRight className="size-4" />

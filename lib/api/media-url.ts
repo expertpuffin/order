@@ -1,6 +1,6 @@
-import { getApiBaseUrl } from "@/lib/api/config"
+import { publicApiUrl } from "@/lib/backend/config"
 
-/** CMS bazen göreli /uploads yolu verir — API host'una bağla */
+/** The CMS sometimes returns a relative /uploads path; the browser loads it from the public API host. */
 export function resolveMediaUrl(url: string | null | undefined): string | null {
   if (!url) return null
   const trimmed = String(url).trim()
@@ -17,7 +17,7 @@ export function resolveMediaUrl(url: string | null | undefined): string | null {
   if (trimmed.startsWith("//")) {
     return `https:${trimmed}`
   }
-  const base = getApiBaseUrl()
+  const base = publicApiUrl()
   if (trimmed.startsWith("/")) return `${base}${trimmed}`
   return `${base}/${trimmed}`
 }

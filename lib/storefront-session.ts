@@ -1,10 +1,10 @@
 import { cache } from "react"
 
-import { getSessionUser } from "@/lib/api/auth"
+import { businessDisplayName } from "@/lib/api/businesses"
 import { getCart, type CartLine, type CartPricing } from "@/lib/api/cart"
-import { getBusinessContext, isSessionExpired } from "@/lib/business-context"
-import { hasTeamPermission } from "@/lib/permissions"
-import type { User } from "@/lib/types"
+import { canOrderFor, getBusinessContext, isSessionExpired } from "@/lib/business-context"
+import { getSessionUser } from "@/lib/session/cookies"
+import type { User } from "@/lib/session/user"
 
 export type StorefrontSession = {
   user: User | null
@@ -18,72 +18,56 @@ export type StorefrontSession = {
   businesses: Array<{ id: string; name: string; postcode: string }>
 }
 
-export const getStorefrontSession = cache(
-  async (): Promise<StorefrontSession> => {
-    const loggedOut: StorefrontSession = {
-      user: null,
-      businessId: null,
-      businessName: null,
-      businessPostcode: null,
-      businessStatus: null,
-      canOrder: false,
-      cartLines: [],
-      cartPricing: null,
-      businesses: [],
-    }
+function withoutBusiness(user: User | null): StorefrontSession {
+  return {
+    user,
+    businessId: null,
+    businessName: null,
+    businessPostcode: null,
+    businessStatus: null,
+    canOrder: false,
+    cartLines: [],
+    cartPricing: null,
+    businesses: [],
+  }
+}
 
-    const user = await getSessionUser()
-    if (!user) return loggedOut
+export const getStorefrontSession = cache(async (): Promise<StorefrontSession> => {
+  const user = await getSessionUser()
+  if (!user) return withoutBusiness(null)
 
-    const ctx = await getBusinessContext()
-    // Stale rl_user cookie but the backend rejected the session: treat as
-    // logged out (login modal) instead of "no business yet" (→ /onboarding).
-    if (!ctx && (await isSessionExpired())) return loggedOut
-    if (!ctx) {
-      return {
-        user,
-        businessId: null,
-        businessName: null,
-        businessPostcode: null,
-        businessStatus: null,
-        canOrder: false,
-        cartLines: [],
-        cartPricing: null,
-        businesses: [],
-      }
-    }
+  const ctx = await getBusinessContext()
+  // Stale user cookie but the backend rejected the session: logged out (sign-in
+  // modal), not "no business yet" (→ /onboarding).
+  if (!ctx) return withoutBusiness((await isSessionExpired()) ? null : user)
 
-    const canOrder =
-      ctx.active.status === "approved" &&
-      hasTeamPermission(ctx.active.permissions, "orders")
+  const canOrder = canOrderFor(ctx.active)
 
-    let cartLines: CartLine[] = []
-    let cartPricing: CartPricing | null = null
-    if (canOrder) {
-      try {
-        const cart = await getCart(ctx.active.id)
-        cartLines = cart.lines
-        cartPricing = cart.pricing
-      } catch {
-        cartLines = []
-        cartPricing = null
-      }
-    }
-
-    return {
-      user,
-      businessId: ctx.active.id,
-      businessName: ctx.active.tradingName || ctx.active.businessName,
-      businessPostcode: ctx.active.postcode || null,
-      businessStatus: ctx.active.status,
-      canOrder,
-      cartLines,
-      cartPricing,
-      businesses: ctx.businesses.map((business) => ({
-        id: business.id,
-        name: business.tradingName || business.businessName,
-        postcode: business.postcode,
-      })),
+  let cartLines: CartLine[] = []
+  let cartPricing: CartPricing | null = null
+  if (canOrder) {
+    try {
+      const cart = await getCart(ctx.active.id)
+      cartLines = cart.lines
+      cartPricing = cart.pricing
+    } catch {
+      // The header still renders; the cart page shows the real error
     }
   }
-)
+
+  return {
+    user,
+    businessId: ctx.active.id,
+    businessName: businessDisplayName(ctx.active),
+    businessPostcode: ctx.active.postcode || null,
+    businessStatus: ctx.active.status,
+    canOrder,
+    cartLines,
+    cartPricing,
+    businesses: ctx.businesses.map((business) => ({
+      id: business.id,
+      name: businessDisplayName(business),
+      postcode: business.postcode,
+    })),
+  }
+})

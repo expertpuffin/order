@@ -25,7 +25,7 @@ export function ProductRail({
 
   return (
     <section className="space-y-3">
-      <div className="flex items-end justify-between gap-3 border-b border-[var(--sidebar-border)] pb-2">
+      <div className="flex items-end justify-between gap-3 border-b border-[var(--border-subtle)] pb-2">
         <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
           {title}
         </h2>
@@ -55,7 +55,7 @@ export function ProductRail({
             onClick={() =>
               ref.current?.scrollBy({ left: 320, behavior: "smooth" })
             }
-            className="absolute top-1/3 right-1 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] bg-white text-[var(--brand-navy)]"
+            className="absolute top-1/3 right-1 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white text-[var(--brand-navy)]"
             aria-label="Scroll products"
           >
             <ChevronRight className="size-4" />

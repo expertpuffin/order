@@ -15,6 +15,7 @@ import { StorefrontLocaleMenu } from "@/components/storefront/storefront-locale-
 import { StorefrontUserMenu } from "@/components/storefront/storefront-user-menu"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { toEnglishChars } from "@/lib/englishInput"
 import { cn } from "@/lib/utils"
 
 type StorefrontTopBarProps = {
@@ -23,7 +24,6 @@ type StorefrontTopBarProps = {
   userName?: string | null
   q?: string
   cartCount?: number
-  cartHref?: string
   onOpenCategories?: () => void
   onOpenCart?: () => void
 }
@@ -37,7 +37,6 @@ export function StorefrontTopBar({
   userName,
   q,
   cartCount = 0,
-  cartHref = "/cart",
   onOpenCategories,
   onOpenCart,
 }: StorefrontTopBarProps) {
@@ -64,7 +63,7 @@ export function StorefrontTopBar({
     </button>
   ) : (
     <Link
-      href={cartHref}
+      href="/cart"
       className={cn(railCell, "relative gap-2 bg-muted/20 px-3")}
       aria-label={t("nav.cart")}
     >
@@ -78,40 +77,42 @@ export function StorefrontTopBar({
       businesses={businesses}
       activeBusinessId={activeBusinessId}
       isAuthenticated={isAuthenticated}
-      onRequireAuth={() => openAuthGate({ intent: "address", tab: "login" })}
+      onRequireAuth={() => openAuthGate()}
       className="w-full lg:max-w-[280px]"
       variant="ledger"
     />
   )
 
-  const searchField = (compact?: boolean) => (
-    <div
-      className={cn(
-        "relative flex w-full items-center rounded-[2px] border border-[var(--sidebar-border)] bg-background",
-        compact ? "h-10" : "h-10"
-      )}
-    >
+  const searchField = () => (
+    <div className="relative flex h-10 w-full items-center rounded-[2px] border border-[var(--border-subtle)] bg-background">
       <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         name="q"
         defaultValue={q}
         placeholder={t("storefront.searchProducts")}
+        onChange={(event) => {
+          // The catalogue is English: fold Turkish letters so searches still match
+          const folded = toEnglishChars(event.target.value)
+          if (folded !== event.target.value) event.target.value = folded
+        }}
         className="h-full w-full min-w-0 rounded-none border-0 bg-transparent pl-9 shadow-none focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
       />
     </div>
   )
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--sidebar-border)] bg-background">
+    <header className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-background">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-4 px-3 sm:px-4 lg:px-6">
-        <button
-          type="button"
-          className="inline-flex size-10 items-center justify-center rounded-[2px] border border-[var(--sidebar-border)] lg:hidden"
-          onClick={onOpenCategories}
-          aria-label={t("storefront.categories")}
-        >
-          <Menu className="size-5" />
-        </button>
+        {onOpenCategories ? (
+          <button
+            type="button"
+            className="inline-flex size-10 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] lg:hidden"
+            onClick={onOpenCategories}
+            aria-label={t("storefront.categories")}
+          >
+            <Menu className="size-5" />
+          </button>
+        ) : null}
 
         <Link href="/" className="flex shrink-0 items-center gap-2 pr-2">
           <Image
@@ -137,29 +138,29 @@ export function StorefrontTopBar({
 
         <div className="ml-auto flex items-center gap-4">
           {isAuthenticated && userName ? (
-            <div className="hidden border-r border-[var(--sidebar-border)] pr-4 sm:block">
+            <div className="hidden border-r border-[var(--border-subtle)] pr-4 sm:block">
               <StorefrontUserMenu userName={userName} />
             </div>
           ) : (
-            <div className="hidden items-center gap-4 border-r border-[var(--sidebar-border)] pr-4 sm:flex">
+            <div className="hidden items-center gap-4 border-r border-[var(--border-subtle)] pr-4 sm:flex">
               <button
                 type="button"
                 className="text-sm font-medium text-[var(--brand-navy)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
-                onClick={() => openAuthGate({ tab: "login" })}
+                onClick={() => openAuthGate("login")}
               >
                 {t("auth.signIn")}
               </button>
               <Button
                 size="sm"
                 className="h-9 rounded-[2px] btn-brand px-4 text-white"
-                onClick={() => openAuthGate({ tab: "register" })}
+                onClick={() => openAuthGate("register")}
               >
                 {t("auth.signUp")}
               </Button>
             </div>
           )}
 
-          <div className="flex items-center divide-x divide-[var(--sidebar-border)] overflow-hidden rounded-[2px] border border-[var(--sidebar-border)]">
+          <div className="flex items-center divide-x divide-[var(--border-subtle)] overflow-hidden rounded-[2px] border border-[var(--border-subtle)]">
             {isAuthenticated ? (
               <button
                 type="button"
@@ -172,14 +173,14 @@ export function StorefrontTopBar({
               </button>
             ) : null}
 
-            <StorefrontLocaleMenu variant="rail" />
+            <StorefrontLocaleMenu />
 
             <Link
               href={isAuthenticated ? "/favourites" : "#"}
               onClick={(event) => {
                 if (!isAuthenticated) {
                   event.preventDefault()
-                  openAuthGate({ intent: "favourite", tab: "login" })
+                  openAuthGate()
                 }
               }}
               className={cn(railCell, "w-10")}
@@ -193,9 +194,9 @@ export function StorefrontTopBar({
         </div>
       </div>
 
-      <div className="space-y-2 border-t border-[var(--sidebar-border)] px-3 py-2 md:hidden">
+      <div className="space-y-2 border-t border-[var(--border-subtle)] px-3 py-2 md:hidden">
         {deliveryPicker}
-        <form action="/">{searchField(true)}</form>
+        <form action="/">{searchField()}</form>
       </div>
     </header>
   )

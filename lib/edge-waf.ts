@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server"
 
 /**
- * Edge WAF (AWS yok) — probe path / traversal kesici.
- * Cloudflare edge WAF ile birlikte kullan; bu uygulama katmanı.
+ * Blocks probe paths and path traversal in the app. Cloudflare's WAF runs in
+ * front; this is the layer behind it.
  */
 
 const BLOCKED_PATH_RE =
