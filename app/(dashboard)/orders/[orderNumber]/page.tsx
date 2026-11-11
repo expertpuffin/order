@@ -20,7 +20,7 @@ import {
 import { getOrder } from "@/lib/api/orders"
 import type { Order } from "@/lib/types"
 import { getBusinessContext } from "@/lib/business-context"
-import { ApiError } from "@/lib/api/errors"
+import { ApiError } from "@/lib/backend/errors"
 import { getTranslator } from "@/lib/i18n"
 import { getOrderTotal } from "@/lib/mappers"
 

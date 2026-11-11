@@ -1,33 +1,25 @@
 import { NextResponse, type NextRequest } from "next/server"
 
-import {
-  ACCESS_COOKIE,
-  REFRESH_COOKIE,
-  applySessionToResponseCookies,
-  cookieOptions,
-} from "@/lib/auth/session"
-import {
-  callRefreshApi,
-  isAccessTokenExpired,
-} from "@/lib/auth/refresh"
-import { edgeWaf, withSecurityHeaders } from "@/lib/edge-waf"
 import { authGateHref } from "@/lib/auth-gate-url"
+import { edgeWaf, withSecurityHeaders } from "@/lib/edge-waf"
+import { refreshSession } from "@/lib/session/backend"
+import { clearSession, readTokens, writeSession } from "@/lib/session/cookies"
+import { isAccessTokenExpired } from "@/lib/session/tokens"
 
-const PUBLIC_PATHS = [
-  "/",
-  "/catalog",
-  "/verify-email",
-  "/onboarding",
-  // Arrival from the business panel: signs the user in (app/api/auth/handoff)
-  "/api/auth/handoff",
-]
-
+/** Browsable without a session; everything else needs one. */
 function isPublic(pathname: string) {
-  if (pathname.startsWith("/products/")) return true
-  return PUBLIC_PATHS.some(
-    (p) =>
-      p === "/" ? pathname === "/" : pathname === p || pathname.startsWith(`${p}/`)
+  return (
+    pathname === "/" ||
+    pathname === "/catalog" ||
+    pathname.startsWith("/products/") ||
+    pathname === "/onboarding" ||
+    pathname.startsWith("/onboarding/")
   )
+}
+
+function signInRedirect(request: NextRequest) {
+  const { pathname, search } = request.nextUrl
+  return NextResponse.redirect(new URL(authGateHref({ tab: "login", next: `${pathname}${search}` }), request.url))
 }
 
 async function route(request: NextRequest): Promise<NextResponse> {
@@ -36,62 +28,42 @@ async function route(request: NextRequest): Promise<NextResponse> {
 
   const { pathname } = request.nextUrl
 
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api/") ||
-    pathname.includes(".")
-  ) {
+  // Assets and API routes (which handle their own auth). Paths with a dot are files.
+  if (pathname.startsWith("/_next") || pathname.startsWith("/api/") || pathname.includes(".")) {
     return withSecurityHeaders(NextResponse.next())
   }
 
-  // Legacy standalone auth pages → home modal
+  // Old standalone auth pages → home modal
   if (pathname === "/login" || pathname === "/register") {
     const tab = pathname === "/register" ? "register" : "login"
     const next = request.nextUrl.searchParams.get("next") || undefined
-    return withSecurityHeaders(
-      NextResponse.redirect(new URL(authGateHref({ tab, next }), request.url))
-    )
+    return withSecurityHeaders(NextResponse.redirect(new URL(authGateHref({ tab, next }), request.url)))
   }
 
-  let access = request.cookies.get(ACCESS_COOKIE)?.value ?? null
-  const refresh = request.cookies.get(REFRESH_COOKIE)?.value ?? null
+  const { accessToken, refreshToken } = readTokens(request.cookies)
 
-  const needsRefresh = Boolean(refresh) && isAccessTokenExpired(access)
-
-  if (needsRefresh && refresh) {
-    const session = await callRefreshApi(refresh)
+  // Refresh here, before render: server components can't write cookies.
+  if (refreshToken && isAccessTokenExpired(accessToken)) {
+    const session = await refreshSession(refreshToken)
     if (session) {
-      access = session.accessToken
-      const response = NextResponse.next()
-      applySessionToResponseCookies(response, session)
+      // The page rendering this request reads the new tokens too
+      writeSession({ set: (name, value) => request.cookies.set(name, value) }, session)
+      const response = NextResponse.next({ request: { headers: new Headers(request.headers) } })
+      writeSession(response.cookies, session)
       return withSecurityHeaders(response)
     }
-    if (!isPublic(pathname) && pathname !== "/") {
-      const response = NextResponse.redirect(
-        new URL(authGateHref({ tab: "login", next: pathname }), request.url)
-      )
-      // Same domain the cookies were set on (AUTH_COOKIE_DOMAIN), or they'd survive
-      response.cookies.set(ACCESS_COOKIE, "", cookieOptions(0))
-      response.cookies.set(REFRESH_COOKIE, "", cookieOptions(0))
+    if (!isPublic(pathname)) {
+      const response = signInRedirect(request)
+      clearSession(response.cookies)
       return withSecurityHeaders(response)
     }
   }
 
-  if (!access && !isPublic(pathname) && pathname !== "/") {
-    return withSecurityHeaders(
-      NextResponse.redirect(
-        new URL(authGateHref({ tab: "login", next: pathname }), request.url)
-      )
-    )
+  if (!accessToken && !isPublic(pathname)) {
+    return withSecurityHeaders(signInRedirect(request))
   }
 
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set("x-pathname", pathname)
-  return withSecurityHeaders(
-    NextResponse.next({
-      request: { headers: requestHeaders },
-    })
-  )
+  return withSecurityHeaders(NextResponse.next())
 }
 
 /**

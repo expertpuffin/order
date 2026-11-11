@@ -2,42 +2,49 @@ import { cache } from "react"
 import { cookies } from "next/headers"
 
 import { apiFetch } from "@/lib/api/client"
-import { getSessionUser } from "@/lib/api/auth"
-import {
-  getMyBusinesses,
-  type MerchantBusiness,
-} from "@/lib/api/businesses"
-import { BUSINESS_COOKIE } from "@/lib/auth/session"
+import { getMyBusinesses, type MerchantBusiness } from "@/lib/api/businesses"
+import { ApiError } from "@/lib/backend/errors"
 import { mapUser } from "@/lib/mappers"
+import { cookieOptions, getSessionUser, REFRESH_MAX_AGE_SEC, type CookieWriter } from "@/lib/session/cookies"
 import type { TeamPermission, User } from "@/lib/types"
+
+/** Shared with the business panel (same cookie domain), so both open on the same business. */
+const ACTIVE_BUSINESS_COOKIE = "rl_business_id"
+
+export function setActiveBusiness(jar: CookieWriter, businessId: string) {
+  jar.set(ACTIVE_BUSINESS_COOKIE, businessId, cookieOptions(REFRESH_MAX_AGE_SEC))
+}
+
+type MemberBusiness = MerchantBusiness & { permissions: TeamPermission[] }
 
 export type BusinessContext = {
   user: User
-  businesses: Array<MerchantBusiness & { permissions: TeamPermission[] }>
-  active: MerchantBusiness & { permissions: TeamPermission[] }
+  businesses: MemberBusiness[]
+  active: MemberBusiness
+}
+
+/** Who may put things in the cart and check out for a business. */
+export function canOrderFor(business: MemberBusiness) {
+  return business.status === "approved" && business.permissions.includes("orders")
 }
 
 type Resolved = { ctx: BusinessContext | null; sessionExpired: boolean }
 
-/**
- * İstek başına bir kez çözümlenir. Aktif işletme rl_business_id cookie'sinden
- * seçilir; cookie yoksa/stale ise ilk işletme kullanılır.
- */
+/** Resolved once per request. The active business comes from its cookie, else the first one. */
 const resolveBusinessContext = cache(async (): Promise<Resolved> => {
   let user = await getSessionUser()
   if (!user) return { ctx: null, sessionExpired: false }
 
-  let businesses: Awaited<ReturnType<typeof getMyBusinesses>>
+  let businesses: MemberBusiness[]
   try {
     businesses = await getMyBusinesses()
   } catch (error) {
-    const status = (error as { status?: number }).status
-    // Oturum backend'de ölmüş (refresh de başarısız) — "işletmesi yok" değil
-    if (status === 401) return { ctx: null, sessionExpired: true }
-    // Token geçersiz değilse cookie'deki kullanıcıyla devam etmeyi denemeye gerek yok
+    // The backend rejected the session (refresh failed too): not "no business yet"
+    if (error instanceof ApiError && error.status === 401) return { ctx: null, sessionExpired: true }
     throw error
   }
 
+  // User cookies written before ids were stored
   if (!user.id) {
     try {
       const me = await apiFetch<{ user: Record<string, unknown> }>("/api/users/me")
@@ -49,20 +56,17 @@ const resolveBusinessContext = cache(async (): Promise<Resolved> => {
 
   if (!businesses.length) return { ctx: null, sessionExpired: false }
 
-  const jar = await cookies()
-  const selectedId = jar.get(BUSINESS_COOKIE)?.value
-  const active =
-    businesses.find((business) => business.id === selectedId) ?? businesses[0]
+  const selectedId = (await cookies()).get(ACTIVE_BUSINESS_COOKIE)?.value
+  const active = businesses.find((business) => business.id === selectedId) ?? businesses[0]
 
   return { ctx: { user, businesses, active }, sessionExpired: false }
 })
 
 export const getBusinessContext = cache(
-  async (): Promise<BusinessContext | null> =>
-    (await resolveBusinessContext()).ctx
+  async (): Promise<BusinessContext | null> => (await resolveBusinessContext()).ctx
 )
 
-/** True when the rl_user cookie is present but the backend rejected the session (401). */
+/** True when the user cookie is present but the backend rejected the session (401). */
 export const isSessionExpired = cache(
   async (): Promise<boolean> => (await resolveBusinessContext()).sessionExpired
 )

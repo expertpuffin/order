@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-import { getSessionUser } from "@/lib/api/auth"
+import { getSessionUser } from "@/lib/session/cookies"
 import { getMyBusinesses } from "@/lib/api/businesses"
 import { authGateHref } from "@/lib/auth-gate-url"
 import { isSessionExpired } from "@/lib/business-context"

@@ -1,7 +1,7 @@
 "use server"
 
 import { getCart } from "@/lib/api/cart"
-import { ApiError } from "@/lib/api/errors"
+import { ApiError } from "@/lib/backend/errors"
 import {
   confirmAddedCard,
   getStripePublishableKey,

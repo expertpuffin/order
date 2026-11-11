@@ -5,17 +5,13 @@ import { AccountPageHeader } from "@/components/storefront/account-page-header"
 import { FavouritesPanel } from "@/components/order/favourites-panel"
 import { Button } from "@/components/ui/button"
 import { getFavorites } from "@/lib/api/favorites"
-import { getBusinessContext } from "@/lib/business-context"
+import { canOrderFor, getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
-import { hasTeamPermission } from "@/lib/permissions"
 
 export default async function FavouritesPage() {
   const { t } = await getTranslator()
   const ctx = await getBusinessContext()
-  if (!ctx) return <AccessDenied />
-  if (!hasTeamPermission(ctx.active.permissions, "orders")) {
-    return <AccessDenied />
-  }
+  if (!ctx || !canOrderFor(ctx.active)) return <AccessDenied />
 
   const { listId, items } = await getFavorites(ctx.active.id)
   const businessName =

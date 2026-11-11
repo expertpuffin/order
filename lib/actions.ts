@@ -22,13 +22,10 @@ import {
   removeFavoriteItem,
   updateFavoriteItem,
 } from "@/lib/api/favorites"
-import {
-  BUSINESS_COOKIE,
-  REFRESH_MAX_AGE_SEC,
-  cookieOptions,
-} from "@/lib/auth/session"
-import { ApiError } from "@/lib/api/errors"
+import { ApiError } from "@/lib/backend/errors"
+import { setActiveBusiness } from "@/lib/business-context"
 import { safeNextPath } from "@/lib/safe-redirect"
+import { signIn, signOut, signUp } from "@/lib/session/auth"
 
 function formString(formData: FormData, key: string) {
   const value = formData.get(key)
@@ -65,9 +62,8 @@ export async function loginAction(_prev: unknown, formData: FormData) {
   const password = formString(formData, "password")
   const next = formString(formData, "next") || "/onboarding"
 
-  const { loginWithPassword } = await import("@/lib/api/auth")
   try {
-    await loginWithPassword(email, password)
+    await signIn(email, password)
   } catch (error) {
     return actionError(error)
   }
@@ -75,8 +71,7 @@ export async function loginAction(_prev: unknown, formData: FormData) {
 }
 
 export async function logoutAction() {
-  const { logoutSession } = await import("@/lib/api/auth")
-  await logoutSession()
+  await signOut()
   redirect("/")
 }
 
@@ -93,8 +88,7 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   }
 
   try {
-    const { registerWithPassword } = await import("@/lib/api/onboarding")
-    await registerWithPassword({
+    await signUp({
       firstName,
       lastName: lastName || undefined,
       email,
@@ -267,8 +261,7 @@ export async function listTeamRoleNamesAction() {
 }
 
 export async function switchBusinessAction(businessId: string) {
-  const jar = await cookies()
-  jar.set(BUSINESS_COOKIE, businessId, cookieOptions(REFRESH_MAX_AGE_SEC))
+  setActiveBusiness(await cookies(), businessId)
   revalidatePath("/", "layout")
 }
 

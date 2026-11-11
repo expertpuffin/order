@@ -1,120 +1,74 @@
-import {
-  getAccessToken,
-  getRefreshToken,
-  persistSessionCookies,
-} from "@/lib/auth/session"
-import {
-  callRefreshApi,
-  isAccessTokenExpired,
-} from "@/lib/auth/refresh"
-import { getApiBaseUrl } from "@/lib/api/config"
-import { ApiError } from "@/lib/api/errors"
+import { cookies } from "next/headers"
+
+import { apiUrl } from "@/lib/backend/config"
+import { ApiError } from "@/lib/backend/errors"
+import { refreshSession } from "@/lib/session/backend"
+import { getSessionTokens, writeSession } from "@/lib/session/cookies"
+import { isAccessTokenExpired } from "@/lib/session/tokens"
 
 type RequestOptions = {
   method?: string
   body?: unknown
-  token?: string | null
   auth?: boolean
   searchParams?: Record<string, string | number | boolean | undefined | null>
   cache?: RequestCache
   formData?: FormData
 }
 
-/** Single-flight refresh so parallel RSC fetches don't rotate thrash. */
-// Keyed by the caller's own refresh token: the server process is shared by
-// every user, so a refresh started for one user must never hand its new
-// access token to another user's request.
+// Parallel requests of one user share a refresh, so the token isn't rotated twice.
+// Keyed by that user's refresh token: the server process serves every user, and a
+// refresh started for one must never hand its access token to another.
 const refreshInFlight = new Map<string, Promise<string | null>>()
 
-async function refreshAccessForRequest(): Promise<string | null> {
-  const refreshToken = await getRefreshToken()
-  if (!refreshToken) return null
+async function refreshAccessToken(refreshToken: string): Promise<string | null> {
   const pending = refreshInFlight.get(refreshToken)
   if (pending) return pending
 
   const flight = (async () => {
-    const session = await callRefreshApi(refreshToken)
+    const session = await refreshSession(refreshToken)
     if (!session) return null
     try {
-      await persistSessionCookies(session)
+      writeSession(await cookies(), session)
     } catch {
-      /* RSC: cookie write deferred to proxy / refresh-session route */
+      // Server components can't set cookies; the proxy refreshes before render
+      // so this path only runs when a token expires mid-request.
     }
     return session.accessToken
-  })().finally(() => {
-    refreshInFlight.delete(refreshToken)
-  })
+  })().finally(() => refreshInFlight.delete(refreshToken))
   refreshInFlight.set(refreshToken, flight)
   return flight
 }
 
-export async function apiFetch<T>(
-  path: string,
-  options: RequestOptions = {}
-): Promise<T> {
-  const {
-    method = "GET",
-    body,
-    auth = true,
-    searchParams,
-    cache = "no-store",
-    formData,
-  } = options
+export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const { method = "GET", body, auth = true, searchParams, cache = "no-store", formData } = options
 
-  let token = options.token
-  if (auth && token === undefined) {
-    token = await getAccessToken()
-    // Proactive refresh before the request if JWT is already dead/expiring
-    if (isAccessTokenExpired(token)) {
-      const next = await refreshAccessForRequest()
-      if (next) token = next
-    }
+  const tokens = auth ? await getSessionTokens() : null
+  let token = tokens?.accessToken ?? null
+  if (tokens?.refreshToken && isAccessTokenExpired(token)) {
+    token = (await refreshAccessToken(tokens.refreshToken)) ?? token
   }
 
-  const url = new URL(
-    path.startsWith("http") ? path : `${getApiBaseUrl()}${path}`
-  )
-  if (searchParams) {
-    for (const [key, value] of Object.entries(searchParams)) {
-      if (value === undefined || value === null || value === "") continue
-      url.searchParams.set(key, String(value))
-    }
+  const url = new URL(`${apiUrl()}${path}`)
+  for (const [key, value] of Object.entries(searchParams ?? {})) {
+    if (value === undefined || value === null || value === "") continue
+    url.searchParams.set(key, String(value))
   }
 
-  const headers: Record<string, string> = {}
-  if (!formData) {
-    headers["Content-Type"] = "application/json"
-  }
-  if (auth && token) {
-    headers.Authorization = `Bearer ${token}`
-  }
+  const send = (accessToken: string | null) =>
+    fetch(url, {
+      method,
+      headers: {
+        ...(formData ? {} : { "Content-Type": "application/json" }),
+        ...(auth && accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      body: formData ?? (body !== undefined ? JSON.stringify(body) : undefined),
+      cache,
+    })
 
-  let res = await fetch(url, {
-    method,
-    headers,
-    body: formData
-      ? formData
-      : body !== undefined
-        ? JSON.stringify(body)
-        : undefined,
-    cache,
-  })
-
-  if (res.status === 401 && auth) {
-    const next = await refreshAccessForRequest()
-    if (next) {
-      headers.Authorization = `Bearer ${next}`
-      res = await fetch(url, {
-        method,
-        headers,
-        body: formData
-          ? formData
-          : body !== undefined
-            ? JSON.stringify(body)
-            : undefined,
-        cache,
-      })
-    }
+  let res = await send(token)
+  if (res.status === 401 && tokens?.refreshToken) {
+    const refreshed = await refreshAccessToken(tokens.refreshToken)
+    if (refreshed) res = await send(refreshed)
   }
 
   const json = (await res.json().catch(() => null)) as {
