@@ -1,5 +1,5 @@
 
-export function downloadBlob(filename: string, blob: Blob) {
+function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement("a")
   anchor.href = url
@@ -10,21 +10,21 @@ export function downloadBlob(filename: string, blob: Blob) {
   URL.revokeObjectURL(url)
 }
 
-export function escapeCsvCell(value: string): string {
+function escapeCsvCell(value: string): string {
   if (/[",\n\r]/.test(value)) {
     return `"${value.replace(/"/g, '""')}"`
   }
   return value
 }
 
-export function rowsToCsv(rows: string[][]): string {
+function rowsToCsv(rows: string[][]): string {
   return (
     "\uFEFF" +
     rows.map((row) => row.map((cell) => escapeCsvCell(cell)).join(",")).join("\r\n")
   )
 }
 
-export function downloadCsv(filename: string, rows: string[][]) {
+function downloadCsv(filename: string, rows: string[][]) {
   const blob = new Blob([rowsToCsv(rows)], {
     type: "text/csv;charset=utf-8",
   })
@@ -36,7 +36,7 @@ function cellText(node: Element | null): string {
   return (node.textContent || "").replace(/\s+/g, " ").trim()
 }
 
-export function tableToRows(table: HTMLTableElement): string[][] {
+function tableToRows(table: HTMLTableElement): string[][] {
   const rows: string[][] = []
   table.querySelectorAll("tr").forEach((tr) => {
     const cells = tr.querySelectorAll("th, td")

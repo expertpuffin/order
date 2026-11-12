@@ -3,11 +3,14 @@
 import { useEffect, useMemo, useState } from "react"
 
 import { loadSupplierAvailability, loadSupplierSlots } from "@/lib/actions/checkout"
-import { slotsFromBusinessHours, upcomingFulfillmentDays } from "@/lib/checkout-slots"
 import type { FulfillmentMethod } from "@/lib/domain"
-import { slotOrderValue, slotStartFromValue } from "@/lib/slot-format"
-
-const DAYS_AHEAD = 14
+import {
+  ORDER_HORIZON_DAYS,
+  slotOrderValue,
+  slotsFromBusinessHours,
+  slotStartFromValue,
+  upcomingFulfillmentDays,
+} from "@/lib/fulfilment-slots"
 
 /** What the supplier said about the chosen day's slots. */
 export type SlotsStatus = "loading" | "ready" | "none" | "failed"
@@ -35,7 +38,7 @@ export function useFulfilmentSchedule({
   defaultDeliveryTime: string | null
 }) {
   const area = method === "delivery" ? postcode : undefined
-  const candidateDays = useMemo(() => upcomingFulfillmentDays(DAYS_AHEAD, { method }), [method])
+  const candidateDays = useMemo(() => upcomingFulfillmentDays(method), [method])
 
   // Days: the supplier's calendar narrows the candidates; if it can't be read, the
   // slot request for the chosen day still has the last word.
@@ -44,7 +47,7 @@ export function useFulfilmentSchedule({
   useEffect(() => {
     if (!supplierId) return
     let cancelled = false
-    void loadSupplierAvailability(supplierId, method, { from: candidateDays[0], days: DAYS_AHEAD, postcode: area, businessId })
+    void loadSupplierAvailability(supplierId, method, { from: candidateDays[0], days: ORDER_HORIZON_DAYS, postcode: area, businessId })
       .then((res) => new Set((res.days ?? []).filter((d) => d.available).map((d) => d.date)))
       .catch(() => null)
       .then((days) => {

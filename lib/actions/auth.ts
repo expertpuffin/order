@@ -2,14 +2,16 @@
 
 import { redirect } from "next/navigation"
 
-import { actionError, formString } from "@/lib/actions/result"
+import { actionError, failure, formString } from "@/lib/actions/result"
 import { safeNextPath } from "@/lib/safe-redirect"
 import { signIn, signOut, signUp } from "@/lib/session/auth"
+import { DEFAULT_NEXT } from "@/lib/auth-gate-url"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 export async function loginAction(_prev: unknown, formData: FormData) {
   const email = formString(formData, "email")
   const password = formString(formData, "password")
-  const next = formString(formData, "next") || "/onboarding"
+  const next = formString(formData, "next") || DEFAULT_NEXT
   try {
     await signIn(email, password)
   } catch (error) {
@@ -32,7 +34,7 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   const receiveAnnouncements = formData.get("receiveAnnouncements") !== "off"
 
   if (!firstName || !email || !password || !phone) {
-    return { error: "All required fields must be filled" }
+    return failure("errors.requiredFields")
   }
 
   try {
@@ -40,5 +42,5 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   } catch (error) {
     return actionError(error)
   }
-  redirect("/onboarding")
+  redirect(ONBOARDING_PATHS.start)
 }

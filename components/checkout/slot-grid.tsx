@@ -2,9 +2,8 @@
 
 import { useT } from "@/components/i18n/i18n-provider"
 import { choiceClass } from "@/components/brand/choice"
-import { isMorningSlot } from "@/lib/checkout-slots"
 import type { FulfillmentMethod } from "@/lib/domain"
-import { slotDisplayLabel, slotOrderValue } from "@/lib/slot-format"
+import { isMorningSlot, slotDisplayLabel, slotOrderValue } from "@/lib/fulfilment-slots"
 import { cn } from "@/lib/utils"
 
 /** Time slots of one day, split into morning and afternoon. */
@@ -29,7 +28,7 @@ export function SlotGrid({
     <>
       {groups.map((group) => (
         <div key={group.labelKey} className="space-y-2">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             {t(group.labelKey)}
           </p>
           <div className={cn("grid gap-2", method === "collection" ? "grid-cols-3 sm:grid-cols-4" : "grid-cols-2 sm:grid-cols-3")}>

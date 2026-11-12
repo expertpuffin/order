@@ -4,6 +4,7 @@ import { businessDisplayName } from "@/lib/api/businesses"
 import { getCart, type CartLine, type CartPricing } from "@/lib/api/cart"
 import { canOrderFor, getBusinessContext, isSessionExpired } from "@/lib/business-context"
 import { getSessionUser } from "@/lib/session/cookies"
+import type { BusinessStatus } from "@/lib/domain"
 import type { User } from "@/lib/session/user"
 
 export type StorefrontSession = {
@@ -11,7 +12,7 @@ export type StorefrontSession = {
   businessId: string | null
   businessName: string | null
   businessPostcode: string | null
-  businessStatus: string | null
+  businessStatus: BusinessStatus | null
   canOrder: boolean
   cartLines: CartLine[]
   cartPricing: CartPricing | null

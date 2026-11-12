@@ -81,10 +81,8 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => () => shotsRef.current.forEach((s) => URL.revokeObjectURL(s.url)), [])
 
-  const close = () => {
-    setOpen(false)
-    setTimeout(reset, 200)
-  }
+  // The form starts over when it opens, so closing never flashes an emptied dialog
+  const close = () => setOpen(false)
 
   const addBlobs = async (blobs: Blob[]) => {
     setError(null)
@@ -120,6 +118,7 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
     setError(null)
     setHidden(true)
     try {
+      // Let the dialog's close animation finish so it isn't in the picture
       await wait(220)
       await nextFrame()
       await nextFrame()
@@ -162,7 +161,15 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
   }
 
   const editingShot = shots.find((s) => s.id === editing) ?? null
-  const value = React.useMemo(() => ({ openFeedback: () => setOpen(true) }), [])
+  const value = React.useMemo(
+    () => ({
+      openFeedback: () => {
+        reset()
+        setOpen(true)
+      },
+    }),
+    [reset]
+  )
 
   return (
     <FeedbackContext.Provider value={value}>

@@ -41,7 +41,6 @@
     "heroTitle": "Order wholesale supplies in minutes",
     "heroSubtitle": "Browse categories, pick EACH / PACK / BOX, and check out when your business is ready.",
     "searchProducts": "Search products",
-    "deliveryTo": "Delivery to",
     "deliveryLabel": "Delivery",
     "selectAddress": "Select your business address",
     "categories": "Categories",
@@ -120,7 +119,14 @@
     "deliveryFee": "Delivery fee",
     "free": "Free",
     "freeDeliveryNudge": "Add {amount} more for free delivery",
-    "deliveryFeeBasis": "Delivery fee ({flat} + {percent}%)"
+    "deliveryFeeBasis": "Delivery fee ({flat} + {percent}%)",
+    "scrollCategories": "Scroll categories",
+    "scrollProducts": "Scroll products",
+    "previousSlide": "Previous",
+    "nextSlide": "Next",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "slide": "Slide {n}"
   },
   "onboarding": {
     "setupLabel": "Setup",
@@ -239,7 +245,8 @@
     "reordered": "Items added to cart",
     "cancel": "Cancel order",
     "cancelConfirm": "Cancel order {number}?",
-    "cancelled": "Order cancelled"
+    "cancelled": "Order cancelled",
+    "cancelNote": "Cancelled by business"
   },
   "promotions": {
     "coupon": "Coupon",
@@ -484,5 +491,27 @@
     "title": "Access denied",
     "body": "Your role in this business does not include this section.",
     "backHome": "Back to home"
+  },
+  "pagination": {
+    "summary": "Page {page} / {pages} · {total} total",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "codeRequired": "Enter the 6-digit code",
+    "sourceRequired": "Please choose how you heard about us",
+    "businessFieldsRequired": "Please fill in all required business fields",
+    "ownerRequired": "Owner first name and email are required when you are not the owner",
+    "roleRequired": "Please select your role in the business",
+    "postcodeRequired": "Enter a postcode",
+    "deliveryDateRequired": "Choose a delivery date",
+    "requiredFields": "Please fill in all required fields",
+    "nothingAdded": "No items could be added — the products may be unavailable",
+    "title": "Something went wrong",
+    "sessionHint": "Your session may have expired. Try again, or sign in again.",
+    "retry": "Try again",
+    "signInAgain": "Sign in again",
+    "reference": "Error {digest}"
   }
 }

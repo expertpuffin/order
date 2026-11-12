@@ -6,8 +6,9 @@ import { ChevronRight, Percent } from "lucide-react"
 
 import { useT } from "@/components/i18n/i18n-provider"
 import type { CatalogCategory } from "@/lib/api/catalog"
-import { resolveCategoryVisual } from "@/lib/category-visuals"
+import { categoryImage } from "@/lib/category-visuals"
 import { cn } from "@/lib/utils"
+import { categoryHref, storefrontHref } from "@/lib/storefront-paths"
 
 type CategoryIconRailProps = {
   categories: CatalogCategory[]
@@ -26,7 +27,7 @@ export function CategoryIconRail({
 
   return (
     <div className="relative">
-      <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+      <p className="mb-2 eyebrow">
         {t("storefront.categories")}
       </p>
       <div
@@ -34,7 +35,7 @@ export function CategoryIconRail({
         className="flex gap-2.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <Link
-          href="/?view=offers"
+          href={storefrontHref({ view: "offers" })}
           className="flex w-[84px] shrink-0 flex-col items-center gap-1.5"
         >
           <div
@@ -55,11 +56,11 @@ export function CategoryIconRail({
 
         {roots.map((cat, index) => {
           const active = activeSlug === cat.slug
-          const visual = resolveCategoryVisual({ ...cat, index })
+          const image = categoryImage({ slug: cat.slug, imageUrl: cat.imageUrl, index })
           return (
             <Link
               key={cat.id}
-              href={`/?category=${encodeURIComponent(cat.slug!)}`}
+              href={categoryHref(cat.slug!)}
               className="flex w-[84px] shrink-0 flex-col items-center gap-1.5"
             >
               <div
@@ -71,7 +72,7 @@ export function CategoryIconRail({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={visual.imageUri}
+                  src={image}
                   alt={cat.name}
                   className="size-full object-cover"
                 />
@@ -91,7 +92,7 @@ export function CategoryIconRail({
             ref.current?.scrollBy({ left: 280, behavior: "smooth" })
           }
           className="absolute top-[46px] right-0 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] bg-white text-[var(--brand-navy)]"
-          aria-label="Scroll categories"
+          aria-label={t("storefront.scrollCategories")}
         >
           <ChevronRight className="size-4" />
         </button>

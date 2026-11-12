@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { loginAction, registerAction } from "@/lib/actions/auth"
+import { FormError } from "@/components/brand/form-error"
 
 const gateField =
-  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] field-focus"
 const gateLabel =
-  "text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+  "field-label"
 const gateSubmit =
   "h-11 w-full rounded-[2px] btn-brand font-semibold text-white"
 
@@ -23,9 +24,9 @@ export function LoginForm({ next }: { next: string }) {
     <form action={formAction} className="space-y-3.5">
       <input type="hidden" name="next" value={next} />
       {state && "error" in state && state.error ? (
-        <p className="rounded-[2px] border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+        <FormError compact>
           {state.error}
-        </p>
+        </FormError>
       ) : null}
       <div className="space-y-1.5">
         <Label htmlFor="gate-email" className={gateLabel}>
@@ -67,9 +68,9 @@ export function RegisterForm() {
   return (
     <form action={formAction} className="space-y-3.5">
       {state && "error" in state && state.error ? (
-        <p className="rounded-[2px] border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+        <FormError compact>
           {state.error}
-        </p>
+        </FormError>
       ) : null}
       <div className="grid grid-cols-2 gap-2">
         <div className="space-y-1.5">

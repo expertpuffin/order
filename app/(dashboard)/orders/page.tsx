@@ -5,10 +5,11 @@ import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
 import { ExportTableButton } from "@/components/shared/export-table-button"
-import { ListFilterBar, ListPagination } from "@/components/shared/list-filter-bar"
+import { ListFilterBar } from "@/components/shared/list-filter-bar"
+import { ListPagination } from "@/components/shared/list-pagination"
 import { OrderStatusBadge } from "@/components/orders/order-status-badge"
 import { StatusBadge } from "@/components/shared/status-badge"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { AccountPageHeader } from "@/components/account/account-page-header"
 import { OrderStatusTabs } from "@/components/orders/order-status-tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -26,34 +27,17 @@ import { getTranslator } from "@/lib/i18n"
 import { orderTotal, readPlacedQuery } from "@/lib/order"
 import { hasOrderFilters, orderFilters, orderListHref, parseOrderListQuery } from "@/lib/order-list-query"
 import { formatDate, formatMoney } from "@/lib/format"
+import { orderHref } from "@/lib/storefront-paths"
+import { pageLinks } from "@/lib/pagination"
 
-type OrdersPageProps = {
-  searchParams: Promise<{
-    status?: string
-    page?: string
-    placed?: string
-    q?: string
-    method?: string
-    deliveryFrom?: string
-    deliveryTo?: string
-    orderDateFrom?: string
-    orderDateTo?: string
-  }>
-}
-
-export default async function OrdersPage({ searchParams }: OrdersPageProps) {
+export default async function OrdersPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const { t, locale } = await getTranslator()
   const ctx = await getBusinessContext()
   if (!ctx) return <AccessDenied />
 
   const query = parseOrderListQuery(await searchParams)
   const filters = orderFilters(query)
-  const { orders, pagination } = await listBusinessOrders(ctx.active.id, {
-    status: query.status || undefined,
-    page: query.page,
-    limit: 20,
-    ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)),
-  })
+  const { orders, pagination } = await listBusinessOrders(ctx.active.id, query)
   const hasActiveFilters = hasOrderFilters(query)
   const { placedCount } = readPlacedQuery(query)
 
@@ -136,7 +120,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
       >
         <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-5">
           <div>
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("orders.sectionLabel")}
             </p>
             <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
@@ -185,22 +169,22 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             <Table>
               <TableHeader>
                 <TableRow className="border-[var(--border-subtle)] hover:bg-transparent">
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colOrder")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colSupplier")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colMethod")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colDelivery")}
                   </TableHead>
-                  <TableHead className="h-10 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 eyebrow">
                     {t("orders.colStatus")}
                   </TableHead>
-                  <TableHead className="h-10 text-right font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  <TableHead className="h-10 text-right eyebrow">
                     {t("orders.colAmount")}
                   </TableHead>
                   <TableHead className="w-12 text-right" />
@@ -216,7 +200,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                     >
                       <TableCell>
                         <Link
-                          href={`/orders/${order.orderNumber}`}
+                          href={orderHref(order.orderNumber)}
                           className="font-mono text-xs font-semibold text-[var(--brand-navy)] underline-offset-4 hover:underline"
                         >
                           {order.orderNumber}
@@ -261,7 +245,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                           className="size-8 rounded-[2px] border-[var(--border-subtle)]"
                           nativeButton={false}
                           render={
-                            <Link href={`/orders/${order.orderNumber}`} />
+                            <Link href={orderHref(order.orderNumber)} />
                           }
                         >
                           <Eye className="size-4" />
@@ -279,9 +263,8 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
         {orders.length > 0 ? (
           <div className="border-t border-[var(--border-subtle)] px-4 py-3">
             <ListPagination
-              basePath="/orders"
               pagination={pagination}
-              searchParams={{ status: query.status || undefined, ...filters }}
+              {...pageLinks(pagination, (page) => orderListHref({ ...query, page }))}
             />
           </div>
         ) : null}

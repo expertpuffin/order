@@ -4,27 +4,29 @@ import { redirect } from "next/navigation"
 
 import {
   createBusinessApplication,
-  listTeamRoleNames,
   lookupPostcode,
   resendVerificationEmail,
   saveAcquisition,
   verifyEmailCode,
 } from "@/lib/api/onboarding"
-import { actionError, formString } from "@/lib/actions/result"
+import { actionError, failure, formString } from "@/lib/actions/result"
 import { ApiError } from "@/lib/backend/errors"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
+import { DEFAULT_DELIVERY_WINDOW, DEFAULT_HOURS } from "@/lib/fulfilment-slots"
+import { OWNER_ROLE } from "@/lib/team-roles"
 
 export async function verifyEmailAction(_prev: unknown, formData: FormData) {
   const code = formString(formData, "code")
   const email = formString(formData, "email")
   if (!code || code.length < 6) {
-    return { error: "Enter the 6-digit code" }
+    return failure("errors.codeRequired")
   }
   try {
     await verifyEmailCode({ code, email: email || undefined })
   } catch (error) {
     return actionError(error)
   }
-  redirect("/onboarding")
+  redirect(ONBOARDING_PATHS.start)
 }
 
 export async function resendVerificationAction() {
@@ -39,7 +41,7 @@ export async function resendVerificationAction() {
 export async function saveAcquisitionAction(_prev: unknown, formData: FormData) {
   const source = formString(formData, "source")
   const otherText = formString(formData, "otherText")
-  if (!source) return { error: "Please select a source" }
+  if (!source) return failure("errors.sourceRequired")
   try {
     await saveAcquisition({
       source,
@@ -48,7 +50,7 @@ export async function saveAcquisitionAction(_prev: unknown, formData: FormData) 
   } catch (error) {
     return actionError(error)
   }
-  redirect("/onboarding/business")
+  redirect(ONBOARDING_PATHS.business)
 }
 
 export async function createBusinessAction(_prev: unknown, formData: FormData) {
@@ -73,22 +75,20 @@ export async function createBusinessAction(_prev: unknown, formData: FormData) {
   const ownerEmail = formString(formData, "ownerEmail")
   const ownerPhone = formString(formData, "ownerPhone")
   const applicantRole = formString(formData, "applicantRole")
-  const openTime = formString(formData, "openTime") || "09:00"
-  const closeTime = formString(formData, "closeTime") || "22:00"
-  const deliveryTime = formString(formData, "deliveryTime") || "11:00-13:00"
+  const openTime = formString(formData, "openTime") || DEFAULT_HOURS.open
+  const closeTime = formString(formData, "closeTime") || DEFAULT_HOURS.close
+  const deliveryTime = formString(formData, "deliveryTime") || DEFAULT_DELIVERY_WINDOW
 
   if (!businessName || !businessType || !line1 || !postcode || !contactFirstName || !contactPhone) {
-    return { error: "Please fill all required business fields" }
+    return failure("errors.businessFieldsRequired")
   }
 
   if (!isOwner && (!ownerFirstName || !ownerEmail)) {
-    return {
-      error: "Owner first name and email are required when you are not the owner",
-    }
+    return failure("errors.ownerRequired")
   }
 
   if (!isOwner && !applicantRole) {
-    return { error: "Please select your role in the business" }
+    return failure("errors.roleRequired")
   }
 
   try {
@@ -119,7 +119,7 @@ export async function createBusinessAction(_prev: unknown, formData: FormData) {
             phone: ownerPhone || null,
           }
         : undefined,
-      applicantRole: isOwner ? "Owner" : applicantRole || undefined,
+      applicantRole: isOwner ? OWNER_ROLE : applicantRole || undefined,
       openTime,
       closeTime,
       deliveryTime,
@@ -127,12 +127,12 @@ export async function createBusinessAction(_prev: unknown, formData: FormData) {
   } catch (error) {
     return actionError(error)
   }
-  redirect("/onboarding/pending")
+  redirect(ONBOARDING_PATHS.pending)
 }
 
 export async function lookupPostcodeAction(postcode: string) {
   const trimmed = postcode.trim()
-  if (!trimmed) return { error: "Enter a postcode", addresses: [] as const }
+  if (!trimmed) return { ...(await failure("errors.postcodeRequired")), addresses: [] as const }
 
   try {
     const data = await lookupPostcode(trimmed)
@@ -140,12 +140,8 @@ export async function lookupPostcodeAction(postcode: string) {
   } catch (error) {
     // The lookup provider is out of credit (402) or knows no address (404): the form says so and offers manual entry
     const status = error instanceof ApiError ? error.status : 0
-    if (status === 402) return { error: "Postcode lookup unavailable", code: "lookup_unavailable", addresses: [] as const }
-    if (status === 404) return { error: "No addresses found", code: "no_addresses", addresses: [] as const }
-    return { ...actionError(error), addresses: [] as const }
+    if (status === 402) return { ...(await failure("onboarding.business.lookupUnavailable")), code: "lookup_unavailable", addresses: [] as const }
+    if (status === 404) return { ...(await failure("onboarding.business.noAddresses")), code: "no_addresses", addresses: [] as const }
+    return { ...(await actionError(error)), addresses: [] as const }
   }
-}
-
-export async function listTeamRoleNamesAction() {
-  return { names: await listTeamRoleNames() }
 }

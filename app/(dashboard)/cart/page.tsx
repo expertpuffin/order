@@ -3,7 +3,7 @@ import Link from "next/link"
 import { EmptyState } from "@/components/brand/empty-state"
 import { PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { AccessDenied } from "@/components/shared/access-denied"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { AccountPageHeader } from "@/components/account/account-page-header"
 import { CartSummary } from "@/components/cart/cart-summary"
 import { CouponField } from "@/components/cart/coupon-field"
 import { CartEditor } from "@/components/cart/cart-editor"
@@ -15,19 +15,17 @@ import { businessDisplayName } from "@/lib/api/businesses"
 import { checkOrderApproval } from "@/lib/api/orders"
 import { canOrderFor, getBusinessContext } from "@/lib/business-context"
 import { getTranslator } from "@/lib/i18n"
+import { FormError } from "@/components/brand/form-error"
 
 export default async function CartPage() {
   const { t } = await getTranslator()
   const ctx = await getBusinessContext()
   if (!ctx || !canOrderFor(ctx.active)) return <AccessDenied />
 
-  const { lines, checkoutGroups, checkoutError, pricing, couponCode } =
-    await getCart(ctx.active.id)
-  const checkoutSupplierId = checkoutGroups[0]?.supplierId ?? null
+  const { lines, supplierId, checkoutError, pricing, couponCode } = await getCart(ctx.active.id)
+  const summary = summarizeCart(pricing, lines)
   // Will this order wait for a manager? (the backend decides again at checkout)
-  const approval = lines.length
-    ? await checkOrderApproval(ctx.active.id, pricing?.grandTotal ?? 0)
-    : null
+  const approval = lines.length ? await checkOrderApproval(ctx.active.id, summary.goodsTotal) : null
 
   return (
     <div className="space-y-5">
@@ -76,16 +74,16 @@ export default async function CartPage() {
       ) : (
         <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
           {checkoutError ? (
-            <p className="rounded-[2px] border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive xl:col-span-2">
+            <FormError className="px-4 py-3 xl:col-span-2">
               {checkoutError}
-            </p>
+            </FormError>
           ) : null}
           <div
             className="h-auto self-start overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5"
           >
             <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-[var(--border-subtle)] pb-2">
               <div>
-                <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                <p className="eyebrow">
                   {t("cart.sectionLabel")}
                 </p>
                 <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
@@ -103,29 +101,25 @@ export default async function CartPage() {
             className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5 xl:sticky xl:top-20 xl:self-start"
           >
             <div className="mb-4 border-b border-[var(--border-subtle)] pb-2">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 {t("cart.checkoutLabel")}
               </p>
               <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
                 {t("cart.checkoutTitle")}
               </h2>
             </div>
-            <CartSummary summary={summarizeCart(pricing, lines)} variant="full" />
+            <CartSummary summary={summary} variant="full" />
             <CouponField businessId={ctx.active.id} initialCode={couponCode} />
             <CheckoutForm
               businessId={ctx.active.id}
-              supplierId={checkoutSupplierId}
+              supplierId={supplierId}
               defaultDeliveryTime={ctx.active.deliveryTime}
               openTime={ctx.active.openTime}
               closeTime={ctx.active.closeTime}
               lineCount={lines.length}
               businessName={businessDisplayName(ctx.active)}
               businessPostcode={ctx.active.postcode}
-              approval={
-                approval?.required && approval.rule
-                  ? { code: approval.rule.code, limit: approval.rule.limit }
-                  : null
-              }
+              approval={approval?.required ? approval.rule : null}
             />
           </div>
         </div>

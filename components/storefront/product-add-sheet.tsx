@@ -32,7 +32,7 @@ export function ProductAddSheet({
   const purchase = useProductPurchase(product, businessId, `${product.id}:${open}`)
   const { unit, pending, lineTotal, quantity } = purchase
   const unitPrice = product.unitPrice
-  const meta = productMeta(product)
+  const meta = productMeta(product) || product.itemCode
 
   const add = () => purchase.add(() => onOpenChange(false))
 

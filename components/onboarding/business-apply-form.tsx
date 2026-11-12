@@ -1,15 +1,18 @@
 "use client"
 
-import { useActionState, useEffect, useMemo, useState, useTransition } from "react"
+import { useActionState, useState, useTransition } from "react"
 
-import { createBusinessAction, listTeamRoleNamesAction, lookupPostcodeAction } from "@/lib/actions/onboarding"
-import { FALLBACK_TEAM_ROLE_NAMES } from "@/lib/team-roles"
+import { createBusinessAction, lookupPostcodeAction } from "@/lib/actions/onboarding"
+import { OWNER_ROLE } from "@/lib/team-roles"
 import { BUSINESS_TYPES } from "@/lib/domain"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { choiceClass } from "@/components/brand/choice"
 import { cn } from "@/lib/utils"
+import { DEFAULT_DELIVERY_WINDOW, DEFAULT_HOURS, USUAL_DELIVERY_WINDOWS } from "@/lib/fulfilment-slots"
+import { FormError } from "@/components/brand/form-error"
 
 type AddressHit = {
   line_1?: string
@@ -23,17 +26,18 @@ type AddressHit = {
 }
 
 const field =
-  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "h-10 rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)] field-focus"
 const label =
-  "text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
+  "field-label"
 const selectCls =
-  "flex h-10 w-full rounded-[2px] border border-[var(--border-subtle)] bg-background px-3 text-sm text-[var(--brand-navy)] outline-none focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+  "flex h-10 w-full rounded-[2px] border border-[var(--border-subtle)] bg-background px-3 text-sm text-[var(--brand-navy)] outline-none field-focus"
 const primaryBtn =
   "rounded-[2px] btn-navy"
 const outlineBtn =
   "rounded-[2px] border-[var(--border-subtle)] text-[var(--brand-navy)]"
 
-export function BusinessApplyForm() {
+/** `roleNames`: the applicant role choices, loaded by the page. */
+export function BusinessApplyForm({ roleNames }: { roleNames: string[] }) {
   const t = useT()
   const [step, setStep] = useState(0)
   const [state, formAction, pending] = useActionState(createBusinessAction, null)
@@ -48,26 +52,10 @@ export function BusinessApplyForm() {
   const [latitude, setLatitude] = useState("")
   const [longitude, setLongitude] = useState("")
   const [isOwner, setIsOwner] = useState(true)
-  const [roleNames, setRoleNames] = useState<string[]>([
-    ...FALLBACK_TEAM_ROLE_NAMES,
-  ])
   const [applicantRole, setApplicantRole] = useState("")
   const [contactError, setContactError] = useState<string | null>(null)
 
-  const selectableRoles = useMemo(
-    () => roleNames.filter((r) => r !== "Owner"),
-    [roleNames]
-  )
-
-  useEffect(() => {
-    let cancelled = false
-    void listTeamRoleNamesAction().then((res) => {
-      if (!cancelled && res.names.length) setRoleNames(res.names)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const selectableRoles = roleNames.filter((r) => r !== OWNER_ROLE)
 
   const runLookup = () => {
     setLookupError(null)
@@ -121,9 +109,9 @@ export function BusinessApplyForm() {
       </div>
 
       {state && "error" in state && state.error ? (
-        <p className="rounded-[2px] border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+        <FormError compact>
           {state.error}
-        </p>
+        </FormError>
       ) : null}
 
       <input type="hidden" name="latitude" value={latitude} />
@@ -367,7 +355,7 @@ export function BusinessApplyForm() {
 
         {!isOwner ? (
           <div className="space-y-3 border-t border-[var(--border-subtle)] pt-3">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("onboarding.business.ownerDetails")}
             </p>
             <div className="grid grid-cols-2 gap-2">
@@ -432,9 +420,7 @@ export function BusinessApplyForm() {
                       }}
                       className={cn(
                         "rounded-[2px] border px-2.5 py-1.5 text-xs font-medium transition-colors",
-                        selected
-                          ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
-                          : "border-[var(--border-subtle)] bg-background text-[var(--brand-navy)] hover:bg-muted/60"
+                        choiceClass(selected)
                       )}
                     >
                       {role}
@@ -488,7 +474,7 @@ export function BusinessApplyForm() {
             <Input
               id="openTime"
               name="openTime"
-              defaultValue="09:00"
+              defaultValue={DEFAULT_HOURS.open}
               className={field}
             />
           </div>
@@ -499,7 +485,7 @@ export function BusinessApplyForm() {
             <Input
               id="closeTime"
               name="closeTime"
-              defaultValue="22:00"
+              defaultValue={DEFAULT_HOURS.close}
               className={field}
             />
           </div>
@@ -512,9 +498,9 @@ export function BusinessApplyForm() {
             id="deliveryTime"
             name="deliveryTime"
             className={selectCls}
-            defaultValue="11:00-13:00"
+            defaultValue={DEFAULT_DELIVERY_WINDOW}
           >
-            {["07:00-09:00", "09:00-11:00", "11:00-13:00", "13:00-15:00", "15:00-17:00"].map(
+            {USUAL_DELIVERY_WINDOWS.map(
               (slot) => (
                 <option key={slot} value={slot}>
                   {slot}

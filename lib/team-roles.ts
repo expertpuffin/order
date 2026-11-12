@@ -1,6 +1,9 @@
-/** Shared with mobile FALLBACK_ROLES — used when /api/roles is empty. */
+/** The role an applicant who owns the business gets; the others are chosen from the list. */
+export const OWNER_ROLE = "Owner"
+
+/** Shared with mobile FALLBACK_ROLES — used when the API has no role list. */
 export const FALLBACK_TEAM_ROLE_NAMES = [
-  "Owner",
+  OWNER_ROLE,
   "General Manager",
   "Deputy Manager",
   "Head Chef",
@@ -10,4 +13,4 @@ export const FALLBACK_TEAM_ROLE_NAMES = [
   "Accountant",
   "HR Manager",
   "Other Team Member",
-] as const
+]

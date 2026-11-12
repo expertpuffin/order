@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { startTransition } from "react"
 
+import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
 import { authGateHref } from "@/lib/auth-gate-url"
 
@@ -19,6 +20,7 @@ export default function AccountError({
   reset: () => void
 }) {
   const router = useRouter()
+  const t = useT()
 
   const retry = () => {
     startTransition(() => {
@@ -34,20 +36,18 @@ export default function AccountError({
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-16 text-center">
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">Something went wrong</h2>
-        <p className="text-sm text-muted-foreground">
-          Your session may have expired. Try again, or sign in again.
-        </p>
+        <h2 className="text-lg font-semibold">{t("errors.title")}</h2>
+        <p className="text-sm text-muted-foreground">{t("errors.sessionHint")}</p>
       </div>
       <div className="flex gap-2">
         <Button variant="outline" onClick={retry}>
-          Try again
+          {t("errors.retry")}
         </Button>
-        <Button onClick={relogin}>Sign in again</Button>
+        <Button onClick={relogin}>{t("errors.signInAgain")}</Button>
       </div>
       {error.digest ? (
         <p className="font-mono text-xs text-muted-foreground">
-          Error {error.digest}
+          {t("errors.reference", { digest: error.digest })}
         </p>
       ) : null}
     </div>

@@ -11,6 +11,7 @@ import { QuantityStepper } from "@/components/cart/quantity-stepper"
 import { notifyActionResult } from "@/lib/action-toast"
 import { useT } from "@/components/i18n/i18n-provider"
 import { Button } from "@/components/ui/button"
+import { choiceClass } from "@/components/brand/choice"
 import { cn } from "@/lib/utils"
 import { productPagePath } from "@/lib/storefront-paths"
 import type { FavoriteItem } from "@/lib/api/favorites"
@@ -30,8 +31,7 @@ export function FavoriteLineCard({
   const [pending, startTransition] = useTransition()
   const [qty, setQty] = useState(item.quantity)
   const [unit, setUnit] = useState(item.unit)
-  const options =
-    item.packagingOptions.length > 0 ? item.packagingOptions : [item.unit]
+  const options = item.packagingOptions
 
   const productHref = item.itemCode ? productPagePath(item.itemCode) : null
 
@@ -83,11 +83,11 @@ export function FavoriteLineCard({
     >
       <div className="flex gap-3">
         {productHref ? (
-          <Link href={productHref} className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[#f3f4f6]">
+          <Link href={productHref} className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[var(--tile)]">
             <ProductImage src={item.imageUrl} name={item.name} className="text-sm" />
           </Link>
         ) : (
-          <div className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[#f3f4f6]">
+          <div className="flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[var(--tile)]">
             <ProductImage src={item.imageUrl} name={item.name} className="text-sm" />
           </div>
         )}
@@ -133,7 +133,7 @@ export function FavoriteLineCard({
         </Button>
       </div>
 
-      <p className="mb-2 mt-3 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+      <p className="mb-2 mt-3 eyebrow">
         {t("favourites.packaging")}
       </p>
       <div className="flex flex-wrap gap-1.5">
@@ -151,9 +151,7 @@ export function FavoriteLineCard({
               }}
               className={cn(
                 "rounded-[2px] border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wide transition-colors",
-                selected
-                  ? "border-[var(--brand-navy)] bg-[var(--brand-navy)] text-white"
-                  : "border-[var(--border-subtle)] bg-white text-[var(--brand-navy)] hover:bg-muted/40"
+                choiceClass(selected)
               )}
             >
               {opt}
@@ -163,7 +161,7 @@ export function FavoriteLineCard({
       </div>
 
       <div className="mt-3 flex items-center justify-between">
-        <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+        <p className="eyebrow">
           {t("favourites.quantity")}
         </p>
         <QuantityStepper

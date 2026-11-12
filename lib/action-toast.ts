@@ -26,19 +26,18 @@ export function useActionToast(
       "success" in state &&
       state.success
     ) {
-      toast.success(state.message ?? opts?.successMessage ?? "Saved")
+      const message = state.message ?? opts?.successMessage
+      if (message) toast.success(message)
     }
   }, [state, opts?.successMessage, opts?.showSuccess])
 }
 
-export function notifyActionResult(
-  result: ActionResult | void,
-  successMessage = "Saved"
-): boolean {
+/** Toasts an action's error, or `successMessage` when given; true when it succeeded. */
+export function notifyActionResult(result: ActionResult | void, successMessage?: string): boolean {
   if (result && "error" in result && result.error) {
     toast.error(result.error)
     return false
   }
-  toast.success(successMessage)
+  if (successMessage) toast.success(successMessage)
   return true
 }

@@ -3,15 +3,11 @@
 import { useTransition } from "react"
 import { Check } from "lucide-react"
 
-import { switchBusinessAction } from "@/lib/actions/cart"
+import { switchBusinessAction } from "@/lib/actions/business"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-type BusinessOption = {
-  id: string
-  tradingName: string
-  status: string
-}
+type BusinessOption = { id: string; name: string }
 
 type BusinessSwitcherProps = {
   businesses: BusinessOption[]
@@ -48,7 +44,7 @@ export function BusinessSwitcher({
             }}
           >
             {active ? <Check data-icon="inline-start" /> : null}
-            {business.tradingName || business.id}
+            {business.name}
           </Button>
         )
       })}

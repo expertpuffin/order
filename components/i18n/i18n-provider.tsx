@@ -11,7 +11,6 @@ import {
 
 import {
   defaultLocale,
-  intlLocale,
   isLocale,
   localeCookieName,
   type Locale,
@@ -26,7 +25,6 @@ type I18nContextValue = {
   locale: Locale
   t: (key: string, values?: TranslateValues) => string
   setLocale: (locale: Locale) => void
-  intlLocale: string
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null)
@@ -68,7 +66,6 @@ export function I18nProvider({
       locale,
       t,
       setLocale,
-      intlLocale: intlLocale(locale),
     }),
     [locale, t, setLocale]
   )

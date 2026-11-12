@@ -13,10 +13,11 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useActionToast } from "@/lib/action-toast"
-import { formatDayCard } from "@/lib/checkout-slots"
-import type { FulfillmentMethod } from "@/lib/domain"
-import { formatMoney } from "@/lib/format"
+import { formatDayCard } from "@/lib/fulfilment-slots"
+import type { ApprovalRuleCode, FulfillmentMethod } from "@/lib/domain"
+import { businessLabel, formatMoney } from "@/lib/format"
 import { cn } from "@/lib/utils"
+import { FormError } from "@/components/brand/form-error"
 
 export function CheckoutForm({
   businessId,
@@ -38,7 +39,7 @@ export function CheckoutForm({
   businessName?: string | null
   businessPostcode?: string | null
   /** Set when this order will wait for a manager's OK first */
-  approval?: { code: "role" | "member" | "amount"; limit: number | null } | null
+  approval?: { code: ApprovalRuleCode; limit: number | null } | null
 }) {
   const t = useT()
   const { locale } = useI18n()
@@ -57,7 +58,7 @@ export function CheckoutForm({
   const { placeOrder, state, busy, error } = usePlaceOrder(businessId, payment)
   useActionToast(state)
 
-  const deliveryLabel = [businessName, businessPostcode].filter(Boolean).join(" · ") || null
+  const deliveryLabel = businessName || businessPostcode ? businessLabel(businessName, businessPostcode) : null
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -71,7 +72,7 @@ export function CheckoutForm({
       <input type="hidden" name="requestedDeliveryDate" value={schedule.deliveryDate} />
       <input type="hidden" name="deliveryTime" value={schedule.deliveryTime} />
 
-      <div className="rounded-[2px] border border-[var(--border-subtle)] bg-[#f7f7f8] px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+      <div className="rounded-[2px] border border-[var(--border-subtle)] bg-[var(--canvas)] px-3 py-2.5 eyebrow">
         {t("cart.checkoutSummaryItems", { count: String(lineCount) })}
       </div>
 
@@ -171,7 +172,7 @@ export function CheckoutForm({
             name="specialNote"
             rows={3}
             placeholder={t("cart.checkoutNotePlaceholder")}
-            className="rounded-[2px] border-[var(--border-subtle)] focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+            className="rounded-[2px] border-[var(--border-subtle)] field-focus"
           />
         ) : null}
       </div>
@@ -189,7 +190,7 @@ export function CheckoutForm({
       ) : null}
 
       {error ? (
-        <p className="rounded-[2px] border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">{error}</p>
+        <FormError>{error}</FormError>
       ) : null}
 
       <Button
@@ -212,7 +213,7 @@ export function CheckoutForm({
 }
 
 function FieldLabel({ children }: { children: string }) {
-  return <Label className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{children}</Label>
+  return <Label className="field-label">{children}</Label>
 }
 
 function Loading() {

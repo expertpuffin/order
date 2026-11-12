@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api/client"
 import type { FulfillmentMethod } from "@/lib/domain"
+import { ORDER_HORIZON_DAYS } from "@/lib/fulfilment-slots"
 
 export type AvailabilityDay = {
   date: string
@@ -36,7 +37,7 @@ export async function fetchSupplierAvailability(
     searchParams: {
       method,
       from: opts?.from,
-      days: opts?.days ?? 14,
+      days: opts?.days ?? ORDER_HORIZON_DAYS,
       postcode: opts?.postcode ?? undefined,
       businessId: opts?.businessId ?? undefined,
     },

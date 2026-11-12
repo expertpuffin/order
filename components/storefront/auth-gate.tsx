@@ -6,7 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { AuthDialog } from "@/components/auth/auth-dialog"
 import { ProductAddSheet } from "@/components/storefront/product-add-sheet"
 import type { CatalogProduct } from "@/lib/api/catalog"
-import { readAuthQuery, withoutAuthQuery, type AuthTab } from "@/lib/auth-gate-url"
+import type { BusinessStatus } from "@/lib/domain"
+import { DEFAULT_NEXT, readAuthQuery, withoutAuthQuery, type AuthTab } from "@/lib/auth-gate-url"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 type AuthGateContextValue = {
   isAuthenticated: boolean
@@ -37,13 +39,13 @@ export function AuthGateProvider({
   isAuthenticated: boolean
   canOrder: boolean
   businessId: string | null
-  businessStatus: string | null
+  businessStatus: BusinessStatus | null
 }) {
   const router = useRouter()
   const [dialog, setDialog] = useState<{ open: boolean; tab: AuthTab; next: string }>({
     open: false,
     tab: "login",
-    next: "/onboarding",
+    next: DEFAULT_NEXT,
   })
   const [sheetProduct, setSheetProduct] = useState<CatalogProduct | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -60,7 +62,7 @@ export function AuthGateProvider({
   const requestAddToCart = useCallback(
     (product: CatalogProduct) => {
       if (!isAuthenticated || businessStatus === "pending") return openAuthGate()
-      if (!canOrder || !businessId) return router.push("/onboarding")
+      if (!canOrder || !businessId) return router.push(ONBOARDING_PATHS.start)
       setSheetProduct(product)
       setSheetOpen(true)
     },
@@ -69,7 +71,7 @@ export function AuthGateProvider({
 
   const requestCheckout = useCallback(() => {
     if (!isAuthenticated) return openAuthGate()
-    router.push(canOrder ? "/cart" : "/onboarding")
+    router.push(canOrder ? "/cart" : ONBOARDING_PATHS.start)
   }, [isAuthenticated, canOrder, openAuthGate, router])
 
   const value = useMemo(

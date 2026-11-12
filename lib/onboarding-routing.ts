@@ -5,6 +5,7 @@ import { fetchMeExtended } from "@/lib/api/onboarding"
 import { authGateHref } from "@/lib/auth-gate-url"
 import { isSessionExpired } from "@/lib/business-context"
 import { getSessionUser } from "@/lib/session/cookies"
+import { ONBOARDING_PATHS } from "@/lib/storefront-paths"
 
 export type OnboardingStep =
   | { step: "verify"; email: string }
@@ -14,10 +15,10 @@ export type OnboardingStep =
   | { step: "done" }
 
 const PATHS: Record<OnboardingStep["step"], string> = {
-  verify: "/onboarding",
-  acquisition: "/onboarding",
-  business: "/onboarding/business",
-  pending: "/onboarding/pending",
+  verify: ONBOARDING_PATHS.start,
+  acquisition: ONBOARDING_PATHS.start,
+  business: ONBOARDING_PATHS.business,
+  pending: ONBOARDING_PATHS.pending,
   done: "/",
 }
 
@@ -31,6 +32,7 @@ async function resolveOnboardingStep(next: string): Promise<OnboardingStep> {
   const signIn = authGateHref({ tab: "login", next })
   if (!user) redirect(signIn)
   // The user cookie alone isn't enough: a session the backend rejected signs in again
+  // Before email verification the businesses call fails with a non-401 error: not a dead session
   if (await isSessionExpired().catch(() => false)) redirect(signIn)
 
   if (!user.isEmailVerified) return { step: "verify", email: user.email }
@@ -44,12 +46,11 @@ async function resolveOnboardingStep(next: string): Promise<OnboardingStep> {
   return { step: "done" }
 }
 
-/** For the page at `path`: its step, or a redirect to the page the user belongs on. */
+/** For a page showing `steps`: the user's step, or a redirect to the page they belong on. */
 export async function requireOnboardingStep<S extends OnboardingStep["step"]>(
-  path: string,
   ...steps: S[]
 ): Promise<Extract<OnboardingStep, { step: S }>> {
-  const current = await resolveOnboardingStep(path)
+  const current = await resolveOnboardingStep(PATHS[steps[0]])
   if (!(steps as string[]).includes(current.step)) redirect(PATHS[current.step])
   return current as Extract<OnboardingStep, { step: S }>
 }

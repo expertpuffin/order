@@ -5,7 +5,7 @@ import { getTranslator } from "@/lib/i18n"
 import { requireOnboardingStep } from "@/lib/onboarding-routing"
 
 export default async function OnboardingPage() {
-  const current = await requireOnboardingStep("/onboarding", "verify", "acquisition")
+  const current = await requireOnboardingStep("verify", "acquisition")
   const { t } = await getTranslator()
 
   if (current.step === "verify") {

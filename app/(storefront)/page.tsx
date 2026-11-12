@@ -7,6 +7,8 @@ import {
 } from "@/lib/api/catalog"
 import { getLocale } from "@/lib/i18n"
 import { getStorefrontSession } from "@/lib/storefront-session"
+import { storefrontHref } from "@/lib/storefront-paths"
+import { PRODUCT_PAGE_SIZE } from "@/lib/storefront-paths"
 
 type PageProps = {
   searchParams: Promise<{
@@ -49,7 +51,7 @@ async function MarketPage({ searchParams }: PageProps) {
       q: params.q,
       categorySlug: params.category,
       page,
-      limit: 24,
+      limit: PRODUCT_PAGE_SIZE,
     })
 
     return (
@@ -76,19 +78,19 @@ async function MarketPage({ searchParams }: PageProps) {
     {
       id: "picked",
       titleKey: "storefront.railPicked" as const,
-      seeAllHref: "/?view=all",
+      seeAllHref: storefrontHref({ view: "all" }),
       products: picked,
     },
     {
       id: "bestsellers",
       titleKey: "storefront.railBestsellers" as const,
-      seeAllHref: "/?view=all",
+      seeAllHref: storefrontHref({ view: "all" }),
       products: bestsellers.length ? bestsellers : picked,
     },
     {
       id: "offers",
       titleKey: "storefront.railOffers" as const,
-      seeAllHref: "/?view=offers",
+      seeAllHref: storefrontHref({ view: "offers" }),
       products: offers,
     },
   ].filter((rail) => rail.products.length > 0)

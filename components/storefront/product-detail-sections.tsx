@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 
 import { useT } from "@/components/i18n/i18n-provider"
 import type { CatalogNutrition, CatalogProductDetail } from "@/lib/api/catalog"
+import { ProductImage } from "@/components/brand/product-image"
 import { cn } from "@/lib/utils"
 
 function DetailSection({
@@ -254,18 +255,14 @@ export function ProductDetailGallery({
     const image = images[0]
     return (
       <div className="flex aspect-4/3 w-full items-center justify-center border-b border-[var(--border-subtle)] bg-muted/20 p-4 sm:aspect-[16/10] sm:p-6">
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image.url}
-            alt={image.alt ?? product.name}
-            className="max-h-full max-w-full object-contain"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center text-3xl font-semibold text-muted-foreground/40">
-            {product.name.slice(0, 2).toUpperCase()}
-          </div>
-        )}
+        <ProductImage
+          src={image?.url}
+          name={product.name}
+          alt={image?.alt ?? product.name}
+          fit="contain"
+          initials={2}
+          className="text-3xl text-muted-foreground/40"
+        />
       </div>
     )
   }
@@ -273,12 +270,7 @@ export function ProductDetailGallery({
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_88px] gap-px border-b border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-[minmax(0,1fr)_96px]">
       <div className="flex aspect-4/3 items-center justify-center bg-muted/20 p-4 sm:aspect-[16/10] sm:p-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={images[0].url}
-          alt={images[0].alt ?? product.name}
-          className="max-h-full max-w-full object-contain"
-        />
+        <ProductImage src={images[0].url} name={product.name} alt={images[0].alt ?? product.name} fit="contain" />
       </div>
       <div className="grid max-h-full auto-rows-fr gap-px bg-[var(--border-subtle)]">
         {images.slice(1, 4).map((image) => (
@@ -286,12 +278,7 @@ export function ProductDetailGallery({
             key={image.url}
             className="flex min-h-0 items-center justify-center bg-muted/20 p-1.5"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={image.url}
-              alt={image.alt ?? product.name}
-              className="max-h-full max-w-full object-contain"
-            />
+            <ProductImage src={image.url} name={product.name} alt={image.alt ?? product.name} fit="contain" />
           </div>
         ))}
       </div>

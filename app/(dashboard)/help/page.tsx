@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import { PuffinIcon, PUFFIN_ICONS } from "@/components/brand/puffin-icon"
 import { SendFeedbackButton } from "@/components/feedback/send-feedback-button"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
+import { AccountPageHeader } from "@/components/account/account-page-header"
 import { Button } from "@/components/ui/button"
 import { getTranslator } from "@/lib/i18n"
 import { STATUS_PAGE_URL } from "@/lib/status-page"
@@ -26,7 +26,7 @@ export default async function HelpPage() {
             label={t("storefront.helpTitle")}
           />
           <div className="min-w-0">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("storefront.helpSectionLabel")}
             </p>
             <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">

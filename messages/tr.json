@@ -41,7 +41,6 @@
     "heroTitle": "Toptan ürünleri dakikalar içinde sipariş edin",
     "heroSubtitle": "Kategorilere göz atın, EACH / PACK / BOX seçin; işletmeniz onaylanınca checkout yapın.",
     "searchProducts": "Ürünleri ara",
-    "deliveryTo": "Teslimat",
     "deliveryLabel": "Teslimat",
     "selectAddress": "İşletme adresinizi seçin",
     "categories": "Kategoriler",
@@ -120,7 +119,14 @@
     "deliveryFee": "Teslimat ücreti",
     "free": "Ücretsiz",
     "freeDeliveryNudge": "Ücretsiz teslimat için {amount} daha ekleyin",
-    "deliveryFeeBasis": "Teslimat ücreti ({flat} + %{percent})"
+    "deliveryFeeBasis": "Teslimat ücreti ({flat} + %{percent})",
+    "scrollCategories": "Kategorileri kaydır",
+    "scrollProducts": "Ürünleri kaydır",
+    "previousSlide": "Önceki",
+    "nextSlide": "Sonraki",
+    "expand": "Aç",
+    "collapse": "Kapat",
+    "slide": "Slayt {n}"
   },
   "onboarding": {
     "setupLabel": "Kurulum",
@@ -239,7 +245,8 @@
     "reordered": "Ürünler sepete eklendi",
     "cancel": "Siparişi iptal et",
     "cancelConfirm": "{number} numaralı sipariş iptal edilsin mi?",
-    "cancelled": "Sipariş iptal edildi"
+    "cancelled": "Sipariş iptal edildi",
+    "cancelNote": "İşletme tarafından iptal edildi"
   },
   "promotions": {
     "coupon": "Kupon",
@@ -484,5 +491,27 @@
     "title": "Erişim yok",
     "body": "Bu işletmedeki rolünüz bu bölümü kapsamıyor.",
     "backHome": "Ana sayfaya dön"
+  },
+  "pagination": {
+    "summary": "Sayfa {page} / {pages} · toplam {total}",
+    "previous": "Önceki",
+    "next": "Sonraki"
+  },
+  "errors": {
+    "generic": "Bir şeyler ters gitti",
+    "codeRequired": "6 haneli kodu girin",
+    "sourceRequired": "Lütfen bizi nereden duyduğunuzu seçin",
+    "businessFieldsRequired": "Lütfen tüm zorunlu işletme alanlarını doldurun",
+    "ownerRequired": "İşletme sahibi değilseniz sahibin adı ve e-postası zorunludur",
+    "roleRequired": "Lütfen işletmedeki rolünüzü seçin",
+    "postcodeRequired": "Bir posta kodu girin",
+    "deliveryDateRequired": "Bir teslimat tarihi seçin",
+    "requiredFields": "Lütfen tüm zorunlu alanları doldurun",
+    "nothingAdded": "Hiçbir ürün eklenemedi — ürünler satışta olmayabilir",
+    "title": "Bir şeyler ters gitti",
+    "sessionHint": "Oturumunuzun süresi dolmuş olabilir. Tekrar deneyin ya da yeniden giriş yapın.",
+    "retry": "Tekrar dene",
+    "signInAgain": "Yeniden giriş yap",
+    "reference": "Hata {digest}"
   }
 }

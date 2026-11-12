@@ -5,7 +5,7 @@ import { requireOnboardingStep } from "@/lib/onboarding-routing"
 import { getTranslator } from "@/lib/i18n"
 
 export default async function PendingOnboardingPage() {
-  const { businessName } = await requireOnboardingStep("/onboarding/pending", "pending")
+  const { businessName } = await requireOnboardingStep("pending")
   const { t } = await getTranslator()
   const name = businessName || t("common.ordoria")
 
@@ -17,7 +17,7 @@ export default async function PendingOnboardingPage() {
       footer={null}
     >
       <div className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-6 text-center">
-        <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+        <p className="eyebrow">
           {t("status.pending")}
         </p>
         <p className="mt-3 text-sm font-semibold text-[var(--brand-navy)]">

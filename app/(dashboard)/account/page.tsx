@@ -1,12 +1,12 @@
-import { redirect } from "next/navigation"
 
 import { AccessDenied } from "@/components/shared/access-denied"
-import { AccountPageHeader } from "@/components/storefront/account-page-header"
-import { BusinessSwitcher } from "@/components/storefront/business-switcher"
+import { AccountPageHeader } from "@/components/account/account-page-header"
+import { BusinessSwitcher } from "@/components/account/business-switcher"
 import { StatusBadge } from "@/components/shared/status-badge"
 import { getBusinessContext } from "@/lib/business-context"
 import { DetailRow } from "@/components/shared/detail-row"
 import { getTranslator } from "@/lib/i18n"
+import { businessDisplayName } from "@/lib/api/businesses"
 
 export default async function AccountPage() {
   const { t } = await getTranslator()
@@ -14,10 +14,6 @@ export default async function AccountPage() {
   if (!ctx) return <AccessDenied />
 
   const { user, businesses, active: business } = ctx
-
-  if (!businesses.length) {
-    redirect("/onboarding/business")
-  }
 
   const address = [
     business.addressLine1,
@@ -40,7 +36,7 @@ export default async function AccountPage() {
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5">
           <div className="mb-3 border-b border-[var(--border-subtle)] pb-2">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               {t("account.sectionLabel")}
             </p>
             <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
@@ -58,7 +54,7 @@ export default async function AccountPage() {
         <section className="rounded-[2px] border border-[var(--border-subtle)] bg-white p-4 sm:p-5">
           <div className="mb-3 flex flex-col gap-3 border-b border-[var(--border-subtle)] pb-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 {t("account.businessSectionLabel")}
               </p>
               <h2 className="text-[15px] font-semibold tracking-tight text-[var(--brand-navy)]">
@@ -72,18 +68,14 @@ export default async function AccountPage() {
           </div>
 
           <BusinessSwitcher
-            businesses={businesses.map((item) => ({
-              id: item.id,
-              tradingName: item.tradingName || item.businessName,
-              status: item.status,
-            }))}
+            businesses={businesses.map((item) => ({ id: item.id, name: businessDisplayName(item) }))}
             activeBusinessId={business.id}
           />
 
           <div className="mt-4">
             <DetailRow
               label={t("account.tradingName")}
-              value={business.tradingName || business.businessName}
+              value={businessDisplayName(business)}
             />
             <DetailRow
               label={t("account.legalName")}

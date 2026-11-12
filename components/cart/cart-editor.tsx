@@ -26,7 +26,7 @@ export function CartEditor({ businessId, lines }: { businessId: string; lines: C
         {lines.map((line) => (
           <li key={line.id} className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-start">
             <div className="flex min-w-0 flex-1 gap-3">
-              <div className="size-14 shrink-0 overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[#f3f4f6]">
+              <div className="size-14 shrink-0 overflow-hidden rounded-[2px] border border-[var(--border-subtle)] bg-[var(--tile)]">
                 <ProductImage src={line.imageUrl} name={line.name} className="text-lg" />
               </div>
               <div className="min-w-0 flex-1 space-y-2">
@@ -42,7 +42,7 @@ export function CartEditor({ businessId, lines }: { businessId: string; lines: C
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-[2px]">
-                      {(line.packagingOptions.length ? line.packagingOptions : [line.unit]).map((option) => (
+                      {line.packagingOptions.map((option) => (
                         <SelectItem key={option} value={option}>
                           {option}
                         </SelectItem>
@@ -101,7 +101,7 @@ function LineNote({
       value={value}
       onChange={(e) => setValue(e.target.value)}
       placeholder={t("cart.lineNotePlaceholder")}
-      className="h-9 rounded-[2px] border-[var(--border-subtle)] text-sm focus-visible:border-[var(--brand-navy)] focus-visible:ring-1 focus-visible:ring-[var(--brand-navy)]"
+      className="h-9 rounded-[2px] border-[var(--border-subtle)] text-sm field-focus"
       disabled={disabled}
       onBlur={() => {
         const next = value.trim() || null
