@@ -22,9 +22,7 @@ export default async function CartPage() {
   const ctx = await getBusinessContext()
   if (!ctx || !canOrderFor(ctx.active)) return <AccessDenied />
 
-  const { lines, checkoutGroups, checkoutError, pricing, couponCode } =
-    await getCart(ctx.active.id)
-  const checkoutSupplierId = checkoutGroups[0]?.supplierId ?? null
+  const { lines, supplierId, checkoutError, pricing, couponCode } = await getCart(ctx.active.id)
   const summary = summarizeCart(pricing, lines)
   // Will this order wait for a manager? (the backend decides again at checkout)
   const approval = lines.length ? await checkOrderApproval(ctx.active.id, summary.goodsTotal) : null
@@ -114,7 +112,7 @@ export default async function CartPage() {
             <CouponField businessId={ctx.active.id} initialCode={couponCode} />
             <CheckoutForm
               businessId={ctx.active.id}
-              supplierId={checkoutSupplierId}
+              supplierId={supplierId}
               defaultDeliveryTime={ctx.active.deliveryTime}
               openTime={ctx.active.openTime}
               closeTime={ctx.active.closeTime}

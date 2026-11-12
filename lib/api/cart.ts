@@ -2,20 +2,6 @@ import { apiFetch } from "@/lib/api/client"
 import { resolveMediaUrl } from "@/lib/api/media-url"
 import { asId, DEFAULT_CURRENCY, packagingUnits, preferredOffer, unitCode, type FulfillmentMethod, type PaymentMode } from "@/lib/domain"
 
-export type CheckoutGroup = {
-  supplierId: string
-  supplierCode: string | null
-  lineCount: number
-  items: Array<{
-    cartItemId: string
-    productId: string
-    name: string
-    offerId: string
-    quantity: number
-    unit: string
-  }>
-}
-
 /** Delivery for this cart — the serving depot's mile band, priced by the server */
 export type CartDelivery = {
   warehouse: { id: string; name: string } | null
@@ -109,8 +95,7 @@ function mapCartLine(raw: Record<string, unknown>): CartLine {
 async function fetchCartRaw(businessId: string) {
   return apiFetch<{
     cart: Record<string, unknown>
-    checkoutSupplierIds?: string[]
-    checkoutGroups?: CheckoutGroup[]
+    supplier?: { id?: string } | null
     checkoutError?: string | null
     pricing?: CartPricing | null
     delivery?: CartDelivery | null
@@ -120,8 +105,8 @@ async function fetchCartRaw(businessId: string) {
 
 export async function getCart(businessId: string): Promise<{
   lines: CartLine[]
-  checkoutSupplierIds: string[]
-  checkoutGroups: CheckoutGroup[]
+  /** The one supplier this cart orders from: the business's default (a cart never mixes suppliers) */
+  supplierId: string | null
   checkoutError: string | null
   pricing: CartPricing | null
   couponError: string | null
@@ -132,18 +117,11 @@ export async function getCart(businessId: string): Promise<{
   const items = Array.isArray(cart.items)
     ? (cart.items as Record<string, unknown>[])
     : []
-  const checkoutSupplierIds = Array.isArray(data.checkoutSupplierIds)
-    ? data.checkoutSupplierIds.map(String).filter(Boolean)
-    : []
-  const checkoutGroups = Array.isArray(data.checkoutGroups)
-    ? (data.checkoutGroups as CheckoutGroup[])
-    : []
   const checkoutError =
     typeof data.checkoutError === "string" ? data.checkoutError : null
   return {
     lines: items.map(mapCartLine),
-    checkoutSupplierIds,
-    checkoutGroups,
+    supplierId: data.supplier?.id ? String(data.supplier.id) : null,
     checkoutError,
     pricing: data.pricing
       ? { ...(data.pricing as CartPricing), delivery: data.delivery ?? null }
@@ -248,7 +226,7 @@ export type PlacedOrder = {
   pendingApproval: boolean
 }
 
-/** One order per supplier; usually just one. */
+/** The backend answers with a list, but a cart has one supplier, so it holds one order. */
 export async function checkoutCart(
   businessId: string,
   input: CheckoutInput

@@ -39,7 +39,7 @@ async function checkoutError(error: unknown) {
   return actionError(error)
 }
 
-/** The cart becomes one order per supplier group. */
+/** The cart becomes an order with its one supplier. */
 export async function checkoutAction(_prev: unknown, formData: FormData) {
   const businessId = formString(formData, "businessId")
   const requestedDeliveryDate = formString(formData, "requestedDeliveryDate")
